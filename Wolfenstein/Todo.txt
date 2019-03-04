@@ -1,0 +1,10 @@
+FIX ALL COORDINATES
+
+Copy enemies_temp array to enemies_temp
+Build objects at origin
+Print proper framerate
+Sounds
+Loading Screen
+Proximity Based Doors
+Fix door textures
+clean up door collision
