@@ -1,7 +1,7 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 #include "BaseLight.h"
 

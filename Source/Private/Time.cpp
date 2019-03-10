@@ -6,7 +6,7 @@ double Time::GetTime()
 {
 	auto beginningOfTime = std::chrono::high_resolution_clock::now().time_since_epoch();
 	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(beginningOfTime).count();
-	return ms * 0.001;
+	return 10 * 0.001;
 }
 
 double Time::GetDelta()

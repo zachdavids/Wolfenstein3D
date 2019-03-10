@@ -16,14 +16,14 @@ Camera::Camera(glm::vec3 position, float yaw, float pitch)
 
 glm::vec3 Camera::GetRightDirection()
 {
-	glm::vec4 right_vector = inverse(GetRotationMatrix()) * glm::vec4(1, 0, 0, 1);
+	glm::vec4 right_vector = glm::inverse(GetRotationMatrix()) * glm::vec4(1, 0, 0, 1);
 
 	return glm::vec3(right_vector);
 }
 
 glm::vec3 Camera::GetViewDirection()
 {
-	glm::vec4 view_vector = inverse(GetRotationMatrix()) * glm::vec4(0, 0, -1, 1);
+	glm::vec4 view_vector = glm::inverse(GetRotationMatrix()) * glm::vec4(0, 0, -1, 1);
 	
 	return glm::vec3(view_vector);
 }
@@ -65,8 +65,8 @@ glm::mat4 Camera::GetRotationMatrix()
 {
 	glm::mat4 rotation_matrix(1.0f);
 
-	rotation_matrix = rotate(rotation_matrix, pitch_, glm::vec3(1, 0, 0));
-	rotation_matrix = rotate(rotation_matrix, yaw_, glm::vec3(0, 1, 0));
+	rotation_matrix = glm::rotate(rotation_matrix, pitch_, glm::vec3(1, 0, 0));
+	rotation_matrix = glm::rotate(rotation_matrix, yaw_, glm::vec3(0, 1, 0));
 
 	return rotation_matrix;
 }

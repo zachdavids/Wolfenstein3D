@@ -1,5 +1,4 @@
-#ifndef TIME_H
-#define TIME_H
+#pragma once
 
 #include <chrono>
 #include <iostream>
@@ -16,5 +15,3 @@ private:
 
 	static double delta_;
 };
-
-#endif

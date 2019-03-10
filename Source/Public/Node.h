@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 #include <string>
 
 class Node

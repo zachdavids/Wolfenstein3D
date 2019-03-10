@@ -3,7 +3,8 @@
 
 #include "Vertex.h"
 
-#include <glew.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include <iostream>
 #include <vector>
 #include <assimp/Importer.hpp>

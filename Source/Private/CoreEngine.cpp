@@ -2,13 +2,8 @@
 
 #define FRAME_CAP 5000; 
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	Window::Create(1280, 720, "Wolfenstein Clone");
-
-	CoreEngine engine;
-	engine.Start();
-
 	return 0;
 }
 

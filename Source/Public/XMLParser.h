@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include <glm/glm.hpp>
 
-#include <pugixml.hpp>
-#include <glm.hpp>
+#include <pugixml/pugixml.hpp>
 #include "Node.h"
 
 class XMLParser

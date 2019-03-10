@@ -1,7 +1,7 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 class Vertex
 {

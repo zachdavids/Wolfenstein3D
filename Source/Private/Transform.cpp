@@ -30,15 +30,15 @@ void Transform::SetScale(float x, float y, float z)
 glm::mat4 Transform::GetModelMatrix()
 {
 	// Translate
-	glm::mat4 model_matrix = translate(glm::mat4(1.0f), translation_);
+	glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), translation_);
 
 	// Scale
-	model_matrix = scale(model_matrix, scale_);
+	model_matrix = glm::scale(model_matrix, scale_);
 
 	// Rotate
-	model_matrix = rotate(model_matrix, rotation_.x, glm::vec3(1, 0, 0));
-	model_matrix = rotate(model_matrix, rotation_.y, glm::vec3(0, 1, 0));
-	model_matrix = rotate(model_matrix, rotation_.z, glm::vec3(0, 0, 1));
+	model_matrix = glm::rotate(model_matrix, rotation_.x, glm::vec3(1, 0, 0));
+	model_matrix = glm::rotate(model_matrix, rotation_.y, glm::vec3(0, 1, 0));
+	model_matrix = glm::rotate(model_matrix, rotation_.z, glm::vec3(0, 0, 1));
 
 	return model_matrix;
 }

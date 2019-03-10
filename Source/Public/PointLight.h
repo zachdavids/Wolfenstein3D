@@ -1,7 +1,7 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 #include "BaseLight.h"
 #include "Attenuation.h"

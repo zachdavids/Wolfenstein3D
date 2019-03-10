@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2014 Laurent Gomila (laurent.gom@gmail.com)
+// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -33,7 +33,7 @@
 
 
 ////////////////////////////////////////////////////////////
-/// This file just includes the OpenGL (GL and GLU) headers,
+/// This file just includes the OpenGL headers,
 /// which have actually different paths on each system
 ////////////////////////////////////////////////////////////
 #if defined(SFML_SYSTEM_WINDOWS)
@@ -44,22 +44,19 @@
     #endif
 
     #include <GL/gl.h>
-    #include <GL/glu.h>
 
-#elif defined(SFML_SYSTEM_LINUX) || defined(SFML_SYSTEM_FREEBSD)
+#elif defined(SFML_SYSTEM_LINUX) || defined(SFML_SYSTEM_FREEBSD) || defined(SFML_SYSTEM_OPENBSD)
 
     #if defined(SFML_OPENGL_ES)
         #include <GLES/gl.h>
         #include <GLES/glext.h>
     #else
         #include <GL/gl.h>
-        #include <GL/glu.h>
     #endif
 
 #elif defined(SFML_SYSTEM_MACOS)
 
     #include <OpenGL/gl.h>
-    #include <OpenGL/glu.h>
 
 #elif defined (SFML_SYSTEM_IOS)
 
@@ -70,6 +67,10 @@
 
     #include <GLES/gl.h>
     #include <GLES/glext.h>
+    
+    // We're not using OpenGL ES 2+ yet, but we can use the sRGB extension
+    #include <GLES2/gl2platform.h>
+    #include <GLES2/gl2ext.h>
 
 #endif
 

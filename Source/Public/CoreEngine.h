@@ -1,11 +1,15 @@
 #ifndef COREENGINE_H	
 #define COREENGINE_H
 
+#include <SDL/SDL.h>
+#undef main
+
 #include "Window.h"
 #include "Time.h"
 #include "Game.h"
 #include "Input.h"
 #include "RenderUtility.h"
+
 #include <iostream>
 
 class CoreEngine

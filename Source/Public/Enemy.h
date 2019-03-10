@@ -7,8 +7,8 @@
 #include "Shader.h"
 #include "Audio.h"
 
-#include <glm.hpp>
-#include <gtx\intersect.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/intersect.hpp>
 
 #include <random>
 

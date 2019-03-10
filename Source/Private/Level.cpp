@@ -46,10 +46,10 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 
 	GenerateLevel();
 
-	music.openFromFile("Sounds/song.ogg");
-	music.setVolume(30);
-	music.setLoop(true);
-	music.play();
+	//music.openFromFile("Sounds/song.ogg");
+	//music.setVolume(30);
+	//music.setLoop(true);
+	//music.play();
 }
 
 void Level::Input()

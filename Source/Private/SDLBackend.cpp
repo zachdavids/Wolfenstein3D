@@ -1,5 +1,5 @@
 #include "SDLBackend.h"
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include <iostream>
 
 static SDL_Window* window;

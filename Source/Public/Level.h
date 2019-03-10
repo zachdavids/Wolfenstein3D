@@ -14,8 +14,8 @@
 #include "Medkit.h"
 #include "Audio.h"
 
-#include <SFML\Audio.hpp>
-#include <gtx\rotate_vector.hpp>
+//#include <SFML/Audio.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <string>
 
 class Door;
@@ -56,7 +56,7 @@ private:
 	Mesh mesh_;
 	Enemy* enemy_;
 
-	sf::Music music;
+	//sf::Music music;
 
 	std::vector<Door> doors_;
 	std::vector<Enemy> enemies_;

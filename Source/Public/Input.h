@@ -1,9 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <SDL.h>
 #include "SDLBackend.h"
-#include <glm.hpp>
+#include <SDL/SDL.h>
+#include <glm/glm.hpp>
 #include <iostream>
 
 class Input

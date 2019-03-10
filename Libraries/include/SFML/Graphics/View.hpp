@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2014 Laurent Gomila (laurent.gom@gmail.com)
+// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -302,18 +302,18 @@ private:
 /// The viewport allows to map the scene to a custom part
 /// of the render target, and can be used for split-screen
 /// or for displaying a minimap, for example. If the source
-/// rectangle has not the same size as the viewport, its
+/// rectangle doesn't have the same size as the viewport, its
 /// contents will be stretched to fit in.
 ///
 /// To apply a view, you have to assign it to the render target.
-/// Then, every objects drawn in this render target will be
+/// Then, objects drawn in this render target will be
 /// affected by the view until you use another view.
 ///
 /// Usage example:
 /// \code
 /// sf::RenderWindow window;
 /// sf::View view;
-/// 
+///
 /// // Initialize the view to a rectangle located at (100, 100) and with a size of 400x200
 /// view.reset(sf::FloatRect(100, 100, 400, 200));
 ///

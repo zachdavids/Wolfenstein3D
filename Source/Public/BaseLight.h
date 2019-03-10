@@ -1,7 +1,7 @@
 #ifndef BASELIGHT_H
 #define BASELIGHT_H
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 class BaseLight
 {

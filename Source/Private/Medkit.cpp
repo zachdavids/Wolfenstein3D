@@ -14,7 +14,7 @@ const int NUM_TEXTURES_Y = 1;
 Medkit::Medkit(glm::vec3 position)
 {
 	eaten_ = false;
-	audio_ = new Audio();
+	//audio_ = new Audio();
 	position_ = position;
 
 	transform_ = new Transform();
@@ -45,7 +45,7 @@ void Medkit::Update()
 	transform_->SetRotation(0, camera_angle, 0);
 
 	if (glm::length(camera_direction) < PICKUP_DISTANCE) {
-		audio_->PlayMedkit();
+		//audio_->PlayMedkit();
 		Player::Damage(-HEAL_AMOUNT);
 		eaten_ = true;
 	}

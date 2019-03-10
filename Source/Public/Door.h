@@ -8,7 +8,7 @@
 #include "Time.h"
 #include "Audio.h"
 
-#include <gtx\compatibility.hpp>
+#include <glm/gtx/compatibility.hpp>
 
 class Door
 {

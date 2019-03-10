@@ -1,7 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <SFML\Audio.hpp>
+//#include <SFML/Audio.hpp>
 
 class Audio
 {
@@ -21,8 +21,8 @@ public:
 
 private:
 
-	sf::SoundBuffer buffer_;
-	sf::Sound sound_;
+	//sf::SoundBuffer buffer_;
+	//sf::Sound sound_;
 };
 
 #endif;

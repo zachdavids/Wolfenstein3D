@@ -20,7 +20,7 @@ private:
 
 	bool eaten_;
 
-	Audio* audio_;
+	//Audio* audio_;
 	glm::vec3 position_;
 	Material* material_;
 	Transform* transform_;

@@ -2,8 +2,8 @@
 #define WINDOW_H
 
 #include <string>
-#include <glew.h>
-#include <SDL.h>
+#include <GL/glew.h>
+#include <SDL/SDL.h>
 #include "SDLBackend.h"
 
 class Window
