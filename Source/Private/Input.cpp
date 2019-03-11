@@ -1,7 +1,5 @@
 #include "Input.h"
 
-static SDL_Event event;
-
 static int mouse_x = 0;
 static int mouse_y = 0;
 

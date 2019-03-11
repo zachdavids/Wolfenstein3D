@@ -3,7 +3,7 @@
 
 #include "Input.h"
 #include "Time.h"
-#include "Window.h"
+#include "WindowManager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

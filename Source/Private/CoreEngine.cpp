@@ -1,8 +1,10 @@
 #include "CoreEngine.h"
+#include "WindowManager.h"
+#include "Game.h"
 
 #define FRAME_CAP 5000; 
 
-int main(int argc, char* argv[])
+int main()
 {
 	return 0;
 }
@@ -10,29 +12,28 @@ int main(int argc, char* argv[])
 CoreEngine::CoreEngine()
 {
 	game_ = new Game();
+	windowManager_ = new WindowManager();
 	RenderUtility::GLInitialize();
-	is_running_ = false;
+	bIsRunning_ = false;
 }
 
 void CoreEngine::Start()
 {
-	if (is_running_)
-		return;
+	if (bIsRunning_) { return; }
 
 	Run();
 }
 
 void CoreEngine::Stop()
 {
-	if (!is_running_)
-		return;
+	if (!bIsRunning_) { return; }
 
-	is_running_ = false;
+	bIsRunning_ = false;
 }
 
 void CoreEngine::Run()
 {
-	is_running_ = true;
+	bIsRunning_ = true;
 
 	int frames = 0;
 
@@ -42,7 +43,7 @@ void CoreEngine::Run()
 
 	double frame_time = 1.0 / FRAME_CAP;
 	
-	while (is_running_)
+	while (bIsRunning_)
 	{
 		bool render = false;
 
@@ -63,7 +64,7 @@ void CoreEngine::Run()
 		{
 			render = true;
 
-			if (Window::CloseRequested())
+			if (windowManager_->CloseRequested())
 				Stop();
 
 			Time::SetDelta(frame_time);
@@ -96,10 +97,10 @@ void CoreEngine::Render()
 {
 	RenderUtility::ClearScreen();
 	game_->Render();
-	Window::Render();
+	windowManager_->Render();
 }
 
 void CoreEngine::Destroy()
 {
-	Window::Destroy();
+	windowManager_->Destroy();
 }

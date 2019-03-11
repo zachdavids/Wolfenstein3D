@@ -1,20 +1,18 @@
-#ifndef COREENGINE_H	
-#define COREENGINE_H
+#pragma once
 
-#include <SDL/SDL.h>
-#undef main
-
-#include "Window.h"
 #include "Time.h"
-#include "Game.h"
 #include "Input.h"
 #include "RenderUtility.h"
 
 #include <iostream>
 
+class Game;
+class WindowManager;
+
 class CoreEngine
 {
 public:
+
 	CoreEngine();
 
 	void Start();
@@ -24,8 +22,9 @@ public:
 	void Destroy();
 
 private:
-	bool is_running_;
-	Game* game_;
-};
 
-#endif
+	bool bIsRunning_;
+	//todo convert to unique_ptrs
+	Game* game_;
+	WindowManager* windowManager_;
+};
