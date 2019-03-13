@@ -1,5 +1,4 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include "Vertex.h"
 
@@ -34,5 +33,3 @@ private:
 
 	int size_;
 };
-
-#endif;

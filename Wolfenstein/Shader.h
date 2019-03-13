@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <glew.h>
 #include <glm.hpp>
@@ -49,5 +48,3 @@ private:
 
 	std::map<std::string, unsigned int> uniform_map_;
 };
-
-#endif;

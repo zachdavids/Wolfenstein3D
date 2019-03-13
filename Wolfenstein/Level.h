@@ -1,5 +1,4 @@
-#ifndef LEVEL_H
-#define LEVEL_H
+#pragma once
 
 #include "Player.h"
 #include "Transform.h"
@@ -71,5 +70,3 @@ private:
 	void GenerateLevel();
 	void RemoveMedkit();
 };
-
-#endif;

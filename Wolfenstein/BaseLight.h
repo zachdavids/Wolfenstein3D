@@ -1,5 +1,4 @@
-#ifndef BASELIGHT_H
-#define BASELIGHT_H
+#pragma once
 
 #include <glm.hpp>
 
@@ -21,5 +20,3 @@ private:
 	glm::vec3 color_;
 	float intensity_;
 };
-
-#endif;

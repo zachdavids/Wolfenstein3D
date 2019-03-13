@@ -1,5 +1,4 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#pragma once
 
 #include <glm.hpp>
 
@@ -33,5 +32,3 @@ private:
 
 	Texture* texture_;
 };
-
-#endif;

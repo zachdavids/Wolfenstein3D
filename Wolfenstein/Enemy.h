@@ -1,5 +1,4 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
 #include "Mesh.h"
 #include "Transform.h"
@@ -58,5 +57,3 @@ private:
 	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;

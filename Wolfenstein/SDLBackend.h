@@ -1,5 +1,4 @@
-#ifndef SDLBACKEND_H
-#define SDLBACKEND_H
+#pragma once
 
 bool SDLGetIsCloseRequested();
 void SDLSetIsCloseRequested(bool value);
@@ -8,5 +7,3 @@ void SDLSetWindowFullscreen(bool value);
 void SDLSwapBuffers();
 void SDLDestroyWindow();
 void SDLSetMousePosition(int x, int y);
-
-#endif

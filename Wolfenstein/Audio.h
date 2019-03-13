@@ -1,5 +1,4 @@
-#ifndef AUDIO_H
-#define AUDIO_H
+#pragma once
 
 #include <SFML\Audio.hpp>
 
@@ -24,5 +23,3 @@ private:
 	sf::SoundBuffer buffer_;
 	sf::Sound sound_;
 };
-
-#endif;

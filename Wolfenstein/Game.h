@@ -1,5 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
 #include "Level.h"
 #include "Player.h"
@@ -24,5 +23,3 @@ private:
 
 	int current_level_;
 };
-
-#endif

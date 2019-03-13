@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 #include <glew.h>
 #include <string>
@@ -22,5 +21,3 @@ private:
 
 	GLuint id_;
 };
-
-#endif;

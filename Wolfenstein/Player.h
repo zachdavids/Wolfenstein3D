@@ -1,5 +1,4 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "Camera.h"
 #include "Level.h"
@@ -55,5 +54,3 @@ private:
 	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;

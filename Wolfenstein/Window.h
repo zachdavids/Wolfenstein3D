@@ -1,5 +1,4 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
 #include <string>
 #include <glew.h>
@@ -26,5 +25,3 @@ private:
 	static int height_;
 	static std::string title_;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef COREENGINE_H	
-#define COREENGINE_H
+#pragma once
 
 #include "Window.h"
 #include "Time.h"
@@ -23,5 +22,3 @@ private:
 	bool is_running_;
 	Game* game_;
 };
-
-#endif

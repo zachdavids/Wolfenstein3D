@@ -1,5 +1,4 @@
-#ifndef RENDERUTILITY_H
-#define RENDERUTILITY_H
+#pragma once
 
 #include <glew.h>
 
@@ -9,5 +8,3 @@ public:
 	static void ClearScreen();
 	static void GLInitialize();
 };
-
-#endif;

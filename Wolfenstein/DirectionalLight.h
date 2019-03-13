@@ -1,5 +1,4 @@
-#ifndef DIRECTIONALLIGHT_H
-#define DIRECTIONALLIGHT_H
+#pragma once
 
 #include <glm.hpp>
 
@@ -23,5 +22,3 @@ private:
 	BaseLight* base_light_;
 	glm::vec3 direction_;
 };
-
-#endif;

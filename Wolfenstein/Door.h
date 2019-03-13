@@ -1,5 +1,4 @@
-#ifndef DOOR_H
-#define DOOR_H
+#pragma once
 
 #include "Mesh.h"
 #include "Level.h"
@@ -49,5 +48,3 @@ private:
 	void AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;

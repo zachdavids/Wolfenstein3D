@@ -1,5 +1,4 @@
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
 #include <SDL.h>
 #include "SDLBackend.h"
@@ -79,5 +78,3 @@ public:
 	static void SetCursor(bool visible);
 	static void SetMousePosition(glm::vec2 pos);
 };
-
-#endif

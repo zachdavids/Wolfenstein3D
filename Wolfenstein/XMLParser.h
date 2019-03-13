@@ -1,5 +1,4 @@
-#ifndef XMLPARSER_H
-#define XMLPARSER_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -35,5 +34,3 @@ private:
 	std::vector<Node> medkit_nodes_;
 	std::vector<Node> endpoint_nodes_;
 };
-
-#endif;

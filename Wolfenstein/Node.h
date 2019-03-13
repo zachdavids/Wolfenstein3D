@@ -1,5 +1,4 @@
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
 #include <glm.hpp>
 #include <string>
@@ -22,5 +21,3 @@ private:
 	std::string type_;
 	glm::vec3 position_;
 };
-
-#endif;

@@ -1,5 +1,4 @@
-#ifndef POINTLIGHT_H
-#define POINTLIGHT_H
+#pragma once
 
 #include <glm.hpp>
 
@@ -31,4 +30,3 @@ private:
 	BaseLight* base_light_;
 	Attenuation* attenuation_;
 };
-#endif;

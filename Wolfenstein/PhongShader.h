@@ -1,5 +1,4 @@
-#ifndef PHONGSHADER_H
-#define PHONGSHADER_H
+#pragma once
 
 #include <glew.h>
 #include <glm.hpp>
@@ -59,5 +58,3 @@ private:
 	std::vector<PointLight> point_lights_;
 	std::map<std::string, unsigned int> uniform_map_;
 };
-
-#endif;

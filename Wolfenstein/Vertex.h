@@ -1,5 +1,4 @@
-#ifndef VERTEX_H
-#define VERTEX_H
+#pragma once
 
 #include <glm.hpp>
 
@@ -26,5 +25,3 @@ private:
 	glm::vec2 texture_coord_;
 	glm::vec3 normal_;
 };
-
-#endif;

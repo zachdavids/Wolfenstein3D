@@ -1,5 +1,4 @@
-#ifndef ATTENUATION_H
-#define ATTENUATION_H
+#pragma once
 
 class Attenuation
 {
@@ -23,5 +22,3 @@ private:
 	float linear_;
 	float exponent_;
 };
-
-#endif;

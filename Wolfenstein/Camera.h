@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include "Input.h"
 #include "Time.h"
@@ -45,5 +44,3 @@ private:
 
 	glm::vec3 position_;
 };
-
-#endif;

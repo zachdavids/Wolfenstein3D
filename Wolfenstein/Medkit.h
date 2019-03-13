@@ -1,5 +1,4 @@
-#ifndef MEDKIT_H
-#define MEDKIT_H
+#pragma once
 
 #include "Level.h"
 #include "Mesh.h"
@@ -32,5 +31,3 @@ private:
 	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;
