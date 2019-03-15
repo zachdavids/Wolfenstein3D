@@ -2,35 +2,30 @@
 
 #include <iostream>
 #include <vector>
-
-#include <pugixml.hpp>
 #include <glm.hpp>
+#include <pugixml.hpp>
 #include "Node.h"
 
 class XMLParser
 {
 public:
 
-	XMLParser() {};
-	XMLParser(std::string filename);
+	XMLParser(std::string& filename);
 
-	glm::vec2 GetDimensions() { return dimensions_; };
-	void SetDimenions(glm::vec2 dimensions) { dimensions_ = dimensions; };
-
-	std::vector<Node> GetNodes() { return nodes_; };
+	void SetDimensions(glm::vec2 dimensions) { dimensions_ = dimensions; };
 	void SetNodes(std::vector<Node> nodes) { nodes_ = nodes; };
 
-	std::vector<Node> GetDoorNodes() { return door_nodes_; };
-	std::vector<Node> GetEnemyNodes() { return enemy_nodes_; };
-	std::vector<Node> GetMedkitNodes() { return medkit_nodes_; };
-	std::vector<Node> GetEndPointNodes() { return endpoint_nodes_; };
+	glm::vec2 GetDimensions() const { return dimensions_; };
+	std::vector<Node> const& GetNodes() const { return nodes_; };
+
+	int GetNodeFlatIndex(int x, int y) { return (static_cast<int>(dimensions_.y) * y) + x; }
 
 private:
 
 	glm::vec2 dimensions_;
 	std::vector<Node> nodes_;
-	std::vector<Node> door_nodes_;
-	std::vector<Node> enemy_nodes_;
-	std::vector<Node> medkit_nodes_;
-	std::vector<Node> endpoint_nodes_;
+	void ParseXMLFile(std::string& filename, pugi::xml_document& out_document) const;
+	void ProcessLevelNode(pugi::xml_node& level_node);
+	void InitializeNodeVector();
+	void ProcessTileNode(pugi::xml_node& tile_node);
 };

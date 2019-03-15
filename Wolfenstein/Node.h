@@ -1,23 +1,42 @@
 #pragma once
 
 #include <glm.hpp>
-#include <string>
 
 class Node
 {
 public:
 
-	Node(glm::vec3 position);
-	Node(glm::vec3 position, std::string type);
+	enum class Flag : unsigned char
+	{
+		kWall = 0b0000'0000,
+		kLocation = 0b0000'0001,
+		kDoor = 0b0000'0010,
+		kEnemy = 0b0000'0100,
+		kMedkit = 0b0000'1000,
+		kEndpoint = 0b0001'0000
+	};
 
-	std::string GetType() { return type_; };
-	void SetType(std::string type) { type_ = type; };
+	friend Flag operator|(Flag a, Flag b)
+	{
+		return static_cast<Flag>(static_cast<unsigned char>(a) | static_cast<unsigned char>(b));
+	}
 
-	glm::vec3 GetPosition() { return position_; };
-	void SetPosition(glm::vec3 position) { position_ = position; };
+	friend Flag operator&(Flag a, Flag b)
+	{
+		return static_cast<Flag>(static_cast<unsigned char>(a) & static_cast<unsigned char>(b));
+	}
+
+	friend Flag& operator|=(Flag& a, Flag b)
+	{
+		return a = a | b;
+	}
+
+	Node(Node::Flag flag);
+	Node::Flag GetFlag() { return flag_; };
+	void SetFlag(Node::Flag flag) { flag_ |= flag; };
+	bool IsType(Node::Flag flag) { return static_cast<bool>(flag_ & flag); }
 
 private:
 	
-	std::string type_;
-	glm::vec3 position_;
+	Node::Flag flag_;
 };
