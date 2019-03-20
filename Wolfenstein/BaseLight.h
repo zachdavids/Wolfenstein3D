@@ -6,13 +6,12 @@ class BaseLight
 {
 public:
 
-	BaseLight() {};
 	BaseLight(glm::vec3 color, float intensity);
 
-	glm::vec3 GetColor() { return color_; };
+	glm::vec3 GetColor() const { return color_; };
 	void SetColor(glm::vec3 color) { color_ = color; };
 
-	float GetIntensity() { return intensity_; };
+	float GetIntensity() const { return intensity_; };
 	void SetIntensity(float intensity) { intensity_ = intensity; };
 
 private:

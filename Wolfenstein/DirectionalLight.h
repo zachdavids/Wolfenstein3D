@@ -2,23 +2,23 @@
 
 #include <glm.hpp>
 
-#include "BaseLight.h"
+class BaseLight;
 
 class DirectionalLight
 {
 public:
 
-	DirectionalLight() {};
 	DirectionalLight(BaseLight* base_light, glm::vec3 direction);
 
-	BaseLight* GetBaseLight() { return base_light_; };
+	BaseLight* GetBaseLight() const { return base_light_; };
 	void SetBaseLight(BaseLight* base_light) { base_light_ = base_light; };
 
-	glm::vec3 GetDirection() { return direction_; };
+	glm::vec3 GetDirection() const { return direction_; };
 	void SetDirection(glm::vec3 direction) { direction_ = direction; };
 
 private:
 
+	//todo remove raw pointer
 	BaseLight* base_light_;
 	glm::vec3 direction_;
 };
