@@ -1,6 +1,5 @@
 #include "PhongShader.h"
-
-#include <cassert>
+#include "DirectionalLight.h"
 
 static int MAX_POINT_LIGHTS = 4;
 

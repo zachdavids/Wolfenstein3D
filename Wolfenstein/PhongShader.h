@@ -11,8 +11,9 @@
 #include "Transform.h"
 #include "Material.h"
 #include "BaseLight.h"
-#include "DirectionalLight.h"
 #include "PointLight.h"
+
+class DirectionalLight;
 
 class PhongShader
 {
@@ -39,7 +40,7 @@ public:
 	glm::vec3 GetAmbientLight() { return ambient_light_; };
 	void SetAmbientLight(glm::vec3 ambient_light) { ambient_light_ = ambient_light; };
 
-	DirectionalLight* GetDirectionalLight() { return directional_light_; };
+	DirectionalLight* GetDirectionalLight() const { return directional_light_; };
 	void SetDirectionalLight(DirectionalLight* directional_light) { directional_light_ = directional_light; };
 
 	void SetPointLights(std::vector<PointLight> lights);
