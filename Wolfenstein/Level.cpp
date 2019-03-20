@@ -13,17 +13,10 @@ const float PLAYER_DAMAGE = 34.0f;
 const int NUM_TEXTURES_X = 6;
 const int NUM_TEXTURES_Y = 19;
 
-static std::vector<Node> door_nodes_;
-static std::vector<Node> enemy_nodes_;
-static std::vector<Node> medkit_nodes_;
-static std::vector<Node> endpoint_nodes_;
-
 static std::vector<glm::vec3> collision_start;
 static std::vector<glm::vec3> collision_end;
 
 static int nearest_enemy_num;
-static std::vector<Door> doors_temp_;
-static std::vector<Enemy> enemies_temp_;
 
 static Shader* shader_;
 
@@ -194,7 +187,6 @@ void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) 
 			doors_.push_back(Door(position, material_, glm::vec3(position.x + 0.9, position.y, position.z), false));
 		}
 	}
-	doors_temp_ = doors_;
 }
 
 void Level::OpenDoors(glm::vec3 position, bool exit)
@@ -240,7 +232,7 @@ void Level::GenerateLevel()
 				// Ceiling Generation
 				//TODO Get rid of magic ceiling height constant
 				AddIndices(indices, vertices.size(), false);
-				AddVertices(vertices, "Ceiling", false, x, 1, z, CalculateTextureCoords(22));
+				AddVertices(vertices, "Ceiling", false, x, CEILING_HEIGHT, z, CalculateTextureCoords(22));
 
 				// Wall Generation
 				//TODO refactor this boundary check
@@ -301,10 +293,8 @@ void Level::GenerateLevel()
 			}
 		}
 	}
-	enemies_temp_ = enemies_;
-	mesh_.InitializeMesh(vertices, indices);
 
-	std::cout << "success\n";
+	mesh_.InitializeMesh(vertices, indices);
 }
 
 glm::vec3 Level::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, float width, float length)
@@ -337,10 +327,10 @@ glm::vec3 Level::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, 
 		old_position_2.x = old_position.x;
 		new_position_2.x = new_position.x;
 
-		for (unsigned int i = 0; i < doors_temp_.size(); i++) 
+		for (unsigned int i = 0; i < doors_.size(); i++) 
 		{
-			node_size = doors_temp_[i].GetDimensions();
-			collision_vector *= RectangularCollision(old_position_2, new_position_2, object_size, doors_temp_[i].GetTranslation(), node_size);
+			node_size = doors_[i].GetDimensions();
+			collision_vector *= RectangularCollision(old_position_2, new_position_2, object_size, doors_[i].GetTranslation(), node_size);
 		}
 	}
 
@@ -380,9 +370,9 @@ glm::vec3 Level::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end, boo
 		}
 	}
 
-	for (unsigned int i = 0; i < doors_temp_.size(); i++) 
+	for (unsigned int i = 0; i < doors_.size(); i++) 
 	{
-		glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, doors_temp_[i].GetTranslation(), doors_temp_[i].GetDimensions().x, doors_temp_[i].GetDimensions().y);
+		glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, doors_[i].GetTranslation(), doors_[i].GetDimensions().x, doors_[i].GetDimensions().y);
 
 		if (collision_vector != glm::vec3(NULL) && nearest_intersection == glm::vec3(NULL) ||
 			glm::length(nearest_intersection - line_start) > glm::length(collision_vector - line_start)) 
@@ -397,9 +387,9 @@ glm::vec3 Level::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end, boo
 		glm::vec3 collision_vector(NULL);
 		Enemy nearest_enemy;
 
-		for (unsigned int i = 0; i < enemies_temp_.size(); i++) 
+		for (unsigned int i = 0; i < enemies_.size(); i++) 
 		{
-			glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, enemies_temp_[i].GetTranslation(), enemies_temp_[i].GetSize().x, enemies_temp_[i].GetSize().y);
+			glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, enemies_[i].GetTranslation(), enemies_[i].GetSize().x, enemies_[i].GetSize().y);
 
 			glm::vec3 last_enemy_intersection = nearest_enemy_intersection;
 			nearest_enemy_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
