@@ -95,7 +95,7 @@ void Door::Update()
 
 void Door::Render()
 {
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	shader_->UpdateUniforms(transform_->GetModelViewProjection(), material_);
 	mesh_.Draw();
 }
 
@@ -126,16 +126,16 @@ void Door::AddVertices(std::vector<Vertex>& vertices, std::string type, bool inv
 	if (type == "Door")
 	{
 		if (!invert) {
-			vertices.push_back(Vertex(glm::vec3(x_coord, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2])));
-			vertices.push_back(Vertex(glm::vec3(x_coord, DOOR_HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3])));
-			vertices.push_back(Vertex(glm::vec3(DOOR_WIDTH, DOOR_HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3])));
-			vertices.push_back(Vertex(glm::vec3(DOOR_WIDTH, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2])));
+			vertices.push_back(Vertex{ glm::vec3(x_coord, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
+			vertices.push_back(Vertex{ glm::vec3(x_coord, DOOR_HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
+			vertices.push_back(Vertex{ glm::vec3(DOOR_WIDTH, DOOR_HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
+			vertices.push_back(Vertex{ glm::vec3(DOOR_WIDTH, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
 		}
 		else {
-			vertices.push_back(Vertex(glm::vec3(x_coord, y_coord, z_coord), glm::vec2(0, 0)));
-			vertices.push_back(Vertex(glm::vec3(x_coord, DOOR_HEIGHT, z_coord), glm::vec2(0, 0)));
-			vertices.push_back(Vertex(glm::vec3(x_coord, DOOR_HEIGHT, DOOR_LENGTH), glm::vec2(0, 0)));
-			vertices.push_back(Vertex(glm::vec3(x_coord, y_coord, DOOR_LENGTH), glm::vec2(0, 0)));
+			vertices.push_back(Vertex{ glm::vec3(x_coord, y_coord, z_coord), glm::vec2(0, 0) });
+			vertices.push_back(Vertex{ glm::vec3(x_coord, DOOR_HEIGHT, z_coord), glm::vec2(0, 0) });
+			vertices.push_back(Vertex{ glm::vec3(x_coord, DOOR_HEIGHT, DOOR_LENGTH), glm::vec2(0, 0) });
+			vertices.push_back(Vertex{ glm::vec3(x_coord, y_coord, DOOR_LENGTH), glm::vec2(0, 0) });
 		}
 	}
 	else {
@@ -144,8 +144,8 @@ void Door::AddVertices(std::vector<Vertex>& vertices, std::string type, bool inv
 
 std::vector<float> Door::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = static_cast<float>(texture_number % NUM_TEXTURES_X);
+	float texture_y = static_cast<float>(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

@@ -2,7 +2,7 @@
 
 #include <glm.hpp>
 
-class BaseLight;
+struct BaseLight;
 
 struct DirectionalLight
 {

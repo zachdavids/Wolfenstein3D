@@ -26,7 +26,7 @@ class Level
 {
 public:
 
-	Level(std::string& filename, std::string& texturefilename, Player* player);
+	Level(std::string filename, std::string texturefilename, Player* player);
 
 	void Input();
 	void Update();

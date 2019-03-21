@@ -3,7 +3,6 @@
 #include <string>
 #include <glew.h>
 #include <SDL.h>
-#include "SDLBackend.h"
 
 class Window
 {
@@ -18,10 +17,13 @@ public:
 	static int GetHeight() { return height_; };
 	static const std::string& GetTitle() { return title_; };
 	static void SetFullScreen(bool value);
+	static void ClearScreen();
 
 private:
 
 	static int width_;
 	static int height_;
 	static std::string title_;
+
+	static void GLInitialize();
 };

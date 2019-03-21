@@ -23,8 +23,8 @@ public:
 	glm::vec3 GetScale() const { return scale_; };
 	void SetScale(glm::vec3 scale) { scale_ = scale; };
 
-	glm::mat4 GetModelMatrix();
-	glm::mat4 GetModelProjection();
+	glm::mat4 GetModelMatrix() const;
+	glm::mat4 GetModelViewProjection() const;
 
 private:
 

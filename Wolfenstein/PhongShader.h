@@ -10,10 +10,10 @@
 
 #include "Transform.h"
 #include "Material.h"
-#include "BaseLight.h"
-#include "PointLight.h"
 
-class DirectionalLight;
+struct DirectionalLight;
+struct PointLight;
+struct BaseLight;
 
 class PhongShader
 {

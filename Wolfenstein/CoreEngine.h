@@ -4,7 +4,6 @@
 #include "Time.h"
 #include "Game.h"
 #include "Input.h"
-#include "RenderUtility.h"
 #include <iostream>
 
 class CoreEngine

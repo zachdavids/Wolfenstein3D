@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
 CoreEngine::CoreEngine()
 {
 	game_ = new Game();
-	RenderUtility::GLInitialize();
 	is_running_ = false;
 }
 
@@ -103,7 +102,7 @@ void CoreEngine::Run()
 
 void CoreEngine::Render()
 {
-	RenderUtility::ClearScreen();
+	Window::ClearScreen();
 	game_->Render();
 	Window::Render();
 }

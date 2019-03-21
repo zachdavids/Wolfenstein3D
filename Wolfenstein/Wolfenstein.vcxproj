@@ -83,12 +83,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Attenuation.cpp" />
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CoreEngine.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -101,14 +98,11 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="PhongShader.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="RenderUtility.cpp" />
     <ClCompile Include="SDLBackend.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="XMLParser.cpp" />
   </ItemGroup>
@@ -131,7 +125,6 @@
     <ClInclude Include="PhongShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="RenderUtility.h" />
     <ClInclude Include="SDLBackend.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />

@@ -3,11 +3,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-Texture::Texture(int id)
-{
-	id_ = id;
-}
-
 Texture::Texture(std::string filename)
 {
 	LoadTexture(filename);
@@ -23,7 +18,10 @@ void Texture::LoadTexture(std::string filename)
 	int width, height, num_components;
 	unsigned char* image_data = stbi_load(filename.c_str(), &width, &height, &num_components, 4);
 
-	if (image_data == NULL) std::cerr << "Texture loading failed for texture: " << filename.c_str() << std::endl;
+	if (image_data == NULL)
+	{
+		std::cerr << "Texture loading failed for texture: " << filename.c_str() << std::endl;
+	}
 
 	glGenTextures(1, &id_);
 	glBindTexture(GL_TEXTURE_2D, id_);

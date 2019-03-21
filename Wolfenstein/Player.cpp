@@ -11,11 +11,11 @@ const float SIZE = 0.2f;
 const float MOVEMENT_SPEED = 0.035f;
 const float SHOOT_DISTANCE = 10.0f;
 
-static int health_;
+static float health_;
 static Camera* camera_ = new Camera();
 
 
-Player::Player(glm::vec3 position, int yaw, int pitch)
+Player::Player(glm::vec3 position, float yaw, float pitch)
 {
 	health_ = HP;
 	shot_ = false;
@@ -124,7 +124,7 @@ void Player::Input()
 		glm::vec3 line_origin = glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z);
 		glm::vec3 line_direction = glm::normalize(glm::vec3(camera_->GetViewDirection().x, 0, camera_->GetViewDirection().z));
 		glm::vec3 line_end = line_origin + (line_direction * SHOOT_DISTANCE);
-		Level::CheckIntersection(line_origin, line_end, true);
+		//Level::CheckIntersection(line_origin, line_end, true);
 	}
 	if (Input::GetKey(Input::KEY_ESCAPE)) {
 		exit(1);
@@ -143,7 +143,7 @@ void Player::Update()
 
 	old_position_ = camera_->GetPosition();
 	new_position_ = old_position_ + (movement_vector_ * MOVEMENT_SPEED);
-	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE, SIZE);
+	//collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE, SIZE);
 	
 	movement_vector_ *= collision_vector_;
 
@@ -151,24 +151,24 @@ void Player::Update()
 
 	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * M_PI / 180.0f);
+	float camera_angle = static_cast<float>(-atanf(camera_direction.z / camera_direction.x) + (90.0f * M_PI / 180.0f));
 
 	if (camera_direction.x > 0) {
-		camera_angle += M_PI;
+		camera_angle += static_cast<float>(M_PI);
 	}
 	else {
 	}
-	transform_->SetRotation(0, camera_angle, 0);
+	transform_->SetRotation(glm::vec3(0, camera_angle, 0));
 
 	// 2 
 	transform_2->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f + 0.05, 0.52f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
-	transform_2->SetRotation(0, camera_angle, 0);
+	transform_2->SetRotation(glm::vec3(0, camera_angle, 0));
 
 	transform_3->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f + 0.0, 0.52f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
-	transform_3->SetRotation(0, camera_angle, 0);
+	transform_3->SetRotation(glm::vec3(0, camera_angle, 0));
 
 	transform_4->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f - 0.05, 0.52f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
-	transform_4->SetRotation(0, camera_angle, 0);
+	transform_4->SetRotation(glm::vec3(0, camera_angle, 0));
 
 	if (GetHealth() < 100) {
 		int tens = GetHealth() / 10;
@@ -186,13 +186,13 @@ int Player::GetHealth() {
 void Player::Render()
 {
 	shader_ = Level::GetShader();
-	shader_->UpdateUniforms(transform_2->GetModelProjection(), material_2);
+	shader_->UpdateUniforms(transform_2->GetModelViewProjection(), material_2);
 	mesh_.Draw();
-	shader_->UpdateUniforms(transform_3->GetModelProjection(), material_3);
+	shader_->UpdateUniforms(transform_3->GetModelViewProjection(), material_3);
 	mesh_.Draw();
-	shader_->UpdateUniforms(transform_4->GetModelProjection(), material_4);
+	shader_->UpdateUniforms(transform_4->GetModelViewProjection(), material_4);
 	mesh_.Draw();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	shader_->UpdateUniforms(transform_->GetModelViewProjection(), material_);
 	mesh_.Draw();
 
 }
@@ -216,16 +216,16 @@ void Player::AddIndices(std::vector<unsigned int>& indices, int start, bool dire
 
 void Player::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
 {
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2])));
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2])));
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
 }
 
 std::vector<float> Player::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = static_cast<float>(texture_number % NUM_TEXTURES_X);
+	float texture_y = static_cast<float>(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

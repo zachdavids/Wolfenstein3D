@@ -2,10 +2,10 @@
 
 #include <glm.hpp>
 
-class BaseLight;
-class Attenuation;
+struct BaseLight;
+struct Attenuation;
 
-class PointLight
+struct PointLight
 {
 	glm::vec3 position_;
 	BaseLight* base_light_;

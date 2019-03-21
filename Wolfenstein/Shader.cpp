@@ -69,10 +69,10 @@ void Shader::AddProgram(std::string filename, int type)
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		GLchar InfoLog[1024];
+		GLchar info_log[1024];
 
-		glGetShaderInfoLog(shader_id, 1024, NULL, InfoLog);
-		fprintf(stderr, "Error compiling shader type %d: '%s'\n", shader, InfoLog);
+		glGetShaderInfoLog(shader_id, 1024, NULL, info_log);
+		std::cerr << "Error compiling shader" << *info_log;
 		
 	}
 

@@ -14,7 +14,7 @@ class Player
 {
 public:
 
-	Player(glm::vec3 position, int yaw, int pitch);
+	Player(glm::vec3 position, float yaw, float pitch);
 
 	static void Damage(int damage_points);
 

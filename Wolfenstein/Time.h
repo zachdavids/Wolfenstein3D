@@ -8,8 +8,8 @@ class Time
 public:
 
 	static double GetTime();
-	static double GetDelta();
-	static void SetDelta(double delta);
+	static double GetDelta() { return delta_; };
+	static void SetDelta(double delta) { delta_ = delta; };
 
 private:
 

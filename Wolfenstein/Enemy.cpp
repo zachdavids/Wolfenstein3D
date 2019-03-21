@@ -28,8 +28,8 @@ const int NUM_TEXTURES_Y = 1;
 Enemy::Enemy(glm::vec3 position)
 {
 	hp_ = HIT_POINTS;
-	death_time_ = 0.0f;
-	hurt_time_ = 0.0f;
+	death_time_ = 0;
+	hurt_time_ = 0;
 	state_ = IDLE_STATE;
 	dead_ = false;
 	can_look_ = false;
@@ -85,6 +85,7 @@ void Enemy::Idle(glm::vec3 orientation, float distance)
 	glm::vec3 line_direction = orientation;
 	glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
+	/*
 	glm::vec3 collision_vector = Level::CheckIntersection(line_origin, line_end, false);
 	glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(Player::GetCamera()->GetPosition().x, 0, Player::GetCamera()->GetPosition().z), 0.2f, 0.2f);
 
@@ -92,6 +93,7 @@ void Enemy::Idle(glm::vec3 orientation, float distance)
 		glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
 		state_ = CHASE_STATE;
 	}
+	*/
 }
 
 void Enemy::Chase(glm::vec3 orientation, float distance)
@@ -116,6 +118,8 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 
 		glm::vec3 old_position = transform_->GetTranslation();
 		glm::vec3 new_position = transform_->GetTranslation() + (orientation * MOVEMENT_SPEED);
+
+		/*
 		glm::vec3 collision_vector = Level::CheckCollision(old_position, new_position, BODY_WIDTH, BODY_LENGTH);
 
 		glm::vec3 movement_vector = collision_vector * orientation;
@@ -124,6 +128,7 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 			transform_->SetTranslation(transform_->GetTranslation() + (movement_vector * MOVEMENT_SPEED));
 			audio_->PlayStep();
 		}
+		*/
 	}
 	else {
 		state_ = ATTACK_STATE;
@@ -153,24 +158,25 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			glm::vec3 line_direction = orientation;
 			glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
+			/*
 			glm::vec3 collision_vector = Level::CheckIntersection(line_origin, line_end, false);
 			glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(Player::GetCamera()->GetPosition().x, 0, Player::GetCamera()->GetPosition().z), 0.2f, 0.2f);
 
 			if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
 				glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
-				Player::Damage(DAMAGE_AMOUNT);
+				Player::Damage(static_cast<int>(DAMAGE_AMOUNT));
 				
 				state_ = CHASE_STATE;
 			}
+			*/
 			can_attack_ = false;
 		}
-		else {
+		else 
+		{
 			state_ = CHASE_STATE;
 			material_->SetTexture(animations_[5]);
 			can_attack_ = true;
 		}
-	}
-	else {
 	}
 }
 
@@ -208,15 +214,15 @@ void Enemy::Death(glm::vec3 orientation, float distance)
 
 void Enemy::FaceCamera(glm::vec3 orientation)
 {
-	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * M_PI / 180.0f);
+	float camera_angle = static_cast<float>(-atanf(orientation.z / orientation.x) + (90.0f * M_PI / 180.0f));
 
 	if (orientation.x > 0) {
-		camera_angle += M_PI;
+		camera_angle += static_cast<float>(M_PI);
 	}
 	else {
 	}
 
-	transform_->SetRotation(0, camera_angle, 0);
+	transform_->SetRotation(glm::vec3(0, camera_angle, 0));
 }
 
 void Enemy::Update()
@@ -250,7 +256,7 @@ void Enemy::Update()
 void Enemy::Render()
 {
 	shader_ = Level::GetShader();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	shader_->UpdateUniforms(transform_->GetModelViewProjection(), material_);
 	mesh_.Draw();
 }
 
@@ -268,16 +274,16 @@ void Enemy::AddIndices(std::vector<unsigned int>& indices, int start, bool direc
 
 void Enemy::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
 {
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2])));
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2])));
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
 }
 
 std::vector<float> Enemy::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = static_cast<float>(texture_number % NUM_TEXTURES_X);
+	float texture_y = static_cast<float>(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

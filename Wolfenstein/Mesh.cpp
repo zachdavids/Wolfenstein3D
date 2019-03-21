@@ -78,7 +78,7 @@ void Mesh::LoadMesh(std::string filename)
 	{
 		const aiVector3D vertex = model->mVertices[i];
 
-		data.push_back(glm::vec3(vertex.x, vertex.y, vertex.z));
+		data.push_back(Vertex{ glm::vec3(vertex.x, vertex.y, vertex.z) });
 	}
 
 	for (unsigned int i = 0; i < model->mNumFaces; i++)
@@ -100,14 +100,14 @@ std::vector<Vertex> Mesh::CalculateNormals(std::vector<Vertex> vertices, std::ve
 		int index_2 = indices[i + 1];
 		int index_3 = indices[i + 2];
 
-		glm::vec3 vertex_1 = vertices[index_2].GetPosition() - vertices[index_1].GetPosition();
-		glm::vec3 vertex_2 = vertices[index_3].GetPosition() - vertices[index_1].GetPosition();
+		glm::vec3 vertex_1 = vertices[index_2].position_ - vertices[index_1].position_;
+		glm::vec3 vertex_2 = vertices[index_3].position_ - vertices[index_1].position_;
 
 		glm::vec3 normal = glm::normalize(glm::cross(vertex_1, vertex_2));
 
-		vertices[index_1].SetNormal(glm::normalize(vertices[index_1].GetNormal() + normal));
-		vertices[index_2].SetNormal(glm::normalize(vertices[index_2].GetNormal() + normal));
-		vertices[index_3].SetNormal(glm::normalize(vertices[index_3].GetNormal() + normal));
+		vertices[index_1].normal_ = glm::normalize(vertices[index_1].normal_ + normal);
+		vertices[index_2].normal_ = glm::normalize(vertices[index_2].normal_ + normal);
+		vertices[index_3].normal_ = glm::normalize(vertices[index_3].normal_ + normal);
 	}
 	return vertices;
 }

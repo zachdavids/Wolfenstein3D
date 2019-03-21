@@ -1,12 +1,15 @@
 #include "PhongShader.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
+#include "Attenuation.h"
+#include "BaseLight.h"
 
 static int MAX_POINT_LIGHTS = 4;
 
 PhongShader::PhongShader()
 {
 	ambient_light_ = glm::vec3(0.1f, 0.1f, 0.1f);
-	directional_light_ = new DirectionalLight((new BaseLight(glm::vec3(1, 1, 1), 0.0)), glm::vec3(1,1,1));
+	directional_light_ = new DirectionalLight{ new BaseLight{ glm::vec3(1, 1, 1), 0.0 }, glm::vec3(1, 1, 1) };
 
 	shader_program_id_ = glCreateProgram();
 	AddVertexShader("PhongShader.vertex");
@@ -98,11 +101,10 @@ void PhongShader::AddProgram(std::string filename, int type)
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		GLchar InfoLog[1024];
+		GLchar info_log[1024];
 
-		glGetShaderInfoLog(shader_id, 1024, NULL, InfoLog);
-		fprintf(stderr, "Error compiling shader type %d: '%s'\n", shader, InfoLog);
-
+		glGetShaderInfoLog(shader_id, 1024, NULL, info_log);
+		std::cerr << "Error compiling shader" << *info_log;
 	}
 
 	glAttachShader(shader_program_id_, shader_id);
@@ -147,14 +149,14 @@ void PhongShader::SetUniformMat4(std::string uniform, const glm::mat4& value)
 
 void PhongShader::SetUniformBL(std::string uniform, BaseLight* base_light)
 {
-	SetUniformVec3(uniform + ".color", base_light->GetColor());
-	SetUniform1f(uniform + ".intensity", base_light->GetIntensity());
+	SetUniformVec3(uniform + ".color", base_light->color_);
+	SetUniform1f(uniform + ".intensity", base_light->intensity_);
 }
 
 void PhongShader::SetUniformDL(std::string uniform, DirectionalLight* directional_light)
 {
-	SetUniformBL(uniform + ".base_light", directional_light->GetBaseLight());
-	SetUniformVec3(uniform + ".direction", directional_light->GetDirection());
+	SetUniformBL(uniform + ".base_light", directional_light->base_light_);
+	SetUniformVec3(uniform + ".direction", directional_light->direction_);
 }
 
 void PhongShader::UpdateUniforms(glm::mat4& model, glm::mat4& model_projection, Material* material, glm::vec3 camera_position)
@@ -168,12 +170,12 @@ void PhongShader::UpdateUniforms(glm::mat4& model, glm::mat4& model_projection, 
 	SetUniformDL("directional_light", directional_light_);
 
 	for (unsigned int i = 0; i < point_lights_.size(); i++) {
-		SetUniformVec3("point_lights[" + std::to_string(i) + "].position", point_lights_[i].GetPosition());
-		SetUniformVec3("point_lights[" + std::to_string(i) + "].base_light.color", point_lights_[i].GetBaseLight()->GetColor());
-		SetUniform1f("point_lights[" + std::to_string(i) + "].base_light.intensity", point_lights_[i].GetBaseLight()->GetIntensity());
-		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.constant", point_lights_[i].GetAttenuation()->GetConstant());
-		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.linear", point_lights_[i].GetAttenuation()->GetLinear());
-		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.exponent", point_lights_[i].GetAttenuation()->GetExponent());
+		SetUniformVec3("point_lights[" + std::to_string(i) + "].position", point_lights_[i].position_);
+		SetUniformVec3("point_lights[" + std::to_string(i) + "].base_light.color", point_lights_[i].base_light_->color_);
+		SetUniform1f("point_lights[" + std::to_string(i) + "].base_light.intensity", point_lights_[i].base_light_->intensity_);
+		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.constant", point_lights_[i].attenuation_->constant_);
+		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.linear", point_lights_[i].attenuation_->linear_);
+		SetUniform1f("point_lights[" + std::to_string(i) + "].attenuation.exponent", point_lights_[i].attenuation_->exponent_);
 	}
 
 	// Specular Lighting Uniforms

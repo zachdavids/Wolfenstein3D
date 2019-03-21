@@ -1,8 +1,9 @@
 #include "Window.h"
+#include "SDLBackend.h"
 
 int Window::width_ = 0;
 int Window::height_ = 0;
-std::string Window::title_ = "Title";
+std::string Window::title_ = "";
 
 void Window::Create(int width, int height, const std::string& title)
 {
@@ -31,6 +32,8 @@ void Window::Create(int width, int height, const std::string& title)
 	{
 		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
 	}
+
+	GLInitialize();
 }
 
 void Window::Destroy()
@@ -52,4 +55,26 @@ bool Window::CloseRequested()
 void Window::SetFullScreen(bool value)
 {
 	SDLSetWindowFullscreen(value);
+}
+
+void Window::ClearScreen()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Window::GLInitialize()
+{
+	glClearColor(0.0f, 0.0f, 0.05f, 0.0f);
+
+	//glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CCW);
+	//glCullFace(GL_BACK);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
+
+	glEnable(GL_TEXTURE_2D);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

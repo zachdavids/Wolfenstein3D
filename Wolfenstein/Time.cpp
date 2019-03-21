@@ -8,13 +8,3 @@ double Time::GetTime()
 	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(beginningOfTime).count();
 	return ms * 0.001;
 }
-
-double Time::GetDelta()
-{
-	return delta_;
-}
-
-void Time::SetDelta(double delta)
-{
-	delta_ = delta;
-}
