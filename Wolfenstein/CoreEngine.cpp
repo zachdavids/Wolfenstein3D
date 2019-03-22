@@ -1,4 +1,8 @@
 #include "CoreEngine.h"
+#include "Window.h"
+#include "Time.h"
+#include "Game.h"
+#include "Input.h"
 
 #define FRAME_CAP 5000; 
 
@@ -16,48 +20,41 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-CoreEngine::CoreEngine()
+CoreEngine::CoreEngine() : game_(std::make_shared<Game>())
 {
-	game_ = new Game();
-	is_running_ = false;
 }
 
 void CoreEngine::Start()
 {
-	if (is_running_)
-		return;
-
+	if (is_running_) { return; }
+	is_running_ = true;
 	Run();
 }
 
 void CoreEngine::Stop()
 {
-	if (!is_running_)
-		return;
-
+	if (!is_running_) { return; }
 	is_running_ = false;
 }
 
-void CoreEngine::Run()
+void CoreEngine::Run() const
 {
-	is_running_ = true;
-
 	int frames = 0;
 
-	double last_time = Time::GetTime();
+	double start_time = 0;
+	double passed_time = 0;
 	double unprocessed_time = 0;
+	double last_time = Time::GetTime();
 	double frame_counter = 0;
-
 	double frame_time = 1.0 / FRAME_CAP;
-	
+
+	bool render = false;
 	while (is_running_)
 	{
-		bool render = false;
-
-		double start_time = Time::GetTime();
-		double passed_time = start_time - last_time;
+		render = false;
+		start_time = Time::GetTime();
+		passed_time = start_time - last_time;
 		last_time = start_time;
-
 		unprocessed_time += passed_time;
 		frame_counter += passed_time;
 
@@ -69,18 +66,19 @@ void CoreEngine::Run()
 
 		while (unprocessed_time > frame_time)
 		{
+			if (Window::CloseRequested()) 
+			{
+				//TODO MAKE CONST SOMEHOW
+				//Stop(); 
+			}
+
 			render = true;
 
-			if (Window::CloseRequested())
-				Stop();
-
 			Time::SetDelta(frame_time);
-
 			Input::Update();
-
 			game_->Input();
 			game_->Update();
-
+			//TODO CHECK THIS
 			Render();
 
 			unprocessed_time -= frame_time;
@@ -100,14 +98,14 @@ void CoreEngine::Run()
 	Destroy();
 }
 
-void CoreEngine::Render()
+void CoreEngine::Render() const
 {
 	Window::ClearScreen();
 	game_->Render();
 	Window::Render();
 }
 
-void CoreEngine::Destroy()
+void CoreEngine::Destroy() const
 {
 	Window::Destroy();
 }

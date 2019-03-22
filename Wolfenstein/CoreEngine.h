@@ -1,23 +1,23 @@
 #pragma once
 
-#include "Window.h"
-#include "Time.h"
-#include "Game.h"
-#include "Input.h"
 #include <iostream>
+
+class Game;
 
 class CoreEngine
 {
 public:
+
 	CoreEngine();
 
 	void Start();
 	void Stop();
-	void Run();
-	void Render();
-	void Destroy();
+	void Run() const;
+	void Render() const;
+	void Destroy() const;
 
 private:
-	bool is_running_;
-	Game* game_;
+
+	bool is_running_ = false;
+	std::shared_ptr<Game> game_;
 };

@@ -8,7 +8,8 @@ Audio::Audio()
 
 void Audio::PlayStep()
 {
-	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+	if (sound_.getStatus() == sf::SoundSource::Stopped) 
+	{
 		sound_.setVolume(20);
 		buffer_.loadFromFile("Sounds/step.wav");
 		sound_.play();
@@ -30,7 +31,8 @@ void Audio::PlayPlayerDeath()
 
 void Audio::PlayEnemyGunshot()
 {
-	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+	if (sound_.getStatus() == sf::SoundSource::Stopped) 
+	{
 		buffer_.loadFromFile("Sounds/mp5.wav");
 		sound_.setVolume(4);
 		sound_.play();
@@ -52,7 +54,8 @@ void Audio::PlayEnemyDeath()
 
 void Audio::PlayDoorOpen()
 {
-	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+	if (sound_.getStatus() == sf::SoundSource::Stopped) 
+	{
 		buffer_.loadFromFile("Sounds/dooropen.wav");
 		sound_.play();
 	}
@@ -60,7 +63,8 @@ void Audio::PlayDoorOpen()
 
 void Audio::PlayDoorClose()
 {
-	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+	if (sound_.getStatus() == sf::SoundSource::Stopped) 
+	{
 		buffer_.loadFromFile("Sounds/doorclose.wav");
 		sound_.play();
 	}
@@ -68,7 +72,8 @@ void Audio::PlayDoorClose()
 
 void Audio::PlayLevelEnd()
 {
-	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+	if (sound_.getStatus() == sf::SoundSource::Stopped) 
+	{
 		sound_.setVolume(100);
 		buffer_.loadFromFile("Sounds/smw.wav");
 		sound_.play();

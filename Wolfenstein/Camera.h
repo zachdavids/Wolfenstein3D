@@ -1,9 +1,5 @@
 #pragma once
 
-#include "Input.h"
-#include "Time.h"
-#include "Window.h"
-
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 
@@ -11,36 +7,34 @@ class Camera
 {
 public:
 
-	Camera();
 	Camera(glm::vec3 position, float yaw, float pitch);
 
-	glm::vec3 GetPosition() { return position_; };
+	glm::vec3 GetPosition() const { return position_; };
 	void SetPosition(glm::vec3 position) { position_ = position; };
 
-	float GetYaw() { return yaw_; };
+	float GetYaw() const { return yaw_; };
 	void SetYaw(float yaw) { yaw_ = yaw; };
 
-	float GetPitch() { return pitch_; };
+	float GetPitch() const { return pitch_; };
 	void SetPitch(float pitch) { pitch_ = pitch; };
 
-	glm::vec3 GetRightDirection();
-	glm::vec3 GetViewDirection();
+	glm::vec3 GetRightDirection() const;
+	glm::vec3 GetViewDirection() const;
+	glm::mat4 GetRotationMatrix() const;
+	glm::mat4 GetViewMatrix() const;
 
 	void MoveCamera(float speed);
 	void MoveCamera(glm::vec3 movement_vector, float speed);
 	void StrafeCamera(float speed);
 	void Camera::MouseControl(float mouse_x, float mouse_y);
 
-	glm::mat4 GetRotationMatrix();
-	glm::mat4 GetViewMatrix();
-
 	// TEST
 	void Input();
 
 private:
 
-	float yaw_;
-	float pitch_;
+	float yaw_ = 0;
+	float pitch_ = 0;
 
-	glm::vec3 position_;
+	glm::vec3 position_ = glm::vec3(0);
 };
