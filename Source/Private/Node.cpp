@@ -1,13 +1,5 @@
 #include "Node.h"
 
-Node::Node(glm::vec3 position)
+Node::Node(Node::Flag flag) : flag_(flag)
 {
-	position_ = position;
-	type_ = "";
-}
-
-Node::Node(glm::vec3 position, std::string type)
-{
-	position_ = position;
-	type_ = type;
 }
