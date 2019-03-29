@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LEVEL_H
+#define LEVEL_H
 
 #include "Player.h"
 #include "Transform.h"
@@ -57,20 +58,18 @@ private:
 
 	sf::Music music;
 
-	glm::vec2 dimensions2_;
-
 	std::vector<Door> doors_;
 	std::vector<Enemy> enemies_;
 	std::vector<Medkit> medkits_;
 	std::vector<glm::vec3> endpoints_;
 
-	int GetFlatIndex(int x, int y) const { return (static_cast<int>(dimensions2_.y) * y) + x; }
-
 	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);
-	void AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, int x_coord, int y_coord, int z_coord, std::vector<float> texture_coords);
+	void AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
-	void AddDoor(glm::vec3 position, bool orientation);
+	void AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation);
 
 	void GenerateLevel();
 	void RemoveMedkit();
 };
+
+#endif;

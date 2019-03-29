@@ -1,26 +1,26 @@
-#pragma once
+#ifndef NODE_H
+#define NODE_H
 
-#include <bitset>
+#include <GLM/glm.hpp>
+#include <string>
 
 class Node
 {
 public:
 
-	enum Option : const int
-	{
-		Location = 0,
-		Door = 1,
-		Enemy = 2,
-		Medkit = 3,
-		Endpoint = 4
-	};
+	Node(glm::vec3 position);
+	Node(glm::vec3 position, std::string type);
 
-	void SetFlag(std::bitset<5> flag) { flag_ = flag; };
-	void SetOption(Option option) { flag_.flip(option); }
-	bool IsType(Option option) const { return flag_.test(option); }
-	std::bitset<5> GetFlag() { return flag_; }
+	std::string GetType() { return type_; };
+	void SetType(std::string type) { type_ = type; };
+
+	glm::vec3 GetPosition() { return position_; };
+	void SetPosition(glm::vec3 position) { position_ = position; };
 
 private:
 	
-	std::bitset<5> flag_;
+	std::string type_;
+	glm::vec3 position_;
 };
+
+#endif;
