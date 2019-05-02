@@ -1,4 +1,6 @@
 # Wolfenstein3D
+****
+
 Wolfenstein3D remade with a custom engine using OpenGL and C++. This game was made from scratch to learn game design by exploring concepts and techniques used in released games.
 
 ### Features
