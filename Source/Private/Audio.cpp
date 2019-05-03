@@ -10,7 +10,7 @@ void Audio::PlayStep()
 {
 	if (sound_.getStatus() == sf::SoundSource::Stopped) {
 		sound_.setVolume(20) ;
-		buffer_.loadFromFile(path + "step.wav");
+		buffer_.loadFromFile("Resources/Sounds/step.wav");
 		sound_.play();
 	}
 }

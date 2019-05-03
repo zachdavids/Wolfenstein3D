@@ -23,7 +23,7 @@ private:
 
 	sf::SoundBuffer buffer_;
 	sf::Sound sound_;
-	std::string path = "Resources/Sounds/";
+	const std::string path = "Resources/Sounds/";
 };
 
 #endif;
