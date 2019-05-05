@@ -4,7 +4,7 @@ const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
 const float SCALE = 0.2f;
 
-const int HEAL_AMOUNT = 30.0f;
+const int HEAL_AMOUNT = 30;
 
 const float PICKUP_DISTANCE = 0.75f;
 
@@ -34,10 +34,10 @@ Medkit::Medkit(glm::vec3 position)
 void Medkit::Update()
 {
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * M_PI / 180.0f);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * (float)M_PI / 180.0f);
 
 	if (camera_direction.x > 0) {
-		camera_angle += M_PI;
+		camera_angle += (float)M_PI;
 	}
 	else {
 	}
@@ -80,8 +80,8 @@ void Medkit::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coo
 
 std::vector<float> Medkit::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
+	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

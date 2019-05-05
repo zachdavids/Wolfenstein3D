@@ -12,7 +12,7 @@ const float STOP_DISTANCE = 3.0f;
 const float WEAPON_RANGE = 100.0f;
 const float WEAPON_ANGLE = 10.0f;
 const float ATTACK_CHANCE = 0.5f;
-const float DAMAGE_AMOUNT = 6.0f;
+const int DAMAGE_AMOUNT = 6;
 
 const int IDLE_STATE = 0;
 const int CHASE_STATE = 1;
@@ -28,8 +28,8 @@ const int NUM_TEXTURES_Y = 1;
 Enemy::Enemy(glm::vec3 position)
 {
 	hp_ = HIT_POINTS;
-	death_time_ = 0.0f;
-	hurt_time_ = 0.0f;
+	death_time_ = 0;
+	hurt_time_ = 0;
 	state_ = IDLE_STATE;
 	dead_ = false;
 	can_look_ = false;
@@ -208,10 +208,10 @@ void Enemy::Death(glm::vec3 orientation, float distance)
 
 void Enemy::FaceCamera(glm::vec3 orientation)
 {
-	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * M_PI / 180.0f);
+	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * (float)M_PI / 180.0f);
 
 	if (orientation.x > 0) {
-		camera_angle += M_PI;
+		camera_angle += (float)M_PI;
 	}
 	else {
 	}
@@ -276,8 +276,8 @@ void Enemy::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coor
 
 std::vector<float> Enemy::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
+	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

@@ -125,5 +125,5 @@ void Input::SetCursor(bool visible)
 
 void Input::SetMousePosition(glm::vec2 position)
 {
-	SDLSetMousePosition(position.x, position.y);
+	SDLSetMousePosition((int)position.x, (int)position.y);
 }

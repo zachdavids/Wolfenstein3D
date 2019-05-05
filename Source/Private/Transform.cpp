@@ -46,16 +46,16 @@ glm::mat4 Transform::GetModelMatrix()
 glm::mat4 Transform::GetModelProjection()
 {
 	glm::mat4 model_matrix = GetModelMatrix();
-	glm::mat4 projection_matrix = glm::perspective(fov_, (width_/height_), near_plane_, far_plane_);
+	glm::mat4 projection_matrix = glm::perspective(fov_, (float)(width_/height_), near_plane_, far_plane_);
 	glm::mat4 view_matrix = camera_->GetViewMatrix();
 
 	return projection_matrix * view_matrix * model_matrix;
 }
 
-void Transform::SetProjection(float fov, float width, float height, float near_plane, float far_plane)
+void Transform::SetProjection(float fov, int width, int height, float near_plane, float far_plane)
 {
-	width_ = width;
-	height_ = height;
+	width_ = (float)width;
+	height_ = (float)height;
 	near_plane_ = near_plane;
 	far_plane_ = far_plane;
 	fov_ = fov;

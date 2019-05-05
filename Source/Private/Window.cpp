@@ -1,10 +1,10 @@
 #include "Window.h"
 
-int Window::width_ = 0;
-int Window::height_ = 0;
+float Window::width_ = 0;
+float Window::height_ = 0;
 std::string Window::title_ = "Title";
 
-void Window::Create(int width, int height, const std::string& title)
+void Window::Create(float width, float height, const std::string& title)
 {
 	Window::width_ = width;
 	Window::height_ = height;
@@ -24,7 +24,7 @@ void Window::Create(int width, int height, const std::string& title)
 
 	SDL_ShowCursor(SDL_DISABLE);
 
-	SDLCreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, false);
+	SDLCreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int)width, (int)height, false);
 
 	GLenum res = glewInit();
 	if (res != GLEW_OK)

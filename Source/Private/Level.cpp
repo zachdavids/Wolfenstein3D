@@ -8,7 +8,7 @@ const float DOOR_LENGTH = 0.125f;
 const float DOOR_WIDTH = 1.0f;
 const float DOOR_HEIGHT = 1.0f;
 
-const float PLAYER_DAMAGE = 34.0f;
+const int PLAYER_DAMAGE = 34;
 
 const int NUM_TEXTURES_X = 6;
 const int NUM_TEXTURES_Y = 19;
@@ -161,8 +161,8 @@ void Level::AddVertices(std::vector<Vertex>& vertices, std::string type, bool in
 
 std::vector<float> Level::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
+	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);
@@ -218,8 +218,8 @@ void Level::GenerateLevel()
 
 	std::cout << "Creating level... ";
 
-	for (unsigned int i = 0; i < dimensions_.x; i++) {
-		for (unsigned int j = 0; j < dimensions_.y; j++) {
+	for (int i = 0; i < dimensions_.x; i++) {
+		for (int j = 0; j < dimensions_.y; j++) {
 			// Floor & Ceiling Generation
 			if (nodes_[i * dimensions_.x + j].GetType() == "Location") {
 				// Floor Generation

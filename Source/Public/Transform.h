@@ -30,7 +30,7 @@ public:
 	glm::mat4 GetModelMatrix();
 	glm::mat4 GetModelProjection();
 
-	void SetProjection(float fov, float width, float height, float near_plane, float far_plane);
+	void SetProjection(float fov, int width, int height, float near_plane, float far_plane);
 
 private:
 

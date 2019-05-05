@@ -49,8 +49,8 @@ void Camera::MoveCamera(glm::vec3 movement_vector, float speed)
 
 void Camera::MouseControl(float mouse_x, float mouse_y)
 {
-	yaw_ += mouse_x * 0.001;
-	pitch_ += mouse_y * 0.001;
+	yaw_ += mouse_x * 0.001f;
+	pitch_ += mouse_y * 0.001f;
 }
 
 void Camera::StrafeCamera(float speed)
@@ -91,16 +91,16 @@ void Camera::Input()
 	}
 
 	if (Input::GetKey(Input::KEY_A)) {
-		StrafeCamera(-0.1);
+		StrafeCamera(-0.1f);
 	}
 	if (Input::GetKey(Input::KEY_D)) {
-		StrafeCamera(0.1);
+		StrafeCamera(0.1f);
 	}
 	if (Input::GetKey(Input::KEY_W)) {
-		MoveCamera(0.1);
+		MoveCamera(0.1f);
 	}
 	if (Input::GetKey(Input::KEY_S)) {
-		MoveCamera(-0.1);
+		MoveCamera(-0.1f);
 	}
 	if (Input::GetKey(Input::KEY_ESCAPE)) {
 		exit(1);

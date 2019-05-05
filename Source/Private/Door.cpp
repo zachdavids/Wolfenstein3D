@@ -144,8 +144,8 @@ void Door::AddVertices(std::vector<Vertex>& vertices, std::string type, bool inv
 
 std::vector<float> Door::CalculateTextureCoords(int texture_number)
 {
-	float texture_x = texture_number % NUM_TEXTURES_X;
-	float texture_y = texture_number / NUM_TEXTURES_X;
+	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
+	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
 	std::vector<float> texture_coords;
 
 	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);

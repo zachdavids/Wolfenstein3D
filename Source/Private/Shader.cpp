@@ -72,7 +72,7 @@ void Shader::AddProgram(std::string filename, int type)
 		GLchar InfoLog[1024];
 
 		glGetShaderInfoLog(shader_id, 1024, NULL, InfoLog);
-		fprintf(stderr, "Error compiling shader type %d: '%s'\n", shader, InfoLog);
+		std::cout << "Error compiling shader type" << shader << InfoLog << std::endl;
 		
 	}
 
