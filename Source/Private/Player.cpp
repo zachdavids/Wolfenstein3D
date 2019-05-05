@@ -22,48 +22,21 @@ Player::Player(glm::vec3 position, float yaw, float pitch)
 	audio_ = new Audio();
 	camera_ = new Camera(position, yaw, pitch);
 	movement_vector_ = glm::vec3(0.0f);
+	text_shader_ = new TextShader();
+	InitText();
 
 	animations_.push_back(new Texture("Enemy/pngs/s1_1.png"));
 	animations_.push_back(new Texture("Enemy/pngs/s2_2.png"));
 	animations_.push_back(new Texture("Enemy/pngs/s3_3.png"));
 	animations_.push_back(new Texture("Enemy/pngs/s4_4.png"));
 	animations_.push_back(new Texture("Enemy/pngs/s5_5.png"));
-	
-	animations_2.push_back(new Texture("Numbers/0.png"));
-	animations_2.push_back(new Texture("Numbers/1.png"));
-	animations_2.push_back(new Texture("Numbers/2.png"));
-	animations_2.push_back(new Texture("Numbers/3.png"));
-	animations_2.push_back(new Texture("Numbers/4.png"));
-	animations_2.push_back(new Texture("Numbers/5.png"));
-	animations_2.push_back(new Texture("Numbers/6.png"));
-	animations_2.push_back(new Texture("Numbers/7.png"));
-	animations_2.push_back(new Texture("Numbers/8.png"));
-	animations_2.push_back(new Texture("Numbers/9.png"));
 
 	transform_ = new Transform();
 	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
 	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
 	transform_->SetCamera(camera_);
 
-	transform_2 = new Transform();
-	transform_2->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
-	transform_2->SetScale(glm::vec3(0.05, 0.05, 0.05));
-	transform_2->SetCamera(camera_);
-
-	transform_3 = new Transform();
-	transform_3->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
-	transform_3->SetScale(glm::vec3(0.05, 0.05, 0.05));
-	transform_3->SetCamera(camera_);
-
-	transform_4 = new Transform();
-	transform_4->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
-	transform_4->SetScale(glm::vec3(0.05, 0.05, 0.05));
-	transform_4->SetCamera(camera_);
-
 	material_ = new Material(animations_[0]);
-	material_2 = new Material(animations_2[1]);
-	material_3 = new Material(animations_2[0]);
-	material_4 = new Material(animations_2[0]);
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -159,14 +132,6 @@ void Player::Update()
 	else {
 	}
 	transform_->SetRotation(0, camera_angle, 0);
-
-	if (GetHealth() < 100) {
-		int tens = GetHealth() / 10;
-		int ones = GetHealth() % 10;
-		material_2 = new Material(animations_2[0]);
-		material_3 = new Material(animations_2[tens]);
-		material_4 = new Material(animations_2[ones]);		
-	}
 }
 
 int Player::GetHealth() {
@@ -176,9 +141,50 @@ int Player::GetHealth() {
 void Player::Render()
 {
 	shader_ = Level::GetShader();
+	shader_->Bind();
 	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();
+	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
+}
 
+void Player::RenderText(std::string const& text, glm::vec2 position)
+{
+	text_shader_->Bind();
+	text_shader_->UpdateUniforms(glm::vec3(0.5, 0.8f, 0.2f));
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(VAO_);
+
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+		Character ch = characters_[*c];
+
+		GLfloat xpos = position.x + ch.Bearing.x;
+		GLfloat ypos = position.y - (ch.Size.y - ch.Bearing.y);
+
+		GLfloat w = ch.Size.x;
+		GLfloat h = ch.Size.y;
+
+		GLfloat vertices[6][4] = {
+			{ xpos,     ypos + h,   0.0, 0.0 },
+			{ xpos,     ypos,       0.0, 1.0 },
+			{ xpos + w, ypos,       1.0, 1.0 },
+
+			{ xpos,     ypos + h,   0.0, 0.0 },
+			{ xpos + w, ypos,       1.0, 1.0 },
+			{ xpos + w, ypos + h,   1.0, 0.0 }
+		};
+
+		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		position.x += (ch.Advance >> 6);
+	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Camera* Player::GetCamera()
@@ -218,4 +224,66 @@ std::vector<float> Player::CalculateTextureCoords(int texture_number)
 	texture_coords.push_back((texture_coords[2] - (1.0f / NUM_TEXTURES_Y)));
 
 	return texture_coords;
+}
+
+void Player::InitText()
+{
+	glGenVertexArrays(1, &VAO_);
+	glGenBuffers(1, &VBO_);
+	glBindVertexArray(VAO_);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft))
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+	FT_Face face;
+	if (FT_New_Face(ft, "Resources/Fonts/OpenSans.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+
+	FT_Set_Pixel_Sizes(face, 0, 48);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	for (GLubyte c = 0; c < 128; c++)
+	{
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+			continue;
+		}
+
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		Character character = {
+			texture,
+			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x
+		};
+		characters_.insert(std::pair<GLchar, Character>(c, character));
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 }

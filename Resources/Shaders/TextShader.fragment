@@ -1,0 +1,14 @@
+#version 330
+
+layout(location=0) out vec4 out_Color;
+
+in vec2 texture_Coord;
+
+uniform sampler2D sampler;
+uniform vec3 color;
+
+void main(void)
+{
+	vec4 sampled_value = vec4(1.0, 1.0, 1.0, texture(sampler, texture_Coord).r);
+	out_Color = vec4(color, 1.0f) * sampled_value;
+}

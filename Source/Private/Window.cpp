@@ -31,6 +31,10 @@ void Window::Create(float width, float height, const std::string& title)
 	{
 		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
 	}
+	
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::Destroy()
