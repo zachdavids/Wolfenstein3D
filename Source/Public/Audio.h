@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUDIO_H
+#define AUDIO_H
 
 #include <SFML\Audio.hpp>
 
@@ -7,6 +8,7 @@ class Audio
 public:
 
 	Audio();
+
 	void PlayStep();
 	void PlayPlayerGunshot();
 	void PlayPlayerDeath();
@@ -19,7 +21,9 @@ public:
 
 private:
 
-	sf::Sound m_Sound;
-	sf::SoundBuffer m_Buffer;
-	const std::string m_Path = "Resources/Sounds/";
+	sf::SoundBuffer buffer_;
+	sf::Sound sound_;
+	const std::string path = "Resources/Sounds/";
 };
+
+#endif;

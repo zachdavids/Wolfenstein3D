@@ -2,80 +2,75 @@
 
 Audio::Audio()
 {
-	m_Sound.setBuffer(m_Buffer);
-	m_Sound.setVolume(30);
+	sound_.setBuffer(buffer_);
+	sound_.setVolume(30);
 }
 
 void Audio::PlayStep()
 {
-	if (m_Sound.getStatus() == sf::SoundSource::Stopped) 
-	{
-		m_Sound.setVolume(20) ;
-		m_Buffer.loadFromFile("Resources/Sounds/step.wav");
-		m_Sound.play();
+	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+		sound_.setVolume(20) ;
+		buffer_.loadFromFile("Resources/Sounds/step.wav");
+		sound_.play();
 	}
 }
 
 void Audio::PlayPlayerGunshot()
 {
-	m_Buffer.loadFromFile(m_Path + "gunshot.wav");
-	m_Sound.setVolume(30);
-	m_Sound.play();
+	buffer_.loadFromFile(path + "gunshot.wav");
+	sound_.setVolume(30);
+	sound_.play();
 }
 
 void Audio::PlayPlayerDeath()
 {
-	m_Buffer.loadFromFile(m_Path + "record6.wav");
-	m_Sound.play();
+	buffer_.loadFromFile(path + "record6.wav");
+	sound_.play();
 }
 
 void Audio::PlayEnemyGunshot()
 {
-	if (m_Sound.getStatus() == sf::SoundSource::Stopped) 
-	{
-		m_Buffer.loadFromFile(m_Path + "mp5.wav");
-		m_Sound.setVolume(4);
-		m_Sound.play();
+	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+		buffer_.loadFromFile(path + "mp5.wav");
+		sound_.setVolume(4);
+		sound_.play();
 	}
 }
 
 void Audio::PlayMedkit()
 {
-	m_Buffer.loadFromFile(m_Path + "smw_power.wav");
-	m_Sound.setVolume(70);
-	m_Sound.play();
+	buffer_.loadFromFile(path + "smw_power.wav");
+	sound_.setVolume(70);
+	sound_.play();
 }
 
 void Audio::PlayEnemyDeath()
 {
-	m_Buffer.loadFromFile(m_Path + "record4.wav");
-	m_Sound.play();
+	buffer_.loadFromFile(path + "record4.wav");
+	sound_.play();
 }
 
 void Audio::PlayDoorOpen()
 {
-	if (m_Sound.getStatus() == sf::SoundSource::Stopped) 
-	{
-		m_Buffer.loadFromFile(m_Path + "dooropen.wav");
-		m_Sound.play();
+	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+		buffer_.loadFromFile(path + "dooropen.wav");
+		sound_.play();
 	}
 }
 
 void Audio::PlayDoorClose()
 {
-	if (m_Sound.getStatus() == sf::SoundSource::Stopped) 
-	{
-		m_Buffer.loadFromFile(m_Path + "doorclose.wav");
-		m_Sound.play();
+	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+		buffer_.loadFromFile(path + "doorclose.wav");
+		sound_.play();
 	}
 }
 
 void Audio::PlayLevelEnd()
 {
-	if (m_Sound.getStatus() == sf::SoundSource::Stopped) 
-	{
-		m_Sound.setVolume(100);
-		m_Buffer.loadFromFile(m_Path + "smw.wav");
-		m_Sound.play();
+	if (sound_.getStatus() == sf::SoundSource::Stopped) {
+		sound_.setVolume(100);
+		buffer_.loadFromFile(path + "smw.wav");
+		sound_.play();
 	}
 }
