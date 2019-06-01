@@ -54,7 +54,7 @@ void Player::Damage(int damage_points)
 	health_ -= damage_points;
 	if (health_ <= 0) {
 		std::cout << "Game Over! Press escape to exit" << "\n";
-		Game::GameOver();
+		//Game::GameOver();
 	}
 }
 
@@ -206,10 +206,10 @@ void Player::AddIndices(std::vector<unsigned int>& indices, int start, bool dire
 
 void Player::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
 {
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2])));
-	vertices.push_back(Vertex(glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3])));
-	vertices.push_back(Vertex(glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2])));
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
+	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
+	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
 }
 
 std::vector<float> Player::CalculateTextureCoords(int texture_number)

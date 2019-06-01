@@ -1,30 +1,11 @@
-#ifndef VERTEX_H
-#define VERTEX_H
+#pragma once
 
-#include <GLM/glm.hpp>
+#include <GLM/vec3.hpp>
+#include <glm/vec2.hpp>
 
-class Vertex
+struct Vertex
 {
-public:
-
-	Vertex(glm::vec3 position);
-	Vertex(glm::vec3 position, glm::vec2 texture_coord);
-	Vertex(glm::vec3 position, glm::vec2 texture_coord, glm::vec3 normal);
-
-	glm::vec3 GetPosition() { return position_; };
-	void SetPosition(glm::vec3 position) { position_ = position; };
-
-	glm::vec2 GetTextureCoord() { return texture_coord_; };
-	void SetTextureCoord(glm::vec2 texture_coord) { texture_coord_ = texture_coord; };
-
-	glm::vec3 GetNormal() { return normal_; };
-	void SetNormal(glm::vec3 normal) { normal_ = normal; };
-
-private:
-
-	glm::vec3 position_;
-	glm::vec2 texture_coord_;
-	glm::vec3 normal_;
+	glm::vec3 m_Position;
+	glm::vec2 m_UV;
+	glm::vec3 m_Normal;
 };
-
-#endif;

@@ -1,5 +1,4 @@
-#ifndef COREENGINE_H	
-#define COREENGINE_H
+#pragma once
 
 #include "Window.h"
 #include "TimeManager.h"
@@ -20,8 +19,7 @@ public:
 	void Destroy();
 
 private:
+
 	bool is_running_;
 	Game* game_;
 };
-
-#endif
