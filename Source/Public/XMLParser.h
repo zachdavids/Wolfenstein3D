@@ -3,8 +3,8 @@
 #include "Node.h"
 
 #include <vector>
+#include <GLM/vec2.hpp>
 #include <pugixml/pugixml.hpp>
-#include <GLM/glm.hpp>
 
 class XMLParser
 {
