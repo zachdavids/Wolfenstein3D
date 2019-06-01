@@ -5,11 +5,18 @@
 #include "Window.h"
 #include "TimeManager.h"
 #include "Input.h"
+#include "RenderUtility.h"
 
 #define FRAME_CAP 5000; 
 
-int main()
+#ifdef main
+#undef main
+#endif
+
+int main(int argc, char *argv[])
 {
+	Window::Create(1280, 720, "Wolfenstein3D");
+
 	CoreEngine engine;
 	engine.Run();
 
@@ -18,10 +25,22 @@ int main()
 
 CoreEngine::CoreEngine()
 {
-	m_Window.Create(800, 600);
-	m_ResourceManager.Create();
-
 	m_Game = new Game();
+	RenderUtility::GLInitialize();
+	m_IsActive = false;
+}
+
+void CoreEngine::Start()
+{
+	if (m_IsActive)	{ return; }
+
+	Run();
+}
+
+void CoreEngine::Stop()
+{
+	if (!m_IsActive) { return; }
+
 	m_IsActive = false;
 }
 
@@ -39,47 +58,49 @@ void CoreEngine::Run()
 	
 	while (m_IsActive)
 	{
-		Render();
-		//bool render = false;
+		bool render = false;
 
-		//double start_time = TimeManager::GetTime();
-		//double passed_time = start_time - last_time;
-		//last_time = start_time;
+		double start_time = TimeManager::GetTime();
+		double passed_time = start_time - last_time;
+		last_time = start_time;
 
-		//unprocessed_time += passed_time;
-		//frame_counter += passed_time;
+		unprocessed_time += passed_time;
+		frame_counter += passed_time;
 
-		//if (frame_counter >= 1.0)
-		//{
-		//	frames = 0;
-		//	frame_counter = 0;
-		//}
+		if (frame_counter >= 1.0)
+		{
+			frames = 0;
+			frame_counter = 0;
+		}
 
-		//while (unprocessed_time > frame_time)
-		//{
-		//	render = true;
+		while (unprocessed_time > frame_time)
+		{
+			render = true;
 
-		//	TimeManager::SetDelta(frame_time);
+			if (Window::CloseRequested())
+				Stop();
 
-		//	Input::Update();
+			TimeManager::SetDelta(frame_time);
 
-		//	m_Game->Input();
-		//	m_Game->Update();
+			Input::Update();
 
-		//	Render();
+			m_Game->Input();
+			m_Game->Update();
 
-		//	unprocessed_time -= frame_time;
-		//}
+			Render();
 
-		//if (render)	
-		//{
-		//	//Render();
-		//	frames++;
-		//}
-		//else 
-		//{
-		//	// SLEEP FOR ONE MILLI
-		//}
+			unprocessed_time -= frame_time;
+		}
+
+		if (render)	
+		{
+			//Render();
+			frames++;
+		}
+		else 
+		{
+			// SLEEP FOR ONE MILLI
+		}
 	}
 
 	Destroy();
@@ -87,12 +108,12 @@ void CoreEngine::Run()
 
 void CoreEngine::Render()
 {
-	Window::Get()->Clear();
+	RenderUtility::ClearScreen();
 	m_Game->Render();
-	Window::Get()->SwapAndPoll();
+	Window::Render();
 }
 
 void CoreEngine::Destroy()
 {
-	Window::Get()->Destroy();
+	Window::Destroy();
 }

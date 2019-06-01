@@ -1,28 +1,53 @@
-#pragma once
+#ifndef SHADER_H
+#define SHADER_H
 
-#include "Resource.h"
-
-#include <glad/glad.h>
-#include <glm/mat4x4.hpp>
+#include <glew/GL/glew.h>
+#include <GLM/glm.hpp>
 #include <string>
-#include <vector>
+#include <fstream>
+#include <map>
+#include <iostream>
 
-class Shader : public Resource
+#include "Material.h"
+
+class Shader
 {
 public:
-	Shader(std::string const& path);
-	void Create();
-	void Use() const;
-	void SetInt(std::string const& name, int value) const;
-	void SetFloat(std::string const& name, float value) const;
-	void SetVec3(std::string const& name, glm::vec3 const& value) const;
-	void SetMat4(std::string const& name, glm::mat4 const& value) const;
-private:
-	GLuint m_ID;
-	static const std::string m_Directory;
 
-	std::vector<GLuint> m_ShaderStages;
-	void LoadShader(std::string const& path);
-	void Compile();
-	void ReadFile(std::string* output, std::string const& path);
+	static Shader* GetInstance()
+	{
+		static Shader instance;
+		return &instance;
+	}
+
+	std::string LoadShaderFile(std::string strFile);
+	void AddProgram(std::string filename, int type);
+	void AddVertexShader(std::string filename);
+	void AddFragmentShader(std::string filename);
+	void AddPhongShader(std::string filename);
+	void CompileShader();
+	void Bind();
+
+	void AddUniform(std::string uniform);
+	void SetUniform1i(std::string uniform, const int& value);
+	void SetUniform1f(std::string uniform, const float& value);
+	void SetUniformVec3(std::string uniform, const glm::vec3& value);
+	void SetUniformMat4(std::string uniform, const glm::mat4& value);
+
+	void UpdateUniforms(glm::mat4& model_projection, Material* material);
+
+private:
+
+	Shader();
+	~Shader() {};
+	Shader(Shader const& copy) = delete;
+	Shader* operator=(Shader const& copy) = delete;
+
+	GLuint vertex_shader_id_;
+	GLuint fragment_shader_id_;
+	GLuint shader_program_id_;
+
+	std::map<std::string, unsigned int> uniform_map_;
 };
+
+#endif;

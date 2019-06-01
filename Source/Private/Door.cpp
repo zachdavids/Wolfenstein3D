@@ -1,5 +1,4 @@
 #include "Door.h"
-#include "ResourceManager.h"
 
 const float DOOR_LENGTH = 0.125f;
 const float DOOR_WIDTH = 1.0f;
@@ -23,7 +22,7 @@ Door::Door(glm::vec3 position, Material* material, glm::vec3 open_position, bool
 
 	audio_ = new Audio();
 
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader_ = Level::GetShader();
 
 	transform_ = new Transform();
 	transform_->SetCamera(Player::GetCamera());
@@ -96,9 +95,7 @@ void Door::Update()
 
 void Door::Render()
 {
-	m_Shader->Use();
-	material_->GetTexture().Bind();
-	m_Shader->SetMat4("transform", transform_->CalculateMVP());
+	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();
 }
 

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "ResourceManager.h"
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;
@@ -8,7 +7,7 @@ const int NUM_TEXTURES_X = 1;
 const int NUM_TEXTURES_Y = 1;
 
 const int HP = 100;
-const float SIZE1 = 0.2f;
+const float SIZE = 0.2f;
 const float MOVEMENT_SPEED = 0.035f;
 const float SHOOT_DISTANCE = 10.0f;
 
@@ -24,7 +23,6 @@ Player::Player(glm::vec3 position, float yaw, float pitch)
 	camera_ = new Camera(position, yaw, pitch);
 	movement_vector_ = glm::vec3(0.0f);
 	text_shader_ = new TextShader();
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	InitText();
 
 	animations_.push_back(new Texture("Enemy/pngs/s1_1.png"));
@@ -70,11 +68,8 @@ void Player::Input()
 	float movAmt = (float)(10 * TimeManager::GetDelta());
 	float rotAmt = (float)(100 * TimeManager::GetDelta());
 
-	int window_width = (float)Window::Get()->GetWidth();
-	int window_height = (float)Window::Get()->GetHeight();
-
-	if (Input::GetMousePosition().x != window_width / 2.0f && Input::GetMousePosition().y != window_height / 2.0f) {
-		camera_->MouseControl(Input::GetMousePosition().x - window_width / 2.0f, Input::GetMousePosition().y - window_height / 2.0f);
+	if (Input::GetMousePosition().x != Window::GetWidth() / 2 && Input::GetMousePosition().y != Window::GetHeight() / 2) {
+		camera_->MouseControl(Input::GetMousePosition().x - Window::GetWidth() / 2, Input::GetMousePosition().y - Window::GetHeight() / 2);
 	}
 
 	movement_vector_ = glm::vec3(0.0f);
@@ -108,7 +103,7 @@ void Player::Input()
 		exit(1);
 	}
 
-	Input::SetMousePosition(glm::vec2(window_width / 2.0f, window_height / 2.0f));
+	Input::SetMousePosition(glm::vec2(Window::GetWidth() / 2, Window::GetHeight() / 2));
 }
 
 void Player::Update()
@@ -121,7 +116,7 @@ void Player::Update()
 
 	old_position_ = camera_->GetPosition();
 	new_position_ = old_position_ + (movement_vector_ * MOVEMENT_SPEED);
-	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
+	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE, SIZE);
 	
 	movement_vector_ *= collision_vector_;
 
@@ -129,10 +124,10 @@ void Player::Update()
 
 	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * (float)M_PI / 180.0f);
 
 	if (camera_direction.x > 0) {
-		camera_angle += glm::pi<float>();
+		camera_angle += (float)M_PI;
 	}
 	else {
 	}
@@ -145,11 +140,11 @@ int Player::GetHealth() {
 
 void Player::Render()
 {
-	m_Shader->Use();
-	material_->GetTexture().Bind();
-	m_Shader->SetMat4("transform", transform_->CalculateMVP());
+	shader_ = Level::GetShader();
+	shader_->Bind();
+	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();
-	//RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
+	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
 }
 
 void Player::RenderText(std::string const& text, glm::vec2 position)

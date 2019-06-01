@@ -53,7 +53,7 @@ private:
 	Material* material_;
 	Mesh mesh_;
 	Transform* transform_;
-	Shader* m_Shader = nullptr;
+	Shader* shader_;
 	Audio* audio_;
 	Texture text_texture;
 	TextShader* text_shader_;
