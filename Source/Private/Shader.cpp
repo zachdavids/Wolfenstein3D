@@ -1,138 +1,123 @@
 #include "Shader.h"
 
-#include <iostream>
-#include <vector>
-#include <glm/gtc/type_ptr.hpp>
-#include <fstream>
-#include <sstream>
-#include <filesystem>
+#include <cassert>
 
-const std::string Shader::m_Directory = "Resources/Shaders/";
-
-Shader::Shader(std::string const& path) :
-	Resource(m_Directory + path)
+Shader::Shader()
 {
+	shader_program_id_ = glCreateProgram();
+	AddVertexShader("Resources/Shaders/Shader.vertex");
+	AddFragmentShader("Resources/Shaders/Shader.fragment");
+	CompileShader();
+
+	AddUniform("transform");
+	AddUniform("color");
 }
 
-void Shader::Create()
+void Shader::Bind()
 {
-	for (const auto& file : std::filesystem::directory_iterator(m_Path))
+	glUseProgram(shader_program_id_);
+}
+
+std::string Shader::LoadShaderFile(std::string strFile)
+{
+	std::ifstream fin(strFile.c_str());
+
+	if (!fin)
+		return "";
+
+	std::string strLine = "";
+	std::string strText = "";
+
+	while (getline(fin, strLine))
 	{
-		LoadShader(file.path().string());
+		strText = strText + "\n" + strLine;
 	}
 
-	Compile();
+	fin.close();
+
+	return strText;
 }
 
-void Shader::Use() const
+void Shader::AddVertexShader(std::string filename)
 {
-	glUseProgram(m_ID);
+	AddProgram(filename, GL_VERTEX_SHADER);
 }
 
-void Shader::SetInt(std::string const& name, int value) const
+void Shader::AddFragmentShader(std::string filename)
 {
-	glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+	AddProgram(filename, GL_FRAGMENT_SHADER);
 }
 
-void Shader::SetFloat(std::string const& name, float value) const
+void Shader::AddPhongShader(const std::string filename)
 {
-	glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);
+	AddProgram(filename, GL_GEOMETRY_SHADER);
 }
 
-void Shader::SetVec3(std::string const& name, glm::vec3 const& value) const
+void Shader::AddProgram(std::string filename, int type)
 {
-	glUniform3fv(glGetUniformLocation(m_ID, name.c_str()), 1, glm::value_ptr(value));
-}
+	std::string shader;
 
-void Shader::SetMat4(std::string const& name, glm::mat4 const& value) const
-{
-	glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
+	shader = LoadShaderFile(filename.c_str());
+	const char *shader_file = shader.c_str();
 
-void Shader::LoadShader(std::string const& path)
-{
-	std::string code;
-	ReadFile(&code, path);
-	const char* stage_code = code.c_str();
+	int shader_id = glCreateShader(type);
 
-	GLuint stage_id;
-	if (path.find("Vertex") != std::string::npos)
+	glShaderSource(shader_id, 1, &shader_file, nullptr);
+	glCompileShader(shader_id);
+
+	GLint success;
+	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
+	if (!success)
 	{
-		stage_id = glCreateShader(GL_VERTEX_SHADER);
-	}
-	else if (path.find("Fragment") != std::string::npos)
-	{
-		stage_id = glCreateShader(GL_FRAGMENT_SHADER);
-	}
-	else if (path.find("TessEval") != std::string::npos)
-	{
-		stage_id = glCreateShader(GL_TESS_EVALUATION_SHADER);
-	}
-	else if (path.find("TessControl") != std::string::npos)
-	{
-		stage_id = glCreateShader(GL_TESS_CONTROL_SHADER);
+		GLchar InfoLog[1024];
+
+		glGetShaderInfoLog(shader_id, 1024, NULL, InfoLog);
+		std::cout << "Error compiling shader type" << shader << InfoLog << std::endl;
+		
 	}
 
-	glShaderSource(stage_id, 1, &stage_code, NULL);
-	glCompileShader(stage_id);
-
-	//TODO: Remove after release
-	GLint status;
-	glGetShaderiv(stage_id, GL_COMPILE_STATUS, &status);
-	if (status != GL_TRUE)
-	{
-		GLint maxLength = 0;
-		glGetProgramiv(stage_id, GL_INFO_LOG_LENGTH, &maxLength);
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(stage_id, maxLength, &maxLength, &infoLog[0]);
-
-		for (unsigned int i = 0; i < infoLog.size(); i++)
-		{
-			std::cout << infoLog[i];
-		}
-		glDeleteProgram(stage_id);
-	}
-	m_ShaderStages.push_back(stage_id);
+	glAttachShader(shader_program_id_, shader_id);
 }
 
-void Shader::Compile()
+void Shader::CompileShader()
 {
-	GLuint program_id = glCreateProgram();
-	for (GLuint stage : m_ShaderStages)
-	{
-		glAttachShader(program_id, stage);
-	}
-	glLinkProgram(program_id);
-
-	GLint status;
-	glGetProgramiv(program_id, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		GLint maxLength = 0;
-		glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &maxLength);
-
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(program_id, maxLength, &maxLength, &infoLog[0]);
-
-		for (unsigned int i = 0; i < infoLog.size(); i++) {
-			std::cout << infoLog[i];
-		}
-		glDeleteProgram(program_id);
-	}
-	m_ID = program_id;
+	glLinkProgram(shader_program_id_);
 }
 
-void Shader::ReadFile(std::string* output, std::string const& path)
+void Shader::AddUniform(std::string uniform)
 {
-	std::ifstream stream;
-	std::stringstream sstr;
+	int uniform_location = glGetUniformLocation(shader_program_id_, uniform.c_str());
 
-	stream.open(path);
-	sstr << stream.rdbuf();
-	stream.close();
-	*output = sstr.str();
-	sstr.str("");
-	sstr.clear();
+	uniform_map_.insert(std::pair<std::string, unsigned int>(uniform, uniform_location));
 }
+
+void Shader::SetUniform1i(std::string uniform, const int& value)
+{
+	glUniform1i(uniform_map_.at(uniform), value);
+}
+
+void Shader::SetUniform1f(std::string uniform, const float& value)
+{
+	glUniform1f(uniform_map_.at(uniform), value);
+}
+
+void Shader::SetUniformVec3(std::string uniform, const glm::vec3& value)
+{
+	glUniform3f(uniform_map_.at(uniform), value.x, value.y, value.z);
+}
+
+void Shader::SetUniformMat4(std::string uniform, const glm::mat4& value)
+{
+	glUniformMatrix4fv(uniform_map_.at(uniform), 1, GL_FALSE, &value[0][0]);
+}
+
+void Shader::UpdateUniforms(glm::mat4& model_projection, Material* material)
+{
+	// TODO: BIND AND UNBIND TEXTURE
+	material->GetTexture().Bind();
+	SetUniformMat4("transform", model_projection);
+	SetUniformVec3("color", material->GetColor());
+}
+
 
 

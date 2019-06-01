@@ -2,6 +2,7 @@
 
 class Level;
 class Player;
+class Audio;
 
 class Game
 {
@@ -19,4 +20,5 @@ private:
 	bool m_IsActive = false;
 	Level* m_Level;
 	Player* m_Player_;
+	Audio* m_Audio;
 };

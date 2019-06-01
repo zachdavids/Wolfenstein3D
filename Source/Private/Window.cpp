@@ -1,89 +1,59 @@
 #include "Window.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+float Window::width_ = 0;
+float Window::height_ = 0;
+std::string Window::title_ = "Title";
 
-Window* Window::m_Instance;
-
-Window* Window::Get()
+void Window::Create(float width, float height, const std::string& title)
 {
-	return m_Instance;
-}
+	Window::width_ = width;
+	Window::height_ = height;
+	Window::title_ = title;
 
-bool Window::Create(int width, int height)
-{
-	if (m_Instance) { return false; }
-	m_Instance = this;
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	m_Width = width;
-	m_Height = height;
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	SDL_ShowCursor(SDL_DISABLE);
 
-	m_Window = glfwCreateWindow(width, height, "Wolfenstein3D", nullptr, nullptr);
-	if (!m_Window)
+	SDLCreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int)width, (int)height, false);
+
+	GLenum res = glewInit();
+	if (res != GLEW_OK)
 	{
-		return false;
+		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
 	}
-
-	glfwMakeContextCurrent(m_Window);
-
-	if (!gladLoadGLLoader((GLADloadproc(glfwGetProcAddress))))
-	{
-		return false;
-	}
-
-	//glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);
-	//glEnable(GL_CULL_FACE);
-	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	////glEnable(GL_FRAMEBUFFER_SRGB);
-	////glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glViewport(0, 0, width, height);
-
-	return true;
-}
-
-void Window::Clear() const
-{
-	glClearColor(1.0f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void Window::SwapAndPoll() const
-{
-	glfwSwapBuffers(m_Window);
-	glfwPollEvents();
-}
-
-bool Window::IsCloseRequested() const
-{
-	return glfwWindowShouldClose(m_Window);
+	
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::Destroy()
 {
-	glfwTerminate();
+	SDLDestroyWindow();
+	SDL_Quit();
 }
 
-int Window::GetWidth() const
+void Window::Render()
 {
-	return m_Width;
+	SDLSwapBuffers();
 }
 
-int Window::GetHeight() const
+bool Window::CloseRequested()
 {
-	return m_Height;
+	return SDLGetIsCloseRequested();
 }
 
-GLFWwindow* Window::GetWindow() const
+void Window::SetFullScreen(bool value)
 {
-	return m_Window;
+	SDLSetWindowFullscreen(value);
 }
