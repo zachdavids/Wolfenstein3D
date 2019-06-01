@@ -1,5 +1,4 @@
-#ifndef LEVEL_H
-#define LEVEL_H
+#pragma once
 
 #include "Player.h"
 #include "Transform.h"
@@ -51,7 +50,6 @@ private:
 	Player* player_;
 	Camera* camera_;
 	Transform* transform_;
-	XMLParser* xml_parser_;
 	Material* material_;
 	Mesh mesh_;
 	Enemy* enemy_;
@@ -68,8 +66,6 @@ private:
 	std::vector<float> CalculateTextureCoords(int texture_number);
 	void AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation);
 
-	void GenerateLevel();
+	void GenerateLevel(std::string const& file_name);
 	void RemoveMedkit();
 };
-
-#endif;

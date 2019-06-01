@@ -1,17 +1,12 @@
 #pragma once
 
-#include "Window.h"
-#include "TimeManager.h"
-#include "Game.h"
-#include "Input.h"
-#include "RenderUtility.h"
-#include <iostream>
+class Game;
 
 class CoreEngine
 {
 public:
-	CoreEngine();
 
+	CoreEngine();
 	void Start();
 	void Stop();
 	void Run();
@@ -20,6 +15,6 @@ public:
 
 private:
 
-	bool is_running_;
-	Game* game_;
+	bool m_IsActive = false;
+	Game* m_Game;
 };
