@@ -28,7 +28,7 @@ public:
 	void SetScale(float x, float y, float z);
 
 	glm::mat4 GetModelMatrix();
-	glm::mat4 GetModelProjection();
+	glm::mat4 CalculateMVP();
 
 	void SetProjection(float fov, int width, int height, float near_plane, float far_plane);
 

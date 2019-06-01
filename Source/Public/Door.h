@@ -42,7 +42,7 @@ private:
 	Audio* audio_;
 	Mesh mesh_;
 	Transform* transform_;
-	Shader* shader_;
+	Shader* m_Shader = nullptr;
 	Material* material_;
 
 	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);

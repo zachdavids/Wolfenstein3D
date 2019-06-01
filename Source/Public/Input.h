@@ -1,8 +1,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <SDL2/SDL.h>
-#include "SDLBackend.h"
 #include <GLM/glm.hpp>
 #include <iostream>
 
@@ -76,7 +74,6 @@ public:
 	static bool GetMouseReleased(int mousebutton);
 	static glm::vec2 GetMousePosition();
 
-	static void SetCursor(bool visible);
 	static void SetMousePosition(glm::vec2 pos);
 };
 

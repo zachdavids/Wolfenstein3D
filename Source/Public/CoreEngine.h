@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Window.h"
+#include "ResourceManager.h"
+
 class Game;
 
 class CoreEngine
@@ -7,8 +10,6 @@ class CoreEngine
 public:
 
 	CoreEngine();
-	void Start();
-	void Stop();
 	void Run();
 	void Render();
 	void Destroy();
@@ -16,5 +17,7 @@ public:
 private:
 
 	bool m_IsActive = false;
+	Window m_Window;
+	ResourceManager m_ResourceManager;
 	Game* m_Game;
 };
