@@ -1,30 +1,26 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
-#include <string>
-#include <glew/GL/glew.h>
-#include <SDL2/SDL.h>
-#include "SDLBackend.h"
+struct GLFWwindow;
 
 class Window
 {
 public:
 
-	static void Create(float width, float height, const std::string& title);
-	static void Destroy();
-	static void Render();
-	static bool CloseRequested();
-
-	static float GetWidth() { return width_; };
-	static float GetHeight() { return height_; };
-	static const std::string& GetTitle() { return title_; };
-	static void SetFullScreen(bool value);
+	Window() = default;
+	bool Create(int width, int height);
+	void Clear() const;
+	void SwapAndPoll() const;
+	bool IsCloseRequested() const;
+	void Destroy();
+	static Window* Get();
+	int GetWidth() const;
+	int GetHeight() const;
+	GLFWwindow* GetWindow() const;
 
 private:
-
-	static float width_;
-	static float height_;
-	static std::string title_;
+	
+	int m_Width;
+	int m_Height;
+	static Window* m_Instance;
+	GLFWwindow* m_Window = nullptr;
 };
-
-#endif

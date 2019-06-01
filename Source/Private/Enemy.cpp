@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "ResourceManager.h"
 
 const float SCALE = 0.73f;
 const float LENGTH = 1.0f;
@@ -37,6 +38,8 @@ Enemy::Enemy(glm::vec3 position)
 
 	audio_ = new Audio();
 	position_ = position;
+
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	transform_ = new Transform();
 	transform_->SetTranslation(position_);
@@ -208,10 +211,10 @@ void Enemy::Death(glm::vec3 orientation, float distance)
 
 void Enemy::FaceCamera(glm::vec3 orientation)
 {
-	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * (float)M_PI / 180.0f);
+	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (orientation.x > 0) {
-		camera_angle += (float)M_PI;
+		camera_angle += glm::pi<float>();
 	}
 	else {
 	}
@@ -249,8 +252,9 @@ void Enemy::Update()
 
 void Enemy::Render()
 {
-	shader_ = Level::GetShader();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	m_Shader->Use();
+	material_->GetTexture().Bind();
+	m_Shader->SetMat4("transform", transform_->CalculateMVP());
 	mesh_.Draw();
 }
 

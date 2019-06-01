@@ -1,4 +1,5 @@
 #include "Medkit.h"
+#include "ResourceManager.h"
 
 const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
@@ -24,6 +25,8 @@ Medkit::Medkit(glm::vec3 position)
 
 	material_ = new Material(new Texture("Medkit/Medkit.png"));
 
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	AddIndices(indices, vertices.size(), false);
@@ -34,10 +37,10 @@ Medkit::Medkit(glm::vec3 position)
 void Medkit::Update()
 {
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * (float)M_PI / 180.0f);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
-		camera_angle += (float)M_PI;
+		camera_angle += glm::pi<float>();
 	}
 	else {
 	}
@@ -53,8 +56,9 @@ void Medkit::Update()
 
 void Medkit::Render()
 {
-	shader_ = Level::GetShader();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	m_Shader->Use();
+	material_->GetTexture().Bind();
+	m_Shader->SetMat4("transform", transform_->CalculateMVP());
 	mesh_.Draw();
 }
 

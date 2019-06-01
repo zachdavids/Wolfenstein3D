@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML\Audio.hpp>
-
 class Audio
 {
 public:
@@ -19,7 +17,7 @@ public:
 
 private:
 
-	sf::Sound m_Sound;
-	sf::SoundBuffer m_Buffer;
-	const std::string m_Path = "Resources/Sounds/";
+	//sf::Sound m_Sound;
+	//sf::SoundBuffer m_Buffer;
+	//const std::string m_Path = "Resources/Sounds/";
 };

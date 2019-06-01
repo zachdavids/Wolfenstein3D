@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "ResourceManager.h"
 
 const float FLOOR_LENGTH = 1.0f;
 const float FLOOR_WIDTH = 1.0f;
@@ -24,8 +25,6 @@ static int nearest_enemy_num;
 static std::vector<Door> doors_temp_;
 static std::vector<Enemy> enemies_temp_;
 
-static Shader* shader_;
-
 Level::Level(std::string filename, std::string texturefilename, Player* player)
 {
 	player_ = player;
@@ -37,7 +36,7 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 	transform_ = new Transform();
 	transform_->SetCamera(player_->GetCamera());
 
-	shader_ = Shader::GetInstance();
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	GenerateLevel(filename);
 
@@ -86,8 +85,10 @@ void Level::Update()
 
 void Level::Render()
 {
-	shader_->Bind();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+
+	m_Shader->Use();
+	material_->GetTexture().Bind();
+	m_Shader->SetMat4("transform", transform_->CalculateMVP());
 	mesh_.Draw();
 
 	for (unsigned int i = 0; i < doors_.size(); i++) {
@@ -103,6 +104,7 @@ void Level::Render()
 	}
 
 	player_->Render();
+
 }
 
 void Level::AddIndices(std::vector<unsigned int>& indices, int start, bool direction)
@@ -150,8 +152,6 @@ void Level::AddVertices(std::vector<Vertex>& vertices, std::string type, bool in
 			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH, (y_coord + 1) * CEILING_HEIGHT,  z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[3]) });
 		}
 	}
-	else {
-	}
 }
 
 std::vector<float> Level::CalculateTextureCoords(int texture_number)
@@ -176,8 +176,6 @@ void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) 
 		else {
 			doors_.push_back(Door(position, material_, glm::vec3(position.x + 0.9, position.y, position.z), false));
 		}
-	}
-	else {
 	}
 	doors_temp_ = doors_;
 }
@@ -368,8 +366,6 @@ glm::vec3 Level::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end, boo
 			if (nearest_enemy_intersection == collision_vector) {
 				nearest_enemy_num = i;
 			}
-			else {
-			}
 		}
 	}
 
@@ -424,14 +420,7 @@ glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::ve
 		glm::length(line_1 - nearest) > glm::length(line_2 - nearest)) {
 		return line_2;
 	}
-	else {
-	}
 	return line_1;
-}
- 
-Shader* Level::GetShader() 
-{ 
-	return shader_; 
 }
 
 void Level::RemoveMedkit()

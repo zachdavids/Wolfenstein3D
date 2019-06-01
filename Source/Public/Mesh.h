@@ -3,12 +3,9 @@
 
 #include "Vertex.h"
 
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 #include <iostream>
 #include <vector>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <GLM/glm.hpp>
 
 class Mesh
@@ -23,7 +20,6 @@ public:
 
 	void InitializeMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 	void InitializeMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, bool normal_calculation);
-	void LoadMesh(std::string filename);
 	void Draw();
 	std::vector<Vertex> CalculateNormals(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 

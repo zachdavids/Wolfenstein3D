@@ -13,7 +13,6 @@
 #include "Medkit.h"
 #include "Audio.h"
 
-#include <SFML\Audio.hpp>
 #include <GLM/gtx\rotate_vector.hpp>
 #include <string>
 
@@ -34,7 +33,6 @@ public:
 	void Render();
 
 	Audio* audio_;
-	static Shader* GetShader();
 
 	void OpenDoors(glm::vec3 position, bool exit);
 
@@ -47,14 +45,15 @@ public:
 
 private:
 
+	Shader* m_Shader = nullptr;
+
+
 	Player* player_;
 	Camera* camera_;
 	Transform* transform_;
 	Material* material_;
 	Mesh mesh_;
 	Enemy* enemy_;
-
-	sf::Music music;
 
 	std::vector<Door> doors_;
 	std::vector<Enemy> enemies_;

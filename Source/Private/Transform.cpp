@@ -6,8 +6,8 @@ Transform::Transform()
 	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 	scale_ = glm::vec3(1.0f, 1.0f, 1.0f);
 	fov_ = glm::radians(70.0f);
-	width_ = Window::GetWidth();
-	height_ = Window:: GetHeight();
+	width_ = Window::Get()->GetWidth();
+	height_ = Window::Get()->GetHeight();
 	near_plane_ = 0.1f;
 	far_plane_ = 1000.0f;
 }
@@ -43,7 +43,7 @@ glm::mat4 Transform::GetModelMatrix()
 	return model_matrix;
 }
 
-glm::mat4 Transform::GetModelProjection()
+glm::mat4 Transform::CalculateMVP()
 {
 	glm::mat4 model_matrix = GetModelMatrix();
 	glm::mat4 projection_matrix = glm::perspective(fov_, (float)(width_/height_), near_plane_, far_plane_);

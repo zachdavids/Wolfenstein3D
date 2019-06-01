@@ -83,11 +83,14 @@ void Camera::Input()
 	float movAmt = (float)(10 * TimeManager::GetDelta());
 	float rotAmt = (float)(100 * TimeManager::GetDelta());
 
-	glm::vec2 centerPosition = glm::vec2((float)Window::GetWidth() / 2.0f, (float)Window::GetHeight() / 2.0f);
+	int window_width = (float)Window::Get()->GetWidth();
+	int window_height = (float)Window::Get()->GetHeight();
+
+	glm::vec2 centerPosition = glm::vec2(window_width / 2.0f, window_height / 2.0f);
 	glm::vec2 deltaPos = glm::vec2(Input::GetMousePosition()) - centerPosition;
 
-	if (Input::GetMousePosition().x != Window::GetWidth()/2 && Input::GetMousePosition().y != Window::GetHeight()/2) {
-		MouseControl(Input::GetMousePosition().x - Window::GetWidth()/2, Input::GetMousePosition().y - Window::GetHeight()/2);
+	if (Input::GetMousePosition().x != window_width / 2.0f && Input::GetMousePosition().y != window_height / 2.0f) {
+		MouseControl(Input::GetMousePosition().x - window_width / 2.0f, Input::GetMousePosition().y - window_height / 2.0f);
 	}
 
 	if (Input::GetKey(Input::KEY_A)) {
@@ -106,5 +109,5 @@ void Camera::Input()
 		exit(1);
 	}
 
-	Input::SetMousePosition(glm::vec2(Window::GetWidth()/2, Window::GetHeight()/2));
+	Input::SetMousePosition(glm::vec2(window_width / 2.0f, window_height / 2.0f));
 }
