@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "ResourceManager.h"
+#include "GLFW/glfw3.h"
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;
@@ -79,19 +80,19 @@ void Player::Input()
 
 	movement_vector_ = glm::vec3(0.0f);
 
-	if (Input::GetKey(Input::KEY_A)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
 		movement_vector_ = movement_vector_ - camera_->GetRightDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_D)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 		movement_vector_ = movement_vector_ + camera_->GetRightDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_W)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 		movement_vector_ = movement_vector_ + camera_->GetViewDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_S)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
 		movement_vector_ = movement_vector_ - camera_->GetViewDirection();
 		audio_->PlayStep();
 	}
@@ -146,10 +147,80 @@ int Player::GetHealth() {
 void Player::Render()
 {
 	m_Shader->Use();
-	material_->GetTexture().Bind();
-	m_Shader->SetMat4("transform", transform_->CalculateMVP());
-	mesh_.Draw();
+	//material_->GetTexture().Bind();
+	//m_Shader->SetMat4("transform", transform_->CalculateMVP());
+	//mesh_.Draw();
 	//RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
+
+	float vertices[] = {
+-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+ 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+ 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+ 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+ 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+ 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+ 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+ 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+ 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+ 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	glm::mat4 view = camera_->GetViewMatrix();
+	glm::mat4 mvp = projection * view * model;
+
+	m_Shader->SetMat4("transform", mvp);
+
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void Player::RenderText(std::string const& text, glm::vec2 position)

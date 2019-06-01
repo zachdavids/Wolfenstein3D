@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "GLFW/glfw3.h"
 
 Camera::Camera()
 {
@@ -93,16 +94,16 @@ void Camera::Input()
 		MouseControl(Input::GetMousePosition().x - window_width / 2.0f, Input::GetMousePosition().y - window_height / 2.0f);
 	}
 
-	if (Input::GetKey(Input::KEY_A)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
 		StrafeCamera(-0.1f);
 	}
-	if (Input::GetKey(Input::KEY_D)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 		StrafeCamera(0.1f);
 	}
-	if (Input::GetKey(Input::KEY_W)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 		MoveCamera(0.1f);
 	}
-	if (Input::GetKey(Input::KEY_S)) {
+	if (glfwGetKey(Window::Get()->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
 		MoveCamera(-0.1f);
 	}
 	if (Input::GetKey(Input::KEY_ESCAPE)) {

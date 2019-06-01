@@ -15,12 +15,6 @@ void ResourceManager::Create()
 		"DefaultShader",
 		"Default/"
 	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kShader,
-		"TextShader",
-		"Text/"
-	);
 }
 
 void ResourceManager::AddResource(Type type, std::string const& name,

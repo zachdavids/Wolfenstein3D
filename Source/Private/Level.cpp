@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "ResourceManager.h"
+#include <GLM/gtc/matrix_transform.hpp>
 
 const float FLOOR_LENGTH = 1.0f;
 const float FLOOR_WIDTH = 1.0f;
@@ -85,12 +86,12 @@ void Level::Update()
 
 void Level::Render()
 {
+	//m_Shader->Use();
+	//material_->GetTexture().Bind();
+	//m_Shader->SetMat4("transform", transform_->CalculateMVP());
+	//mesh_.Draw();
 
-	m_Shader->Use();
-	material_->GetTexture().Bind();
-	m_Shader->SetMat4("transform", transform_->CalculateMVP());
-	mesh_.Draw();
-
+	/*
 	for (unsigned int i = 0; i < doors_.size(); i++) {
 		doors_[i].Render();
 	}
@@ -102,8 +103,9 @@ void Level::Render()
 	for (unsigned int i = 0; i < medkits_.size(); i++) {
 		medkits_[i].Render();
 	}
-
+		*/
 	player_->Render();
+
 
 }
 

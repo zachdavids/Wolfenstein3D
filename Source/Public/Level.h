@@ -49,7 +49,6 @@ private:
 
 
 	Player* player_;
-	Camera* camera_;
 	Transform* transform_;
 	Material* material_;
 	Mesh mesh_;
