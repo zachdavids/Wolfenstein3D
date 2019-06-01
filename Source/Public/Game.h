@@ -1,26 +1,28 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
+
+#include "Level.h"
+#include "Player.h"
+#include "Audio.h"
 
 class Level;
 class Player;
-class Audio;
 
 class Game
 {
 public:
 
 	Game();
-
 	void Input();
 	void Update();
 	void Render();
 
-	//void GameOver();
+	static void LoadNextLevel();
+	static void GameOver();
 
 private:
 
-	bool m_IsActive = false;
-
-	Level* level_;
-	Player* player_;
-	Audio* audio_;
+	int current_level_;
 };
+
+#endif
