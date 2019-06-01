@@ -1,26 +1,17 @@
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
-#include <GLM/glm.hpp>
-#include <string>
+#include <bitset>
 
-class Node
+struct Node
 {
-public:
+	enum NodeType : const int
+	{
+		Location,
+		Door,
+		Enemy,
+		Medkit,
+		Endpoint
+	};
 
-	Node(glm::vec3 position);
-	Node(glm::vec3 position, std::string type);
-
-	std::string GetType() { return type_; };
-	void SetType(std::string type) { type_ = type; };
-
-	glm::vec3 GetPosition() { return position_; };
-	void SetPosition(glm::vec3 position) { position_ = position; };
-
-private:
-	
-	std::string type_;
-	glm::vec3 position_;
+	std::bitset<5> m_Node;
 };
-
-#endif;

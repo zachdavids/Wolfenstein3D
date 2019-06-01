@@ -5,42 +5,49 @@
 
 Game::Game()
 {
-	player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
-	level_ = new Level("Level1.xml", "Tiles/TileTextures.png", player_);
+	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
+	m_Level = new Level("Level1.xml", "Tiles/TileTextures.png", m_Player_);
+	m_Audio = new Audio();
+
 	m_IsActive = true;
-	audio_ = new Audio();
 }
 
-//void Game::GameOver()
-//{
-//	audio_->PlayPlayerDeath();
-//	m_IsActive = false;
-//}
+//TODO FIX
+void Game::ResetGame()
+{
+	delete m_Player_;
+	delete m_Level;
+
+	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
+	m_Level = new Level("Level1.xml", "TileTextures.png", m_Player_);
+}
 
 void Game::Input()
 {
-	level_->Input();
+	m_Level->Input();
 
 	if (Input::GetKeyPressed(Input::KEY_ESCAPE))
 	{
+		m_IsActive = false;
 		exit(0);
 	}
 	if (Input::GetKeyPressed(Input::KEY_R))
 	{
-		delete player_;
-		player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
-		delete level_;
-		level_ = new Level("Level1.xml", "TileTextures.png", player_);
-		m_IsActive = true;
+		ResetGame();
 	}
 }
 
 void Game::Update()
 {
-	level_->Update();
+	m_Level->Update();
 }
 
 void Game::Render()
 {
-	level_->Render();
+	m_Level->Render();
+}
+
+bool Game::GetActive()
+{
+	return m_IsActive;
 }
