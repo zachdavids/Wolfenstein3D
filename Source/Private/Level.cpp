@@ -16,6 +16,10 @@ const int NUM_TEXTURES_Y = 19;
 static glm::vec2 dimensions_;
 
 static std::vector<Node> nodes_;
+static std::vector<Node> door_nodes_;
+static std::vector<Node> enemy_nodes_;
+static std::vector<Node> medkit_nodes_;
+static std::vector<Node> endpoint_nodes_;
 
 static std::vector<glm::vec3> collision_start;
 static std::vector<glm::vec3> collision_end;
@@ -30,6 +34,7 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 {
 	player_ = player;
 	nearest_enemy_num = -1;
+	xml_parser_ = new XMLParser(filename);
 
 	audio_ = new Audio();
 	material_ = new Material(new Texture(texturefilename));
@@ -39,7 +44,7 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 
 	shader_ = Shader::GetInstance();
 
-	GenerateLevel(filename);
+	GenerateLevel();
 
 	//music.openFromFile("Resources/Sounds/song.ogg");
 	//music.setVolume(30);
@@ -199,26 +204,24 @@ void Level::OpenDoors(glm::vec3 position, bool exit)
 	}
 }
 
-void Level::GenerateLevel(std::string const& file_name)
+void Level::GenerateLevel()
 {
-	/**/
-	XMLParser parser(file_name);
-	if (!parser.TryParse())
-	{
-		std::cout << "Error parsing level file\n";
-		return;
-	}
-
-	nodes_ = parser.GetNodes();
-	dimensions_ = parser.GetDimensions();
+	dimensions_ = xml_parser_->GetDimensions();
+	nodes_ = xml_parser_->GetNodes();
+	door_nodes_ = xml_parser_->GetDoorNodes();
+	enemy_nodes_ = xml_parser_->GetEnemyNodes();
+	medkit_nodes_ = xml_parser_->GetMedkitNodes();
+	endpoint_nodes_ = xml_parser_->GetEndPointNodes();
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
+	std::cout << "Creating level... ";
+
 	for (int i = 0; i < dimensions_.x; i++) {
 		for (int j = 0; j < dimensions_.y; j++) {
 			// Floor & Ceiling Generation
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+			if (nodes_[i * dimensions_.x + j].GetType() == "Location") {
 				// Floor Generation
 				AddIndices(indices, vertices.size(), true);
 				AddVertices(vertices, "Floor", false, i, 0, j, CalculateTextureCoords(0));
@@ -228,57 +231,62 @@ void Level::GenerateLevel(std::string const& file_name)
 				AddVertices(vertices, "Ceiling", false, i, 1, j, CalculateTextureCoords(22));			
 
 				// Wall Generation
-				if (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) {
+				if (nodes_[i * dimensions_.x + (j - 1)].GetType() == "Wall") {
 					AddIndices(indices, vertices.size(), false);
 					AddVertices(vertices, "Wall", false, i, 0, j, CalculateTextureCoords(3));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[i * dimensions_.x + (j + 1)].m_Node.test(Node::NodeType::Location)) {
+				if (nodes_[i * dimensions_.x + (j + 1)].GetType() == "Wall") {
 					AddIndices(indices, vertices.size(), true);
 					AddVertices(vertices, "Wall", false, i, 0, (j + 1), CalculateTextureCoords(3));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+				if (nodes_[(i - 1) * dimensions_.x + j].GetType() == "Wall") {
 					AddIndices(indices, vertices.size(), true);
 					AddVertices(vertices, "Wall", true, i * CEILING_HEIGHT, 0, j, CalculateTextureCoords(3));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+				if (nodes_[(i + 1) * dimensions_.x + j].GetType() == "Wall") {
 					AddIndices(indices, vertices.size(), false);
 					AddVertices(vertices, "Wall", true, (i + 1), 0, j, CalculateTextureCoords(3));
 					collision_start.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 			}
+			else {
+			}
 			// Door Generation
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Door)) {
-				bool x_orientation = ((!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) && (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)));
-				bool y_orientation = ((!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) && (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)));
+			if (door_nodes_[i * dimensions_.x + j].GetType() == "Door") {
+				bool x_orientation = ((nodes_[i * dimensions_.x + (j - 1)].GetType() == "Wall") && (nodes_[i * dimensions_.x + (j - 1)].GetType() == "Wall"));
+				bool y_orientation = ((nodes_[(i - 1) * dimensions_.x + j].GetType() == "Wall") && (nodes_[(i + 1) * dimensions_.x + j].GetType() == "Wall"));
 
 				AddDoor(glm::vec3(i, 0, j), x_orientation, y_orientation);
 			}
+			else {
+			}
 			// Enemy
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Enemy)) {
+			if (enemy_nodes_[i * dimensions_.x + j].GetType() == "Enemy") {
 				enemies_.push_back(Enemy(glm::vec3(i, 0, j)));
 			}
 			// Medkits
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Medkit)) {
+			if (medkit_nodes_[i * dimensions_.x + j].GetType() == "Medkit") {
 				medkits_.push_back(Medkit(glm::vec3(i, 0, j)));
 			}
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Endpoint)) {
+			if (endpoint_nodes_[i * dimensions_.x + j].GetType() == "Endpoint") {
 				endpoints_.push_back(glm::vec3(i, 0, j));
 			}
-
 		}
 	}
 	enemies_temp_ = enemies_;
 	mesh_.InitializeMesh(vertices, indices);
+
+	std::cout << "success\n";
 }
 
 glm::vec3 Level::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, float width, float length)
@@ -296,7 +304,7 @@ glm::vec3 Level::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, 
 
 		for (unsigned int i = 0; i < dimensions_.x; i++) {
 			for (unsigned int j = 0; j < dimensions_.y; j++) {
-				if (!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+				if (nodes_[(i - 1) * dimensions_.x + j].GetType() == "Wall") {
 					collision_vector *= RectangularCollision(old_position_2, new_position_2, object_size, node_size * glm::vec3(i, 0, j), node_size);
 				}
 			}

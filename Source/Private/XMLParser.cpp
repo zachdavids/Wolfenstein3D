@@ -1,82 +1,63 @@
 #include "XMLParser.h"
 
-#include <iostream>
-
-XMLParser::XMLParser(std::string const& filename) : m_FileName(filename)
+XMLParser::XMLParser(std::string filename)
 {
-}
-
-bool XMLParser::TryParse()
-{
-	pugi::xml_document level_document;
-	pugi::xml_parse_result result = level_document.load_file(("Resources/Levels/" + m_FileName).c_str());
-
-	if (!result.description())
-	{
-		return false;
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file(("Resources/Levels/" + filename).c_str());
+	std::cout << "Parsing " << filename << "... ";
+	if (result.description()) {
+		std::cout << "success" << std::endl;
 	}
-	else
-	{
-		ParseLevel(level_document.child("Level"));
+	else {
+		exit(1);
 	}
 
-	return true;
-}
-
-void XMLParser::ParseLevel(pugi::xml_node const& level_node)
-{
-	std::string dimensions_string = level_node.child_value("Dimensions");
-	m_Dimensions.x = std::stoi(dimensions_string.substr(0, dimensions_string.find(",")));
-	m_Dimensions.y = std::stoi(dimensions_string.substr(dimensions_string.find(",") + 1));
-
-	for (int i = 0; i != m_Dimensions.x * m_Dimensions.y; ++i)
+	for (pugi::xml_node level = doc.child("Level"); level; level = level.next_sibling("Level"))
 	{
-		m_Nodes.emplace_back(Node());
-	}
+		// Dimensions
+		//std::cout << "Dimensions: " << "\n";
+		std::string dimensions_string = level.child_value("Dimensions");
+		unsigned int dimensions_x = std::stoul(dimensions_string.substr(0, dimensions_string.find(",")));
+		unsigned int dimensions_y = std::stoul(dimensions_string.substr(dimensions_string.find(",") + 1));
+		SetDimenions(glm::vec2(dimensions_x, dimensions_y));
+		for (unsigned int i = 0; i < dimensions_x; i++) {
+			for (unsigned int j = 0; j < dimensions_y; j++) {
+				nodes_.push_back(Node(glm::vec3(i, 0, j), "Wall"));
+				door_nodes_.push_back(Node(glm::vec3(i, 0, j), ""));
+				enemy_nodes_.push_back(Node(glm::vec3(i, 0, j), ""));
+				medkit_nodes_.push_back(Node(glm::vec3(i, 0, j), ""));
+				endpoint_nodes_.push_back(Node(glm::vec3(i, 0, j), ""));
+			}
+		}
 
-	ParseTiles(level_node);
-}
-
-void XMLParser::ParseTiles(pugi::xml_node const& level_node)
-{
-	for (pugi::xml_node tile = level_node.child("Node"); tile; tile = tile.next_sibling("Node"))
-	{
-		std::string location_string = tile.child_value("Location");
-		if (location_string != "")
+		// Nodes
+		//std::cout << "Nodes: " << "\n";
+		for (pugi::xml_node node = level.child("Node"); node; node = node.next_sibling("Node"))
 		{
-			int col = std::stoi(location_string.substr(0, location_string.find(",")));
-			int row = std::stoi(location_string.substr(location_string.find(",") + 1));
+			std::string location_string = node.child_value("Location");
+			std::string door_string = node.child_value("Door");
+			std::string enemy_string = node.child_value("Enemy");
+			std::string medkit_string = node.child_value("Medkit");
+			std::string endpoint_string = node.child_value("Endpoint");
 
-			Node new_node;
-			new_node.m_Node.flip(Node::NodeType::Location);
+			if (location_string.find(",") != std::string::npos) {
+				unsigned int node_x = std::stoul(location_string.substr(0, location_string.find(",")));
+				unsigned int node_z = std::stoul(location_string.substr(location_string.find(",") + 1));
+				nodes_[node_x * GetDimensions().y + node_z].SetType("Location");
 
-			if (std::string(tile.child_value("Door")) != "")
-			{
-				new_node.m_Node.flip(Node::NodeType::Door);
+				if (door_string != "") {
+					door_nodes_[node_x * GetDimensions().y + node_z].SetType("Door");
+				}
+				if (enemy_string != "") {
+					enemy_nodes_[node_x * GetDimensions().y + node_z].SetType("Enemy");
+				}
+				if (medkit_string != "") {
+					medkit_nodes_[node_x * GetDimensions().y + node_z].SetType("Medkit");
+				}
+				if (endpoint_string != "") {
+					endpoint_nodes_[node_x * GetDimensions().y + node_z].SetType("Endpoint");
+				}
 			}
-			if (std::string(tile.child_value("Enemy")) != "")
-			{
-				new_node.m_Node.flip(Node::NodeType::Enemy);
-			}
-			if (std::string(tile.child_value("Medkit")) != "")
-			{
-				new_node.m_Node.flip(Node::NodeType::Medkit);
-			}
-			if (std::string(tile.child_value("Endpoint")) != "")
-			{
-				new_node.m_Node.flip(Node::NodeType::Endpoint);
-			}
-			m_Nodes[m_Dimensions.y * col + row] = new_node;
 		}
 	}
-}
-
-std::vector<Node>& XMLParser::GetNodes()
-{
-	return m_Nodes;
-}
-
-glm::ivec2 XMLParser::GetDimensions()
-{
-	return m_Dimensions;
 }

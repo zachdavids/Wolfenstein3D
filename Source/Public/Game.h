@@ -9,16 +9,18 @@ class Game
 public:
 
 	Game();
+
 	void Input();
 	void Update();
 	void Render();
-	void ResetGame();
-	bool GetActive();
+
+	//void GameOver();
 
 private:
 
 	bool m_IsActive = false;
-	Level* m_Level;
-	Player* m_Player_;
-	Audio* m_Audio;
+
+	Level* level_;
+	Player* player_;
+	Audio* audio_;
 };

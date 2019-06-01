@@ -1,11 +1,4 @@
-#pragma once
-
 #include "CoreEngine.h"
-#include "Game.h"
-#include "Window.h"
-#include "TimeManager.h"
-#include "Input.h"
-#include "RenderUtility.h"
 
 #define FRAME_CAP 5000; 
 
@@ -15,38 +8,40 @@
 
 int main(int argc, char *argv[])
 {
-	Window::Create(1280, 720, "Wolfenstein3D");
+	Window::Create(1280, 720, "Wolfenstein Clone");
 
 	CoreEngine engine;
-	engine.Run();
+	engine.Start();
 
 	return 0;
 }
 
 CoreEngine::CoreEngine()
 {
-	m_Game = new Game();
+	game_ = new Game();
 	RenderUtility::GLInitialize();
-	m_IsActive = false;
+	is_running_ = false;
 }
 
 void CoreEngine::Start()
 {
-	if (m_IsActive)	{ return; }
+	if (is_running_)
+		return;
 
 	Run();
 }
 
 void CoreEngine::Stop()
 {
-	if (!m_IsActive) { return; }
+	if (!is_running_)
+		return;
 
-	m_IsActive = false;
+	is_running_ = false;
 }
 
 void CoreEngine::Run()
 {
-	m_IsActive = true;
+	is_running_ = true;
 
 	int frames = 0;
 
@@ -56,7 +51,7 @@ void CoreEngine::Run()
 
 	double frame_time = 1.0 / FRAME_CAP;
 	
-	while (m_IsActive)
+	while (is_running_)
 	{
 		bool render = false;
 
@@ -84,8 +79,8 @@ void CoreEngine::Run()
 
 			Input::Update();
 
-			m_Game->Input();
-			m_Game->Update();
+			game_->Input();
+			game_->Update();
 
 			Render();
 
@@ -109,7 +104,7 @@ void CoreEngine::Run()
 void CoreEngine::Render()
 {
 	RenderUtility::ClearScreen();
-	m_Game->Render();
+	game_->Render();
 	Window::Render();
 }
 
