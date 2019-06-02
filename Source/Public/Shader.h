@@ -3,7 +3,7 @@
 #include "Resource.h"
 #include "Material.h"
 
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 #include <GLM/glm.hpp>
 #include <string>
 #include <fstream>

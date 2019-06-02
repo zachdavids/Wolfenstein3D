@@ -1,7 +1,7 @@
 #include "TextShader.h"
 #include "Material.h"
 
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <fstream>
 #include <iostream>

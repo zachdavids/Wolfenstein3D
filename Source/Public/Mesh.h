@@ -3,7 +3,7 @@
 
 #include "Vertex.h"
 
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 #include <iostream>
 #include <vector>
 #include <assimp/Importer.hpp>

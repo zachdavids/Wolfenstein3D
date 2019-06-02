@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 
 CoreEngine::CoreEngine()
 {
+	//m_WindowManager.Create();
 	m_ResourceManager.Create();
 
 	m_Game = new Game();

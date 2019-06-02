@@ -1,7 +1,7 @@
 #ifndef RENDERUTILITY_H
 #define RENDERUTILITY_H
 
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 
 class RenderUtility
 {

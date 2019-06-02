@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ResourceManager.h"
+#include "WindowManager.h"
 
 class Game;
 
@@ -20,5 +21,6 @@ private:
 	bool m_IsActive = false;
 	Game* m_Game;
 
+	WindowManager m_WindowManager;
 	ResourceManager m_ResourceManager;
 };

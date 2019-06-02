@@ -8,7 +8,7 @@ const int NUM_TEXTURES_X = 1;
 const int NUM_TEXTURES_Y = 1;
 
 const int HP = 100;
-const float SIZE = 0.2f;
+const float SIZE1 = 0.2f;
 const float MOVEMENT_SPEED = 0.035f;
 const float SHOOT_DISTANCE = 10.0f;
 
@@ -117,7 +117,7 @@ void Player::Update()
 
 	old_position_ = camera_->GetPosition();
 	new_position_ = old_position_ + (movement_vector_ * MOVEMENT_SPEED);
-	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE, SIZE);
+	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
 	
 	movement_vector_ *= collision_vector_;
 

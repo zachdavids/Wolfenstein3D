@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <string>
-#include <glew/GL/glew.h>
+#include <glad/glad.h>
 #include <SDL2/SDL.h>
 #include "SDLBackend.h"
 

@@ -26,10 +26,9 @@ void Window::Create(float width, float height, const std::string& title)
 
 	SDLCreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int)width, (int)height, false);
 
-	GLenum res = glewInit();
-	if (res != GLEW_OK)
+	if (!gladLoadGLLoader(GLADloadproc(SDL_GL_GetProcAddress)))
 	{
-		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+
 	}
 	
 	glEnable(GL_CULL_FACE);
