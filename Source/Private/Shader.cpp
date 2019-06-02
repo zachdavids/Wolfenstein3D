@@ -7,10 +7,7 @@
 #include <fstream>
 #include <sstream>
 
-const std::string Shader::m_Directory = "Resources/Shaders/";
-
-Shader::Shader(std::string const& path) :
-	Resource(m_Directory + path)
+Shader::Shader(std::string const& path) : Resource(path)
 {
 }
 

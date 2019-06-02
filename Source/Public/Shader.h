@@ -25,7 +25,6 @@ public:
 private:
 
 	GLuint m_ID;
-	static const std::string m_Directory;
 	std::vector<GLuint> m_ShaderStages;
 	void LoadShader(std::string const& path);
 	void Compile();

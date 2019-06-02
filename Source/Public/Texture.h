@@ -15,5 +15,4 @@ public:
 private:
 
 	unsigned int m_ID;
-	static const std::string m_Directory;
 };

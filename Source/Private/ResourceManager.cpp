@@ -7,6 +7,9 @@
 
 ResourceManager* ResourceManager::m_Instance;
 
+const std::string ResourceManager::m_TextureDir = "Resources/Textures/";
+const std::string ResourceManager::m_ShaderDir = "Resources/Shaders/";
+
 void ResourceManager::Create()
 {
 	if (m_Instance) { return; }
@@ -18,152 +21,60 @@ void ResourceManager::Create()
 		"Default/"
 	);
 
-	ResourceManager::Get()->AddResource(
+	ResourceManager::Get()->AddResourceFolder(
 		ResourceManager::Type::kTexture,
-		"TileTexture",
-		"Tiles/TileTextures.png"
+		"Enemy/Guard/"
 	);
 
-	ResourceManager::Get()->AddResource(
+	ResourceManager::Get()->AddResourceFolder(
 		ResourceManager::Type::kTexture,
-		"Medkit",
-		"Medkit/Medkit.png"
+		"HUD/"
 	);
 
-	ResourceManager::Get()->AddResource(
+	ResourceManager::Get()->AddResourceFolder(
 		ResourceManager::Type::kTexture,
-		"Guard_Idle",
-		"Enemy/Guard/Guard_Idle.png"
+		"Medkit/"
 	);
 
-	ResourceManager::Get()->AddResource(
+	ResourceManager::Get()->AddResourceFolder(
 		ResourceManager::Type::kTexture,
-		"Guard_Walk1",
-		"Enemy/Guard/Guard_Walk1.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Walk2",
-		"Enemy/Guard/Guard_Walk2.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Walk3",
-		"Enemy/Guard/Guard_Walk3.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Walk4",
-		"Enemy/Guard/Guard_Walk4.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Die1",
-		"Enemy/Guard/Guard_Die1.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Die2",
-		"Enemy/Guard/Guard_Die2.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Die3",
-		"Enemy/Guard/Guard_Die3.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Die4",
-		"Enemy/Guard/Guard_Die4.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Pain1",
-		"Enemy/Guard/Guard_Pain1.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Pain2",
-		"Enemy/Guard/Guard_Pain2.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Shoot1",
-		"Enemy/Guard/Guard_Shoot1.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Shoot2",
-		"Enemy/Guard/Guard_Shoot2.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Guard_Shoot3",
-		"Enemy/Guard/Guard_Shoot3.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Shoot_1",
-		"HUD/Shoot_1.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Shoot_2",
-		"HUD/Shoot_2.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Shoot_3",
-		"HUD/Shoot_3.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Shoot_4",
-		"HUD/Shoot_4.png"
-	);
-
-	ResourceManager::Get()->AddResource(
-		ResourceManager::Type::kTexture,
-		"Shoot_5",
-		"HUD/Shoot_5.png"
+		"Tiles/"
 	);
 }
 
-void ResourceManager::AddResource(Type type, std::string const& name, std::string const& path)
+void ResourceManager::AddResource(Type type, std::string const& name, std::string const& filename)
 {
 	switch (type)
 	{
 	case Type::kShader:
-		m_Resources.try_emplace(name, std::make_unique<Shader>(path));
+		m_Resources.try_emplace(name, std::make_unique<Shader>(m_ShaderDir + filename));
 		break;
 	case Type::kTexture:
-		m_Resources.try_emplace(name, std::make_unique<Texture>(path));
+		m_Resources.try_emplace(name, std::make_unique<Texture>(m_TextureDir + filename));
 		break;
 	}
 	m_Resources.find(name)->second->Create();
 }
 
-void ResourceManager::AddResourceFolder(Type type, std::string const& directory)
+void ResourceManager::AddResourceFolder(Type type, std::string const& folder)
 {
+	std::string directory;
+	switch (type)
+	{
+	case Type::kShader:
+		directory = m_ShaderDir + folder;
+		break;
+	case Type::kTexture:
+		directory = m_TextureDir + folder;
+		break;
+	}
+
 	for (const auto& file : std::filesystem::directory_iterator(directory))
 	{
-		std::cout << file.path().string() << std::endl;
-		//AddResource(type, std::string const& name, std::string const& path);
+		AddResource(
+			type, 
+			file.path().stem().string(),
+			folder + file.path().filename().string()
+		);
 	}
 }

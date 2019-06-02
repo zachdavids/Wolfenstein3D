@@ -90,7 +90,7 @@ void Level::Render()
 	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader->Bind();
 	shader->SetMat4("transform", transform_->GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("TileTexture")->Bind();
+	ResourceManager::Get()->GetResource<Texture>("TileTextures")->Bind();
 	mesh_.Draw();
 
 	for (unsigned int i = 0; i < doors_.size(); i++) {

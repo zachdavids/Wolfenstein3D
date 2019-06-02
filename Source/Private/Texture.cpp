@@ -4,9 +4,7 @@
 
 #include <glad/glad.h>
 
-const std::string Texture::m_Directory = "Resources/Textures/";
-
-Texture::Texture(std::string const& filename) : Resource(m_Directory + filename)
+Texture::Texture(std::string const& filename) : Resource(filename)
 {
 }
 

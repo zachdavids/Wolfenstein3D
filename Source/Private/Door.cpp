@@ -98,7 +98,7 @@ void Door::Render()
 	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader->Bind();
 	shader->SetMat4("transform", transform_->GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("TileTexture")->Bind();
+	ResourceManager::Get()->GetResource<Texture>("TileTextures")->Bind();
 	mesh_.Draw();
 }
 
