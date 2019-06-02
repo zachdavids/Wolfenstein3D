@@ -10,7 +10,8 @@ class ResourceManager
 public:
 	enum class Type
 	{
-		kShader
+		kShader,
+		kTexture
 	};
 
 	ResourceManager() = default;

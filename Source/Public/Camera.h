@@ -7,12 +7,12 @@ class Camera
 {
 public:
 
-	Camera(glm::vec3 position, float yaw, float pitch);
+	Camera(glm::vec3 const& position, float yaw, float pitch);
 	glm::vec3 GetPosition() const;
 	glm::vec3 GetRight() const;
 	glm::vec3 GetForward() const;
 	glm::mat4 GetViewMatrix() const;
-	void MoveCamera(glm::vec3 movement_vector, float speed);
+	void MoveCamera(glm::vec3 const& movement_vector, float speed);
 	void MouseControl(float mouse_x, float mouse_y);
 
 private:

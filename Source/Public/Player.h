@@ -55,7 +55,6 @@ private:
 	Transform* transform_;
 	Shader* shader_;
 	Audio* audio_;
-	Texture text_texture;
 	TextShader* text_shader_;
 
 	std::vector<Texture*> animations_;

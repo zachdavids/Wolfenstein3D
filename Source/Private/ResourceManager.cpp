@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 #include "Shader.h"
+#include "Texture.h"
 
 #include <iostream>
 
@@ -23,6 +24,9 @@ void ResourceManager::AddResource(Type type, std::string const& name, std::strin
 	{
 	case Type::kShader:
 		m_Resources.try_emplace(name, std::make_unique<Shader>(path));
+		break;
+	case Type::kTexture:
+		m_Resources.try_emplace(name, std::make_unique<Texture>(path));
 		break;
 	}
 	m_Resources.find(name)->second->Create();

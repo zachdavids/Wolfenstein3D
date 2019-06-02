@@ -1,42 +1,38 @@
 #include "Texture.h"
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-Texture::Texture(int id)
+#include <glad/glad.h>
+
+const std::string Texture::m_Directory = "Resources/Textures/";
+
+Texture::Texture(std::string const& filename) : Resource(m_Directory + filename)
 {
-	id_ = id;
 }
 
-Texture::Texture(std::string filename)
+void Texture::Create()
 {
-	LoadTexture("Resources/Textures/" + filename);
-}
+	stbi_set_flip_vertically_on_load(true);
+	glGenTextures(1, &m_ID);
+	int width;
+	int height;
+	int num_components;
 
-void Texture::Bind()
-{
-	glBindTexture(GL_TEXTURE_2D, id_);
-}
+	unsigned char *data = stbi_load(m_Path.c_str(), &width, &height, &num_components, 4);
 
-void Texture::LoadTexture(std::string filename)
-{
-	int width, height, num_components;
-	unsigned char* image_data = stbi_load(filename.c_str(), &width, &height, &num_components, 4);
+	glBindTexture(GL_TEXTURE_2D, m_ID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
-	if (image_data == NULL) std::cerr << "Texture loading failed for texture: " << filename.c_str() << std::endl;
-
-	glGenTextures(1, &id_);
-	glBindTexture(GL_TEXTURE_2D, id_);
-
-	// Repeats texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	stbi_image_free(data);
+}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-
-	stbi_image_free(image_data);
+void Texture::Bind() const
+{
+	glBindTexture(GL_TEXTURE_2D, m_ID);
 }

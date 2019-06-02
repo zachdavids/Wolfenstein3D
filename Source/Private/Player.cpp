@@ -18,7 +18,6 @@ const float SHOOT_DISTANCE = 10.0f;
 static int health_;
 static Camera* camera_;
 
-
 Player::Player(glm::vec3 position, float yaw, float pitch)
 {
 	health_ = HP;

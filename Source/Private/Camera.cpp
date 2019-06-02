@@ -2,14 +2,14 @@
 
 #include <GLM/gtc/matrix_transform.hpp>
 
-Camera::Camera(glm::vec3 position, float yaw, float pitch) :
+Camera::Camera(glm::vec3 const& position, float yaw, float pitch) :
 	m_Position(position),
 	m_Yaw(yaw),
 	m_Pitch(pitch)
 {
 }
 
-void Camera::MoveCamera(glm::vec3 movement_vector, float speed)
+void Camera::MoveCamera(glm::vec3 const& movement_vector, float speed)
 {
 	glm::vec3 view_vector = movement_vector;
 

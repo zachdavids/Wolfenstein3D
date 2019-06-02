@@ -1,26 +1,19 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
-#include <glad/glad.h>
+#include "Resource.h"
+
 #include <string>
-#include <iostream>
 
-
-class Texture
+class Texture : public Resource
 {
 public:
 
-	Texture() {};
-	Texture(int id);
-	Texture(std::string filename);
-
-	int GetId() { return id_; };
-	void LoadTexture(std::string filename);
-	void Bind();
+	Texture(std::string const& filename);
+	void Create();
+	void Bind() const;
 
 private:
 
-	GLuint id_;
+	unsigned int m_ID;
+	static const std::string m_Directory;
 };
-
-#endif;
