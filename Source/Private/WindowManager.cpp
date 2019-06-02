@@ -35,15 +35,6 @@ bool WindowManager::Create(int width, int height)
 		return false; 
 	}
 
-	//glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);
-	//glEnable(GL_CULL_FACE);
-	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	//glEnable(GL_FRAMEBUFFER_SRGB);
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
 	glEnable(GL_TEXTURE_2D);

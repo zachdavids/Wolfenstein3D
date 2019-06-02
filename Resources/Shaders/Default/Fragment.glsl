@@ -7,10 +7,9 @@ in VertexData
 	vec2 uv;
 } i;
 
-uniform vec3 color;
 uniform sampler2D sampler;
 
 void main(void)
 {
-	out_color = texture(sampler, i.uv) * vec4(color, 1.0f);
+	out_color = texture(sampler, i.uv);
 }
