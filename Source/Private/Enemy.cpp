@@ -209,10 +209,10 @@ void Enemy::Death(glm::vec3 orientation, float distance)
 
 void Enemy::FaceCamera(glm::vec3 orientation)
 {
-	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * (float)M_PI / 180.0f);
+	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (orientation.x > 0) {
-		camera_angle += (float)M_PI;
+		camera_angle += glm::pi<float>();
 	}
 	else {
 	}

@@ -1,4 +1,7 @@
 #include "Camera.h"
+#include "WindowManager.h"
+
+#include <GLFW/glfw3.h>
 
 Camera::Camera()
 {
@@ -83,28 +86,32 @@ void Camera::Input()
 	float movAmt = (float)(10 * TimeManager::GetDelta());
 	float rotAmt = (float)(100 * TimeManager::GetDelta());
 
-	glm::vec2 centerPosition = glm::vec2((float)Window::GetWidth() / 2.0f, (float)Window::GetHeight() / 2.0f);
-	glm::vec2 deltaPos = glm::vec2(Input::GetMousePosition()) - centerPosition;
+	double mouse_x;
+	double mouse_y;
+	glfwGetCursorPos(WindowManager::Get()->GetWindow(), &mouse_x, &mouse_y);
 
-	if (Input::GetMousePosition().x != Window::GetWidth()/2 && Input::GetMousePosition().y != Window::GetHeight()/2) {
-		MouseControl(Input::GetMousePosition().x - Window::GetWidth()/2, Input::GetMousePosition().y - Window::GetHeight()/2);
+	float window_width = (float)WindowManager::Get()->GetWidth();
+	float window_height = (float)WindowManager::Get()->GetHeight();
+
+	if (mouse_x != window_width / 2.0f && mouse_y != window_height / 2.0f) {
+		MouseControl(mouse_x - window_width / 2.0f, mouse_y - window_height / 2.0f);
 	}
 
-	if (Input::GetKey(Input::KEY_A)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
 		StrafeCamera(-0.1f);
 	}
-	if (Input::GetKey(Input::KEY_D)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
 		StrafeCamera(0.1f);
 	}
-	if (Input::GetKey(Input::KEY_W)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
 		MoveCamera(0.1f);
 	}
-	if (Input::GetKey(Input::KEY_S)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
 		MoveCamera(-0.1f);
 	}
-	if (Input::GetKey(Input::KEY_ESCAPE)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
 		exit(1);
 	}
 
-	Input::SetMousePosition(glm::vec2(Window::GetWidth()/2, Window::GetHeight()/2));
+	glfwSetCursorPos(WindowManager::Get()->GetWindow(), window_width / 2.0f, window_height / 2.0f);
 }

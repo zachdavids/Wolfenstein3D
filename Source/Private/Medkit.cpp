@@ -35,10 +35,10 @@ Medkit::Medkit(glm::vec3 position)
 void Medkit::Update()
 {
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * (float)M_PI / 180.0f);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
-		camera_angle += (float)M_PI;
+		camera_angle += glm::pi<float>();
 	}
 	else {
 	}

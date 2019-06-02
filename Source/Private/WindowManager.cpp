@@ -7,10 +7,13 @@
 
 WindowManager* WindowManager::m_Instance;
 
-bool WindowManager::Create()
+bool WindowManager::Create(int width, int height)
 {
 	if (m_Instance) { return false; }
 	m_Instance = this;
+
+	m_Width = width;
+	m_Height = height;
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -18,7 +21,7 @@ bool WindowManager::Create()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	m_Window = glfwCreateWindow(800, 600, "Wolfenstein Remastered", nullptr, nullptr);
+	m_Window = glfwCreateWindow(m_Width, m_Height, "Wolfenstein", nullptr, nullptr);
 	if (!m_Window) 
 	{ 
 		return false; 
@@ -31,16 +34,22 @@ bool WindowManager::Create()
 		return false; 
 	}
 
-	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	//glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LEQUAL);
+	//glEnable(GL_CULL_FACE);
+	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glViewport(0, 0, 800, 600);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glViewport(0, 0, m_Width, m_Height);
 	
 	return true;
 }

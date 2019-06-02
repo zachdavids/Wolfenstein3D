@@ -1,5 +1,8 @@
 #include "Player.h"
 #include "ResourceManager.h"
+#include "WindowManager.h"
+
+#include <GLFW/glfw3.h>
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;
@@ -69,29 +72,36 @@ void Player::Input()
 	float movAmt = (float)(10 * TimeManager::GetDelta());
 	float rotAmt = (float)(100 * TimeManager::GetDelta());
 
-	if (Input::GetMousePosition().x != Window::GetWidth() / 2 && Input::GetMousePosition().y != Window::GetHeight() / 2) {
-		camera_->MouseControl(Input::GetMousePosition().x - Window::GetWidth() / 2, Input::GetMousePosition().y - Window::GetHeight() / 2);
+	double mouse_x;
+	double mouse_y;
+	glfwGetCursorPos(WindowManager::Get()->GetWindow(), &mouse_x, &mouse_y);
+
+	float window_width = (float)WindowManager::Get()->GetWidth();
+	float window_height = (float)WindowManager::Get()->GetHeight();
+
+	if (mouse_x != window_width / 2.0f && mouse_y != window_height / 2.0f) {
+		camera_->MouseControl(mouse_x - window_width / 2.0f, mouse_y - window_height / 2.0f);
 	}
 
 	movement_vector_ = glm::vec3(0.0f);
 
-	if (Input::GetKey(Input::KEY_A)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
 		movement_vector_ = movement_vector_ - camera_->GetRightDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_D)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
 		movement_vector_ = movement_vector_ + camera_->GetRightDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_W)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
 		movement_vector_ = movement_vector_ + camera_->GetViewDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetKey(Input::KEY_S)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
 		movement_vector_ = movement_vector_ - camera_->GetViewDirection();
 		audio_->PlayStep();
 	}
-	if (Input::GetMousePressed(Input::LEFT_MOUSE)) {
+	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		material_->SetTexture(animations_[2]);
 		shot_ = true;
 		audio_->PlayPlayerGunshot();
@@ -100,11 +110,11 @@ void Player::Input()
 		glm::vec3 line_end = line_origin + (line_direction * SHOOT_DISTANCE);
 		Level::CheckIntersection(line_origin, line_end, true);
 	}
-	if (Input::GetKey(Input::KEY_ESCAPE)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
 		exit(1);
 	}
 
-	Input::SetMousePosition(glm::vec2(Window::GetWidth() / 2, Window::GetHeight() / 2));
+	glfwSetCursorPos(WindowManager::Get()->GetWindow(), window_width / 2.0f, window_height / 2.0f);
 }
 
 void Player::Update()
@@ -125,10 +135,10 @@ void Player::Update()
 
 	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * (float)M_PI / 180.0f);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
-		camera_angle += (float)M_PI;
+		camera_angle += glm::pi<float>();
 	}
 	else {
 	}

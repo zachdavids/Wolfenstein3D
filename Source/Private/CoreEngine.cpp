@@ -2,10 +2,7 @@
 
 #include "CoreEngine.h"
 #include "Game.h"
-#include "Window.h"
 #include "TimeManager.h"
-#include "Input.h"
-#include "RenderUtility.h"
 
 #define FRAME_CAP 5000; 
 
@@ -15,7 +12,6 @@
 
 int main(int argc, char *argv[])
 {
-	Window::Create(1280, 720, "Wolfenstein3D");
 
 	CoreEngine engine;
 	engine.Run();
@@ -25,11 +21,10 @@ int main(int argc, char *argv[])
 
 CoreEngine::CoreEngine()
 {
-	//m_WindowManager.Create();
+	m_WindowManager.Create(800, 600);
 	m_ResourceManager.Create();
 
 	m_Game = new Game();
-	RenderUtility::GLInitialize();
 	m_IsActive = false;
 }
 
@@ -80,12 +75,7 @@ void CoreEngine::Run()
 		{
 			render = true;
 
-			if (Window::CloseRequested())
-				Stop();
-
 			TimeManager::SetDelta(frame_time);
-
-			Input::Update();
 
 			m_Game->Input();
 			m_Game->Update();
@@ -111,12 +101,12 @@ void CoreEngine::Run()
 
 void CoreEngine::Render()
 {
-	RenderUtility::ClearScreen();
+	WindowManager::Get()->Clear();
 	m_Game->Render();
-	Window::Render();
+	WindowManager::Get()->SwapAndPoll();
 }
 
 void CoreEngine::Destroy()
 {
-	Window::Destroy();
+	WindowManager::Get()->Destroy();
 }

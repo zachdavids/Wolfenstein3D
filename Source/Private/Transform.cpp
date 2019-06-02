@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include "WindowManager.h"
 
 Transform::Transform()
 {
@@ -6,8 +7,8 @@ Transform::Transform()
 	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 	scale_ = glm::vec3(1.0f, 1.0f, 1.0f);
 	fov_ = glm::radians(70.0f);
-	width_ = Window::GetWidth();
-	height_ = Window:: GetHeight();
+	width_ = WindowManager::Get()->GetWidth();
+	height_ = WindowManager::Get()->GetHeight();
 	near_plane_ = 0.1f;
 	far_plane_ = 1000.0f;
 }

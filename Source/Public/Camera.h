@@ -1,9 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Input.h"
 #include "TimeManager.h"
-#include "Window.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc\matrix_transform.hpp>

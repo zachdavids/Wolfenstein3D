@@ -1,5 +1,8 @@
 #include "Level.h"
 #include "ResourceManager.h"
+#include "WindowManager.h"
+
+#include <GLFW/glfw3.h>
 
 const float FLOOR_LENGTH = 1.0f;
 const float FLOOR_WIDTH = 1.0f;
@@ -48,7 +51,7 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 
 void Level::Input()
 {
-	if (Input::GetKey(Input::KEY_E)) {
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E)) {
 		OpenDoors(player_->GetCamera()->GetPosition(), true);
 	}
 
