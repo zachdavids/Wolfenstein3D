@@ -7,5 +7,4 @@ struct Vertex
 {
 	glm::vec3 m_Position;
 	glm::vec2 m_UV;
-	glm::vec3 m_Normal;
 };

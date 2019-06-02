@@ -1,5 +1,4 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include "Vertex.h"
 
@@ -12,24 +11,26 @@ class Mesh
 {
 public:
 
-	static const GLuint position_index_ = 0;
-	static const GLuint texture_coord_index_ = 1;
-	static const GLuint normal_index_ = 2;
-
 	Mesh();
-
+	Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices);
+	void Create();
 	void InitializeMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
-	void InitializeMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, bool normal_calculation);
 	void Draw();
-	std::vector<Vertex> CalculateNormals(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
 private:
 
-	GLuint vao_;
-	GLuint vbo_;
-	GLuint ibo_;
+	GLuint m_VAO;
+	GLuint m_VBO;
+	GLuint m_EBO;
+
+	std::vector<Vertex> m_Vertices;
+	std::vector<unsigned int> m_Indices;
+
+	void CreateVAO();
+	void CreateEBO();
+	void CreateVBO();
+	void EnableAttributes() const;
+	void UnbindVAO() const;
 
 	int size_;
 };
-
-#endif;
