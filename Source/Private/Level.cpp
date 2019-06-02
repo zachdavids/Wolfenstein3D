@@ -1,4 +1,6 @@
 #include "Level.h"
+#include "Texture.h"
+#include "Shader.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
 
@@ -28,18 +30,15 @@ static int nearest_enemy_num;
 static std::vector<Door> doors_temp_;
 static std::vector<Enemy> enemies_temp_; 
 
-Level::Level(std::string filename, std::string texturefilename, Player* player)
+Level::Level(std::string filename, Player* player)
 {
 	player_ = player;
 	nearest_enemy_num = -1;
 
 	audio_ = new Audio();
-	material_ = new Material(new Texture(texturefilename));
 
 	transform_ = new Transform();
 	transform_->SetCamera(player_->GetCamera());
-
-	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	GenerateLevel(filename);
 
@@ -88,8 +87,10 @@ void Level::Update()
 
 void Level::Render()
 {
-	shader_->Bind();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader->Bind();
+	shader->SetMat4("transform", transform_->GetModelProjection());
+	ResourceManager::Get()->GetResource<Texture>("TileTexture")->Bind();
 	mesh_.Draw();
 
 	for (unsigned int i = 0; i < doors_.size(); i++) {
@@ -173,10 +174,10 @@ std::vector<float> Level::CalculateTextureCoords(int texture_number)
 void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) {
 	if (x_orientation ^ y_orientation) {
 		if (x_orientation) {
-			doors_.push_back(Door(position, material_, glm::vec3(position.x, position.y, position.z - 0.9), true));
+			doors_.push_back(Door(position, glm::vec3(position.x, position.y, position.z - 0.9), true));
 		}
 		else {
-			doors_.push_back(Door(position, material_, glm::vec3(position.x + 0.9, position.y, position.z), false));
+			doors_.push_back(Door(position, glm::vec3(position.x + 0.9, position.y, position.z), false));
 		}
 	}
 	else {

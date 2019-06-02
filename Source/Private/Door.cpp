@@ -1,5 +1,7 @@
 #include "Door.h"
 #include "ResourceManager.h"
+#include "Shader.h"
+#include "Texture.h"
 
 const float DOOR_LENGTH = 0.125f;
 const float DOOR_WIDTH = 1.0f;
@@ -12,18 +14,15 @@ const float TIME_TO_CLOSE = 1.0f;
 const int NUM_TEXTURES_X = 6;
 const int NUM_TEXTURES_Y = 19;
 
-Door::Door(glm::vec3 position, Material* material, glm::vec3 open_position, bool rotation)
+Door::Door(glm::vec3 position, glm::vec3 open_position, bool rotation)
 {
 	is_open_ = false;
 
-	material_ = material;
 	position_ = position;
 	open_position_ = open_position;
 	close_position_ = position;
 
 	audio_ = new Audio();
-
-	shader_ = shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	transform_ = new Transform();
 	transform_->SetCamera(Player::GetCamera());
@@ -96,7 +95,10 @@ void Door::Update()
 
 void Door::Render()
 {
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader->Bind();
+	shader->SetMat4("transform", transform_->GetModelProjection());
+	ResourceManager::Get()->GetResource<Texture>("TileTexture")->Bind();
 	mesh_.Draw();
 }
 

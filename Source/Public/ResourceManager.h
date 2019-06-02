@@ -17,6 +17,7 @@ public:
 	ResourceManager() = default;
 	void Create();
 	void AddResource(Type type, std::string const& name, std::string const& path);
+	void AddResourceFolder(Type type, std::string const& directory);
 	static ResourceManager* Get() { return m_Instance; }
 	template <typename T>
 	T* GetResource(std::string const& name) const { return dynamic_cast<T*>(m_Resources.find(name)->second.get()); }

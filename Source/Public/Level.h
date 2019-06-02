@@ -4,8 +4,6 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Mesh.h"
-#include "Material.h"
-#include "Shader.h"
 #include "XMLParser.h"
 #include "Node.h"
 #include "Door.h"
@@ -26,8 +24,7 @@ class Level
 {
 public:
 
-	Level() {};
-	Level(std::string filename, std::string texturefilename, Player* player);
+	Level(std::string filename, Player* player);
 
 	void Input();
 	void Update();
@@ -49,11 +46,8 @@ private:
 	Player* player_;
 	Camera* camera_;
 	Transform* transform_;
-	Material* material_;
 	Mesh mesh_;
 	Enemy* enemy_;
-
-	Shader* shader_;
 
 	sf::Music music;
 

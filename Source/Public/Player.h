@@ -6,13 +6,13 @@
 #include "Game.h"
 #include "Vertex.h"
 #include "Mesh.h"
-#include "Material.h"
 #include "Transform.h"
-#include "Shader.h"
 #include "Audio.h"
 #include "TextShader.h"
 #include <freetype/ft2build.h>
 #include FT_FREETYPE_H
+
+class Texture;
 
 class Player
 {
@@ -50,14 +50,12 @@ private:
 	glm::vec3 collision_vector_;
 	glm::vec3 movement_vector_;
 
-	Material* material_;
 	Mesh mesh_;
 	Transform* transform_;
-	Shader* shader_;
 	Audio* audio_;
 	TextShader* text_shader_;
 
-	std::vector<Texture*> animations_;
+	Texture* m_CurrentAnimation = nullptr;
 
 	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);
 	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);

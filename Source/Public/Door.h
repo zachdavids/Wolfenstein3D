@@ -14,7 +14,7 @@ class Door
 {
 public:
 	
-	Door(glm::vec3 position, Material* material, glm::vec3 open_position, bool rotation);
+	Door(glm::vec3 position, glm::vec3 open_position, bool rotation);
 
 	void Open();
 
@@ -42,8 +42,6 @@ private:
 	Audio* audio_;
 	Mesh mesh_;
 	Transform* transform_;
-	Shader* shader_;
-	Material* material_;
 
 	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);
 	void AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);

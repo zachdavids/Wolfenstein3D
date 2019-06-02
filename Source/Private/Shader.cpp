@@ -135,13 +135,5 @@ void Shader::ReadFile(std::string* output, std::string const& path)
 	sstr.clear();
 }
 
-void Shader::UpdateUniforms(glm::mat4& model_projection, Material* material)
-{
-	// TODO: BIND AND UNBIND TEXTURE
-	material->GetTexture().Bind();
-	SetMat4("transform", model_projection);
-	SetVec3("color", material->GetColor());
-}
-
 
 

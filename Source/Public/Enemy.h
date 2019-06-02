@@ -1,16 +1,16 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
 #include "Mesh.h"
 #include "Transform.h"
 #include "Player.h"
-#include "Shader.h"
 #include "Audio.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtx/intersect.hpp>
 
 #include <random>
+
+class Texture;
 
 class Enemy
 {
@@ -38,11 +38,9 @@ private:
 	bool can_attack_;
 
 	glm::vec3 position_;
-	std::vector<Texture*> animations_;
 
-	Material* material_;
+	Texture* m_CurrentAnimation;
 	Mesh mesh_;
-	Shader* shader_;
 	Transform* transform_;
 	Audio* audio_;
 
@@ -58,5 +56,3 @@ private:
 	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
 	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;

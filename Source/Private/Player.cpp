@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "Texture.h"
+#include "Shader.h"
 
 #include <GLFW/glfw3.h>
 
@@ -28,18 +30,10 @@ Player::Player(glm::vec3 position, float yaw, float pitch)
 	text_shader_ = new TextShader();
 	InitText();
 
-	animations_.push_back(new Texture("Enemy/pngs/s1_1.png"));
-	animations_.push_back(new Texture("Enemy/pngs/s2_2.png"));
-	animations_.push_back(new Texture("Enemy/pngs/s3_3.png"));
-	animations_.push_back(new Texture("Enemy/pngs/s4_4.png"));
-	animations_.push_back(new Texture("Enemy/pngs/s5_5.png"));
-
 	transform_ = new Transform();
 	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
 	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
 	transform_->SetCamera(camera_);
-
-	material_ = new Material(animations_[0]);
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -64,7 +58,7 @@ void Player::Damage(int damage_points)
 void Player::Input()
 {
 	if (shot_ = true) {
-		material_->SetTexture(animations_[0]);
+		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_1");
 	}
 
 	float sensitivity = 0.5f;
@@ -101,7 +95,7 @@ void Player::Input()
 		audio_->PlayStep();
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
-		material_->SetTexture(animations_[2]);
+		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
 		audio_->PlayPlayerGunshot();
 		glm::vec3 line_origin = glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z);
@@ -150,9 +144,10 @@ int Player::GetHealth() {
 
 void Player::Render()
 {
-	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader_->Bind();
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader->Bind();
+	shader->SetMat4("transform", transform_->GetModelProjection());
+	m_CurrentAnimation->Bind();
 	mesh_.Draw();
 	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
 }

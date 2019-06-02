@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Resource.h"
-#include "Material.h"
 
 #include <glad/glad.h>
 #include <GLM/glm.hpp>
@@ -22,7 +21,6 @@ public:
 	void SetFloat(std::string const& name, float value) const;
 	void SetVec3(std::string const& name, glm::vec3 const& value) const;
 	void SetMat4(std::string const& name, glm::mat4 const& value) const;
-	void UpdateUniforms(glm::mat4& model_projection, Material* material);
 
 private:
 

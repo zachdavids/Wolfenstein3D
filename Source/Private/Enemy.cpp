@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "ResourceManager.h"
+#include "Shader.h"
+#include "Texture.h"
 
 const float SCALE = 0.73f;
 const float LENGTH = 1.0f;
@@ -47,31 +49,6 @@ Enemy::Enemy(glm::vec3 position)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
-	// Idle
-	animations_.push_back(new Texture("Enemy/pngs/mguard_s_1.png")); //0
-
-	// Walk
-	animations_.push_back(new Texture("Enemy/pngs/mguard_w1_1.png")); //1
-	animations_.push_back(new Texture("Enemy/pngs/mguard_w2_1.png")); //2
-	animations_.push_back(new Texture("Enemy/pngs/mguard_w3_1.png")); //3
-	animations_.push_back(new Texture("Enemy/pngs/mguard_w4_1.png")); //4
-
-	// Attack
-	animations_.push_back(new Texture("Enemy/pngs/mguard_shoot1.png")); //5
-	animations_.push_back(new Texture("Enemy/pngs/mguard_shoot2.png")); //6
-	animations_.push_back(new Texture("Enemy/pngs/mguard_shoot3.png")); //7
-
-	// Hurt
-	animations_.push_back(new Texture("Enemy/pngs/mguard_pain1.png")); //8
-	animations_.push_back(new Texture("Enemy/pngs/mguard_pain2.png")); //9
-
-	// Death
-	animations_.push_back(new Texture("Enemy/pngs/mguard_die1.png")); //10
-	animations_.push_back(new Texture("Enemy/pngs/mguard_die2.png")); //11
-	animations_.push_back(new Texture("Enemy/pngs/mguard_die3.png")); //12
-	animations_.push_back(new Texture("Enemy/pngs/mguard_die4.png")); //13
-
-	material_ = new Material(animations_[5]);
 	AddIndices(indices, vertices.size(), false);
 	AddVertices(vertices, false, 0, 0, 0, CalculateTextureCoords(27));
 
@@ -80,7 +57,7 @@ Enemy::Enemy(glm::vec3 position)
 
 void Enemy::Idle(glm::vec3 orientation, float distance)
 {
-	material_->SetTexture(animations_[0]);
+	m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Idle");
 
 	glm::vec3 line_origin = transform_->GetTranslation();
 	glm::vec3 line_direction = orientation;
@@ -101,16 +78,16 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 
 	if (distance > STOP_DISTANCE) {
 		if (time < 0.25f) {
-			material_->SetTexture(animations_[1]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk1");
 		}
 		else if (time < 0.50f) {
-			material_->SetTexture(animations_[2]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk2");
 		}
 		else if (time < 0.75f) {
-			material_->SetTexture(animations_[3]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk3");
 		}
 		else if (time < 1.00f) {
-			material_->SetTexture(animations_[4]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk4");
 		}
 		else {
 		}
@@ -137,15 +114,15 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 
 	if (time < 0.40f) {
 		can_attack_ = true;
-		material_->SetTexture(animations_[5]);
+		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot1");
 	}
 	else if (time < 0.80f) {
-		material_->SetTexture(animations_[6]);
+		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot2");
 	}
 	else if (time < 1.00f) {
 		if (can_attack_) {
 			audio_->PlayEnemyGunshot();
-			material_->SetTexture(animations_[7]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot3");
 			std::random_device generator;
 			std::uniform_real_distribution<float> distribution(0.0f, 10.0f);
 			float random = distribution(generator);
@@ -167,7 +144,7 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 		}
 		else {
 			state_ = CHASE_STATE;
-			material_->SetTexture(animations_[5]);
+			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot1");
 			can_attack_ = true;
 		}
 	}
@@ -196,15 +173,14 @@ void Enemy::Damage(int damage_points)
 
 void Enemy::Hurt(glm::vec3 orientation, float distance)
 {
-	material_->SetTexture(animations_[8]);
+	m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Pain1");
 
 	state_ = ATTACK_STATE;
 }
 
 void Enemy::Death(glm::vec3 orientation, float distance)
 {
-	material_->SetTexture(animations_[13]);
-
+	m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Die4");
 }
 
 void Enemy::FaceCamera(glm::vec3 orientation)
@@ -250,8 +226,9 @@ void Enemy::Update()
 
 void Enemy::Render()
 {
-	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader->SetMat4("transform", transform_->GetModelProjection());
+	m_CurrentAnimation->Bind();
 	mesh_.Draw();
 }
 

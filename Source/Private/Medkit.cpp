@@ -1,5 +1,7 @@
 #include "Medkit.h"
 #include "ResourceManager.h"
+#include "Texture.h"
+#include "Shader.h"
 
 const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
@@ -22,8 +24,6 @@ Medkit::Medkit(glm::vec3 position)
 	transform_->SetTranslation(position_);
 	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
 	transform_->SetCamera(Player::GetCamera());
-
-	material_ = new Material(new Texture("Medkit/Medkit.png"));
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -54,8 +54,10 @@ void Medkit::Update()
 
 void Medkit::Render()
 {
-	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
+	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	shader->Bind();
+	shader->SetMat4("transform", transform_->GetModelProjection());
+	ResourceManager::Get()->GetResource<Texture>("Medkit")->Bind();
 	mesh_.Draw();
 }
 
