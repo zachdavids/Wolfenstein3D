@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "ResourceManager.h"
 
 const float SCALE = 0.73f;
 const float LENGTH = 1.0f;
@@ -249,7 +250,7 @@ void Enemy::Update()
 
 void Enemy::Render()
 {
-	shader_ = Level::GetShader();
+	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();
 }

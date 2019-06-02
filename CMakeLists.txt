@@ -36,6 +36,7 @@ if(NOT WIN32)
     find_library(VORBISFILE_LIB SFML)
     find_library(VORBIS_LIB SFML)
     find_library(OGG_LIB SFML)
+	find_library(GLFW_LIB glfw3)
 
 elseif(WIN32)
     find_library(ASSIMP_LIB assimp HINTS ${LIBRARY_PATH}/lib/assimp)
@@ -52,6 +53,7 @@ elseif(WIN32)
     find_library(VORBISFILE_LIB vorbisfile HINTS ${LIBRARY_PATH}/lib/SFML)
     find_library(VORBIS_LIB vorbis HINTS ${LIBRARY_PATH}/lib/SFML)
     find_library(OGG_LIB ogg HINTS ${LIBRARY_PATH}/lib/SFML)
+	find_library(GLFW_LIB glfw3 HINTS ${LIBRARY_PATH}/lib/GLFW)
 endif(NOT WIN32)
 
 target_link_libraries(Wolfenstein3D ${ASSIMP_LIB})
@@ -68,6 +70,7 @@ target_link_libraries(Wolfenstein3D ${VORBISENC_LIB})
 target_link_libraries(Wolfenstein3D ${VORBISFILE_LIB})
 target_link_libraries(Wolfenstein3D ${VORBIS_LIB})
 target_link_libraries(Wolfenstein3D ${OGG_LIB})
+target_link_libraries(Wolfenstein3D ${GLFW_LIB})
 
 # The rules here are specific to Windows Systems
 if(WIN32)

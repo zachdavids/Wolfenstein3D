@@ -34,7 +34,6 @@ public:
 	void Render();
 
 	Audio* audio_;
-	static Shader* GetShader();
 
 	void OpenDoors(glm::vec3 position, bool exit);
 
@@ -53,6 +52,8 @@ private:
 	Material* material_;
 	Mesh mesh_;
 	Enemy* enemy_;
+
+	Shader* shader_;
 
 	sf::Music music;
 

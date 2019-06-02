@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "ResourceManager.h"
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;
@@ -140,7 +141,7 @@ int Player::GetHealth() {
 
 void Player::Render()
 {
-	shader_ = Level::GetShader();
+	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader_->Bind();
 	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();

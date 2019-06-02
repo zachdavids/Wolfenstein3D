@@ -1,4 +1,5 @@
 #include "Door.h"
+#include "ResourceManager.h"
 
 const float DOOR_LENGTH = 0.125f;
 const float DOOR_WIDTH = 1.0f;
@@ -22,7 +23,7 @@ Door::Door(glm::vec3 position, Material* material, glm::vec3 open_position, bool
 
 	audio_ = new Audio();
 
-	shader_ = Level::GetShader();
+	shader_ = shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	transform_ = new Transform();
 	transform_->SetCamera(Player::GetCamera());

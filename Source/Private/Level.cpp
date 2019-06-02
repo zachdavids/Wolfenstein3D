@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "ResourceManager.h"
 
 const float FLOOR_LENGTH = 1.0f;
 const float FLOOR_WIDTH = 1.0f;
@@ -22,9 +23,7 @@ static std::vector<glm::vec3> collision_end;
 
 static int nearest_enemy_num;
 static std::vector<Door> doors_temp_;
-static std::vector<Enemy> enemies_temp_;
-
-static Shader* shader_;
+static std::vector<Enemy> enemies_temp_; 
 
 Level::Level(std::string filename, std::string texturefilename, Player* player)
 {
@@ -37,7 +36,7 @@ Level::Level(std::string filename, std::string texturefilename, Player* player)
 	transform_ = new Transform();
 	transform_->SetCamera(player_->GetCamera());
 
-	shader_ = Shader::GetInstance();
+	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	GenerateLevel(filename);
 
@@ -427,11 +426,6 @@ glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::ve
 	else {
 	}
 	return line_1;
-}
- 
-Shader* Level::GetShader() 
-{ 
-	return shader_; 
 }
 
 void Level::RemoveMedkit()

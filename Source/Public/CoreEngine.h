@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ResourceManager.h"
+
 class Game;
 
 class CoreEngine
@@ -17,4 +19,6 @@ private:
 
 	bool m_IsActive = false;
 	Game* m_Game;
+
+	ResourceManager m_ResourceManager;
 };

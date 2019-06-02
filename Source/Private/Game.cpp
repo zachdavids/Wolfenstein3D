@@ -9,6 +9,8 @@ Game::Game()
 	m_Level = new Level("Level1.xml", "Tiles/TileTextures.png", m_Player_);
 	m_Audio = new Audio();
 
+
+
 	m_IsActive = true;
 }
 

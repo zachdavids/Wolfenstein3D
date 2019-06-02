@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 
 CoreEngine::CoreEngine()
 {
+	m_ResourceManager.Create();
+
 	m_Game = new Game();
 	RenderUtility::GLInitialize();
 	m_IsActive = false;

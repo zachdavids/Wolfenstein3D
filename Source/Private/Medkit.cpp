@@ -1,4 +1,5 @@
 #include "Medkit.h"
+#include "ResourceManager.h"
 
 const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
@@ -53,7 +54,7 @@ void Medkit::Update()
 
 void Medkit::Render()
 {
-	shader_ = Level::GetShader();
+	shader_ = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader_->UpdateUniforms(transform_->GetModelProjection(), material_);
 	mesh_.Draw();
 }
