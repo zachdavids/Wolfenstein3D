@@ -52,47 +52,6 @@ void Mesh::Draw()
 	glBindVertexArray(0);
 }
 
-void Mesh::LoadMesh(std::string filename)
-{
-	std::vector<Vertex> data;
-	std::vector<unsigned int> indices;
-
-	Assimp::Importer importer;
-
-	const aiScene* scene = importer.ReadFile(filename.c_str(),
-		aiProcess_Triangulate |
-		aiProcess_GenSmoothNormals |
-		aiProcess_FlipUVs |
-		aiProcess_CalcTangentSpace);
-
-	if (!scene)
-	{
-		std::cout << "Mesh load failed!: " << filename << std::endl;
-		//assert(0 == 0);
-	}
-
-	const aiMesh* model = scene->mMeshes[0];
-
-	const aiVector3D aiZeroVector(0.0f, 0.0f, 0.0f);
-	for (unsigned int i = 0; i < model->mNumVertices; i++)
-	{
-		const aiVector3D vertex = model->mVertices[i];
-
-		data.push_back(Vertex{ glm::vec3(vertex.x, vertex.y, vertex.z), glm::vec2(0.0f), glm::vec3(0.0f) });
-	}
-
-	for (unsigned int i = 0; i < model->mNumFaces; i++)
-	{
-		const aiFace& face = model->mFaces[i];
-		assert(face.mNumIndices == 3);
-		indices.push_back(face.mIndices[0]);
-		indices.push_back(face.mIndices[1]);
-		indices.push_back(face.mIndices[2]);
-	}
-
-	InitializeMesh(data, indices, true);
-}
-
 std::vector<Vertex> Mesh::CalculateNormals(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
 	for (unsigned int i = 0; i < indices.size(); i += 3) {

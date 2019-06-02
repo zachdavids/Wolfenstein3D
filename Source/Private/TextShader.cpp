@@ -1,5 +1,4 @@
 #include "TextShader.h"
-#include "Material.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
