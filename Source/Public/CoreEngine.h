@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "AudioManager.h"
 
 class Game;
 
@@ -23,4 +24,5 @@ private:
 
 	WindowManager m_WindowManager;
 	ResourceManager m_ResourceManager;
+	AudioManager m_AudioManager;
 };

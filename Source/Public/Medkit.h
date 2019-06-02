@@ -4,7 +4,7 @@
 #include "Level.h"
 #include "Mesh.h"
 #include "Transform.h"
-#include "Audio.h"
+#include "AudioManager.h"
 
 class Medkit
 {
@@ -20,7 +20,6 @@ private:
 
 	bool eaten_;
 
-	Audio* audio_;
 	glm::vec3 position_;
 	Transform* transform_;
 	Mesh mesh_;

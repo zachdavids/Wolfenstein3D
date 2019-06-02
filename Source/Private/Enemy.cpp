@@ -38,7 +38,6 @@ Enemy::Enemy(glm::vec3 position)
 	can_look_ = false;
 	can_attack_ = false;
 
-	audio_ = new Audio();
 	position_ = position;
 
 	transform_ = new Transform();
@@ -100,7 +99,7 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 
 		if (glm::length(movement_vector) > 0) {
 			transform_->SetTranslation(transform_->GetTranslation() + (movement_vector * MOVEMENT_SPEED));
-			audio_->PlayStep();
+			//audio_->PlayStep();
 		}
 	}
 	else {
@@ -121,7 +120,7 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 	}
 	else if (time < 1.00f) {
 		if (can_attack_) {
-			audio_->PlayEnemyGunshot();
+			//audio_->PlayEnemyGunshot();
 			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot3");
 			std::random_device generator;
 			std::uniform_real_distribution<float> distribution(0.0f, 10.0f);
@@ -164,7 +163,7 @@ void Enemy::Damage(int damage_points)
 		state_ = HURT_STATE;
 	}
 	else if (hp_ <= 0) {
-		audio_->PlayEnemyDeath();
+		//audio_->PlayEnemyDeath();
 		state_ = DEATH_STATE;
 	}
 	else {

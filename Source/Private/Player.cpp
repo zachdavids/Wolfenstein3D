@@ -24,7 +24,6 @@ Player::Player(glm::vec3 position, float yaw, float pitch)
 {
 	health_ = HP;
 	shot_ = false;
-	audio_ = new Audio();
 	camera_ = new Camera(position, yaw, pitch);
 	movement_vector_ = glm::vec3(0.0f);
 	text_shader_ = new TextShader();
@@ -80,24 +79,24 @@ void Player::Input()
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
 		movement_vector_ = movement_vector_ - camera_->GetRight();
-		audio_->PlayStep();
+		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
 		movement_vector_ = movement_vector_ + camera_->GetRight();
-		audio_->PlayStep();
+		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
 		movement_vector_ = movement_vector_ + camera_->GetForward();
-		audio_->PlayStep();
+		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
 		movement_vector_ = movement_vector_ - camera_->GetForward();
-		audio_->PlayStep();
+		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
-		audio_->PlayPlayerGunshot();
+		//audio_->PlayPlayerGunshot();
 		glm::vec3 line_origin = glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z);
 		glm::vec3 line_direction = glm::normalize(glm::vec3(camera_->GetForward().x, 0, camera_->GetForward().z));
 		glm::vec3 line_end = line_origin + (line_direction * SHOOT_DISTANCE);

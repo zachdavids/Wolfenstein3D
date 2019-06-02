@@ -9,7 +9,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "Medkit.h"
-#include "Audio.h"
+#include "AudioManager.h"
 
 #include <GLM/gtx\rotate_vector.hpp>
 #include <string>
@@ -28,8 +28,6 @@ public:
 	void Input();
 	void Update();
 	void Render();
-
-	Audio* audio_;
 
 	void OpenDoors(glm::vec3 position, bool exit);
 

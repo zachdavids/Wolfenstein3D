@@ -35,17 +35,12 @@ Level::Level(std::string filename, Player* player)
 	player_ = player;
 	nearest_enemy_num = -1;
 
-	audio_ = new Audio();
-
 	transform_ = new Transform();
 	transform_->SetCamera(player_->GetCamera());
 
 	GenerateLevel(filename);
 
-	//music.openFromFile("Resources/Sounds/song.ogg");
-	//music.setVolume(30);
-	//music.setLoop(true);
-	//music.play();
+	AudioManager::Get()->PlayMusic();
 }
 
 void Level::Input()
@@ -195,7 +190,7 @@ void Level::OpenDoors(glm::vec3 position, bool exit)
 	if (exit) {
 		for (unsigned int i = 0; i < endpoints_.size(); i++) {
 			if (glm::length(endpoints_[i] - position) < 1.0f) {
-				audio_->PlayLevelEnd();
+				//audio_->PlayLevelEnd();
 				//Game::LoadNextLevel();
 			}
 		}

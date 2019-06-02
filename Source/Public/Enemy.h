@@ -3,7 +3,7 @@
 #include "Mesh.h"
 #include "Transform.h"
 #include "Player.h"
-#include "Audio.h"
+#include "AudioManager.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtx/intersect.hpp>
@@ -42,7 +42,6 @@ private:
 	Texture* m_CurrentAnimation;
 	Mesh mesh_;
 	Transform* transform_;
-	Audio* audio_;
 
 	void Idle(glm::vec3 orientation, float distance);
 	void Chase(glm::vec3 orientation, float distance);

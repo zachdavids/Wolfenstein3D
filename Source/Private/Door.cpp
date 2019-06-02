@@ -22,8 +22,6 @@ Door::Door(glm::vec3 position, glm::vec3 open_position, bool rotation)
 	open_position_ = open_position;
 	close_position_ = position;
 
-	audio_ = new Audio();
-
 	transform_ = new Transform();
 	transform_->SetCamera(Player::GetCamera());
 
@@ -75,14 +73,14 @@ void Door::Update()
 		double time = TimeManager::GetTime();
 		if (time < open_time_) {
 			transform_->SetTranslation(glm::lerp(close_position_, open_position_, (float)(time - open_start_ / TIME_TO_OPEN)));
-			audio_->PlayDoorOpen();
+			//audio_->PlayDoorOpen();
 		}
 		else if (time < close_start_) {
 			transform_->SetTranslation(open_position_);
 		}
 		else if (time < close_time_) {
 			transform_->SetTranslation(glm::lerp(open_position_, close_position_, (float)(time - close_start_ / TIME_TO_OPEN)));
-			audio_->PlayDoorClose();
+			//audio_->PlayDoorClose();
 		}
 		else {
 			transform_->SetTranslation(close_position_);

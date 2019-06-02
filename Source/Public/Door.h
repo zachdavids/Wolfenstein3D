@@ -6,7 +6,7 @@
 #include "Transform.h"
 #include "Player.h"
 #include "TimeManager.h"
-#include "Audio.h"
+#include "AudioManager.h"
 
 #include <GLM/gtx\compatibility.hpp>
 
@@ -39,7 +39,6 @@ private:
 	glm::vec3 open_position_;
 	glm::vec3 close_position_;
 
-	Audio* audio_;
 	Mesh mesh_;
 	Transform* transform_;
 

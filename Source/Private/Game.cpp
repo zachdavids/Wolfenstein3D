@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Level.h"
 #include "Player.h"
-#include "Audio.h"
+#include "AudioManager.h"
 #include "WindowManager.h"
 
 #include <GLFW/glfw3.h>
@@ -10,7 +10,6 @@ Game::Game()
 {
 	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
 	m_Level = new Level("Level1.xml", m_Player_);
-	m_Audio = new Audio();
 
 	m_IsActive = true;
 }

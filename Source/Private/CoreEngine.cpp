@@ -19,6 +19,7 @@ CoreEngine::CoreEngine()
 {
 	m_WindowManager.Create(800, 600);
 	m_ResourceManager.Create();
+	m_AudioManager.Create();
 
 	m_Game = new Game();
 	m_IsActive = false;
