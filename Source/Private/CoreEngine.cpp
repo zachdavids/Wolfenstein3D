@@ -6,11 +6,7 @@
 
 #define FRAME_CAP 5000; 
 
-#ifdef main
-#undef main
-#endif
-
-int main(int argc, char *argv[])
+int main()
 {
 
 	CoreEngine engine;

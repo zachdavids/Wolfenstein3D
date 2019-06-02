@@ -28,6 +28,7 @@ bool WindowManager::Create(int width, int height)
 	}
 
 	glfwMakeContextCurrent(m_Window);
+	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	if (!gladLoadGLLoader((GLADloadproc(glfwGetProcAddress)))) 
 	{

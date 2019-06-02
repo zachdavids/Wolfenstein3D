@@ -16,7 +16,7 @@ const float MOVEMENT_SPEED = 0.035f;
 const float SHOOT_DISTANCE = 10.0f;
 
 static int health_;
-static Camera* camera_ = new Camera();
+static Camera* camera_;
 
 
 Player::Player(glm::vec3 position, float yaw, float pitch)
@@ -86,19 +86,19 @@ void Player::Input()
 	movement_vector_ = glm::vec3(0.0f);
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
-		movement_vector_ = movement_vector_ - camera_->GetRightDirection();
+		movement_vector_ = movement_vector_ - camera_->GetRight();
 		audio_->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
-		movement_vector_ = movement_vector_ + camera_->GetRightDirection();
+		movement_vector_ = movement_vector_ + camera_->GetRight();
 		audio_->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
-		movement_vector_ = movement_vector_ + camera_->GetViewDirection();
+		movement_vector_ = movement_vector_ + camera_->GetForward();
 		audio_->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
-		movement_vector_ = movement_vector_ - camera_->GetViewDirection();
+		movement_vector_ = movement_vector_ - camera_->GetForward();
 		audio_->PlayStep();
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
@@ -106,7 +106,7 @@ void Player::Input()
 		shot_ = true;
 		audio_->PlayPlayerGunshot();
 		glm::vec3 line_origin = glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z);
-		glm::vec3 line_direction = glm::normalize(glm::vec3(camera_->GetViewDirection().x, 0, camera_->GetViewDirection().z));
+		glm::vec3 line_direction = glm::normalize(glm::vec3(camera_->GetForward().x, 0, camera_->GetForward().z));
 		glm::vec3 line_end = line_origin + (line_direction * SHOOT_DISTANCE);
 		Level::CheckIntersection(line_origin, line_end, true);
 	}
@@ -133,7 +133,7 @@ void Player::Update()
 
 	camera_->MoveCamera(movement_vector_, MOVEMENT_SPEED);
 
-	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetViewDirection().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetViewDirection().z * 0.29f));
+	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetForward().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetForward().z * 0.29f));
 	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 

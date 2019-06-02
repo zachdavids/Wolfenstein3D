@@ -1,47 +1,24 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
-#include "TimeManager.h"
-
-#include <GLM/glm.hpp>
-#include <GLM/gtc\matrix_transform.hpp>
+#include <GLM/vec3.hpp>
+#include <GLM/mat4x4.hpp>
 
 class Camera
 {
 public:
 
-	Camera();
 	Camera(glm::vec3 position, float yaw, float pitch);
-
-	glm::vec3 GetPosition() { return position_; };
-	void SetPosition(glm::vec3 position) { position_ = position; };
-
-	float GetYaw() { return yaw_; };
-	void SetYaw(float yaw) { yaw_ = yaw; };
-
-	float GetPitch() { return pitch_; };
-	void SetPitch(float pitch) { pitch_ = pitch; };
-
-	glm::vec3 GetRightDirection();
-	glm::vec3 GetViewDirection();
-
-	void MoveCamera(float speed);
+	glm::vec3 GetPosition() const;
+	glm::vec3 GetRight() const;
+	glm::vec3 GetForward() const;
+	glm::mat4 GetViewMatrix() const;
 	void MoveCamera(glm::vec3 movement_vector, float speed);
-	void StrafeCamera(float speed);
-	void Camera::MouseControl(float mouse_x, float mouse_y);
-
-	glm::mat4 GetRotationMatrix();
-	glm::mat4 GetViewMatrix();
-
-	// TEST
-	void Input();
+	void MouseControl(float mouse_x, float mouse_y);
 
 private:
 
-	float yaw_;
-	float pitch_;
-
-	glm::vec3 position_;
+	float m_Yaw;
+	float m_Pitch;
+	glm::vec3 m_Position;
+	glm::mat4 GetRotationMatrix() const;
 };
-
-#endif;
