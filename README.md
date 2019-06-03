@@ -8,7 +8,7 @@ Wolfenstein3D remade with a custom engine using OpenGL and C++. This game was ma
   * XML File Parsing using pugixml
   * Sprite Animation
   * Billboarding
-  * Texturing
+  * Model Loading using ASSIMP
   * HUD
   * Text Rendering using FreeType
   * Simple AI
