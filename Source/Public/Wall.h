@@ -6,6 +6,7 @@
 
 class Mesh;
 class Texture;
+class Shader;
 
 class Wall
 {
@@ -20,15 +21,12 @@ public:
 	
 	Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type);
 	void Render();
-	glm::vec3 GetDimensions();
-	glm::vec3 GetTranslation() { return transform_.GetTranslation(); };
-	glm::vec3 GetPosition() { return m_Position; };
-	void SetPosition(glm::vec3 position) { m_Position = position; };
 
 private:
 
-	Mesh* m_Mesh;
-	Texture* m_Texture;
 	glm::vec3 m_Position;
 	Transform transform_;
+	Mesh* m_Mesh = nullptr;
+	Shader* m_Shader = nullptr;
+	Texture* m_Texture = nullptr;
 };

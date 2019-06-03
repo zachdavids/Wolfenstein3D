@@ -5,9 +5,6 @@
 #include "Mesh.h"
 #include "Player.h"
 
-const float WALL_LENGTH = 0.125f;
-const float WALL_WIDTH = 1.0f;
-
 Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type) :
 	m_Position(position)
 {
@@ -16,6 +13,7 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type) :
 	transform_.SetTranslation(position);
 
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Wall");
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 
 	switch (type)
 	{
@@ -33,19 +31,8 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type) :
 
 void Wall::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->Bind();
-	shader->SetMat4("transform", transform_.GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("DoorTile")->Bind();
+	m_Shader->Bind();
+	m_Shader->SetMat4("transform", transform_.GetModelProjection());
+	m_Texture->Bind();
 	m_Mesh->Draw();
-}
-
-glm::vec3 Wall::GetDimensions()
-{
-	if (transform_.GetRotation().y == glm::radians(-90.0f)) {
-		return glm::vec3(WALL_LENGTH, 0, WALL_WIDTH);
-	}
-	else {
-		return glm::vec3(WALL_WIDTH, 0, WALL_LENGTH);
-	}
 }
