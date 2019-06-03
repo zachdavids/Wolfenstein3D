@@ -6,6 +6,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;

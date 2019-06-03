@@ -2,12 +2,9 @@
 
 #include "Resource.h"
 
-#include <glad/glad.h>
-#include <GLM/glm.hpp>
+#include <GLM/mat4x4.hpp>
+#include <GLM/vec3.hpp>
 #include <string>
-#include <fstream>
-#include <map>
-#include <iostream>
 #include <vector>
 
 class Shader : public Resource
@@ -24,8 +21,8 @@ public:
 
 private:
 
-	GLuint m_ID;
-	std::vector<GLuint> m_ShaderStages;
+	unsigned int m_ID;
+	std::vector<unsigned int> m_ShaderStages;
 	void LoadShader(std::string const& path);
 	void Compile();
 	void ReadFile(std::string* output, std::string const& path);

@@ -1,5 +1,8 @@
 #include "TimeManager.h"
 
+#include <chrono>
+#include <iostream>
+
 double TimeManager::delta_ = 0.0;
 
 double TimeManager::GetTime()

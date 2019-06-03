@@ -1,8 +1,8 @@
 #include "Shader.h"
 
-#include <iostream>
-#include <vector>
+#include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -73,7 +73,6 @@ void Shader::LoadShader(std::string const& path)
 	glShaderSource(stage_id, 1, &stage_code, NULL);
 	glCompileShader(stage_id);
 
-	//TODO: Remove after release
 	GLint status;
 	glGetShaderiv(stage_id, GL_COMPILE_STATUS, &status);
 	if (status != GL_TRUE)

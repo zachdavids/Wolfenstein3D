@@ -24,18 +24,6 @@ Medkit::Medkit(glm::vec3 position)
 	transform_->SetTranslation(position_);
 	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
 	transform_->SetCamera(Player::GetCamera());
-
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	AddIndices(indices, vertices.size(), false);
-	AddVertices(vertices, false, 0, 0, 0, CalculateTextureCoords(27));
-
-	for (Vertex vert : vertices)
-	{
-		std::cout << vert.m_Position.x << ":" << vert.m_Position.y << ":" << vert.m_Position.z << std::endl;
-	}
-	std::cout << std::endl;
-	//mesh_.InitializeMesh(vertices, indices);
 }
 
 void Medkit::Update()
@@ -65,38 +53,4 @@ void Medkit::Render()
 	shader->SetMat4("transform", transform_->GetModelProjection());
 	ResourceManager::Get()->GetResource<Texture>("Medkit")->Bind();
 	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
-}
-
-void Medkit::AddIndices(std::vector<unsigned int>& indices, int start, bool direction)
-{
-	indices.push_back(start + 0);
-	indices.push_back(start + 1);
-	indices.push_back(start + 2);
-
-	indices.push_back(start + 0);
-	indices.push_back(start + 2);
-	indices.push_back(start + 3);
-
-}
-
-void Medkit::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
-{
-	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
-	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
-	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
-	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
-}
-
-std::vector<float> Medkit::CalculateTextureCoords(int texture_number)
-{
-	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
-	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
-	std::vector<float> texture_coords;
-
-	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);
-	texture_coords.push_back((texture_coords[0] - (1.0f / NUM_TEXTURES_X)));
-	texture_coords.push_back((1.0f / NUM_TEXTURES_Y) + (1.0f / NUM_TEXTURES_Y) * texture_y);
-	texture_coords.push_back((texture_coords[2] - (1.0f / NUM_TEXTURES_Y)));
-
-	return texture_coords;
 }

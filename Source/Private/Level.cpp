@@ -5,6 +5,7 @@
 #include "WindowManager.h"
 
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 const float FLOOR_LENGTH = 1.0f;
 const float FLOOR_WIDTH = 1.0f;

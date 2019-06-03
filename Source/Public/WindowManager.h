@@ -5,6 +5,7 @@ struct GLFWwindow;
 class WindowManager
 {
 public:
+
 	WindowManager() = default;
 	bool Create(int width, int height);
 	void Clear() const;
@@ -15,7 +16,9 @@ public:
 	GLFWwindow* GetWindow() const { return m_Window; }
 	int GetWidth() { return m_Width; }
 	int GetHeight() { return m_Height; }
+
 private:
+
 	int m_Width = 800;
 	int m_Height = 600;
 	static WindowManager* m_Instance;

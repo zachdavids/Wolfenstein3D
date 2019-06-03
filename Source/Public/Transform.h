@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#pragma once
 
 #include "Camera.h"
 
@@ -46,5 +45,3 @@ private:
 
 	Camera* camera_;
 };
-
-#endif;

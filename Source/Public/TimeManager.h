@@ -1,8 +1,4 @@
-#ifndef TIME_H
-#define TIME_H
-
-#include <chrono>
-#include <iostream>
+#pragma once
 
 class TimeManager
 {
@@ -16,5 +12,3 @@ private:
 
 	static double delta_;
 };
-
-#endif

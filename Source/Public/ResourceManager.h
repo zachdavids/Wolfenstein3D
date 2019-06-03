@@ -8,6 +8,7 @@
 class ResourceManager
 {
 public:
+
 	enum class Type
 	{
 		kShader,
@@ -24,6 +25,7 @@ public:
 	T* GetResource(std::string const& name) const { return (T*)m_Resources.find(name)->second.get(); }
 
 private:
+
 	static ResourceManager* m_Instance;
 	static const std::string m_TextureDir;
 	static const std::string m_ShaderDir;
