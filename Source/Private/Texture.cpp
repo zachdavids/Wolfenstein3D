@@ -10,6 +10,8 @@ Texture::Texture(std::string const& filename) : Resource(filename)
 
 void Texture::Create()
 {
+	stbi_set_flip_vertically_on_load(true);
+
 	int width;
 	int height;
 	int num_components;

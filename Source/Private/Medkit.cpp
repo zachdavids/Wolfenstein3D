@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Mesh.h"
 
 const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
@@ -28,7 +29,13 @@ Medkit::Medkit(glm::vec3 position)
 	std::vector<unsigned int> indices;
 	AddIndices(indices, vertices.size(), false);
 	AddVertices(vertices, false, 0, 0, 0, CalculateTextureCoords(27));
-	mesh_.InitializeMesh(vertices, indices);
+
+	for (Vertex vert : vertices)
+	{
+		std::cout << vert.m_Position.x << ":" << vert.m_Position.y << ":" << vert.m_Position.z << std::endl;
+	}
+	std::cout << std::endl;
+	//mesh_.InitializeMesh(vertices, indices);
 }
 
 void Medkit::Update()
@@ -57,7 +64,7 @@ void Medkit::Render()
 	shader->Bind();
 	shader->SetMat4("transform", transform_->GetModelProjection());
 	ResourceManager::Get()->GetResource<Texture>("Medkit")->Bind();
-	mesh_.Draw();
+	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
 }
 
 void Medkit::AddIndices(std::vector<unsigned int>& indices, int start, bool direction)

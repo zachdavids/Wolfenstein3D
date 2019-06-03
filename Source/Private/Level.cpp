@@ -82,11 +82,10 @@ void Level::Update()
 
 void Level::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->Bind();
-	shader->SetMat4("transform", transform_->GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("TileTextures")->Bind();
-	mesh_.Draw();
+	for (Wall wall : m_LevelGeometry)
+	{
+		wall.Render();
+	}
 
 	for (unsigned int i = 0; i < doors_.size(); i++) {
 		doors_[i].Render();
@@ -101,69 +100,6 @@ void Level::Render()
 	}
 
 	player_->Render();
-}
-
-void Level::AddIndices(std::vector<unsigned int>& indices, int start, bool direction)
-{
-	if (direction) {
-		indices.push_back(start + 2);
-		indices.push_back(start + 1);
-		indices.push_back(start + 0);
-
-		indices.push_back(start + 3);
-		indices.push_back(start + 2);
-		indices.push_back(start + 0);
-	}
-	else {
-		indices.push_back(start + 0);
-		indices.push_back(start + 1);
-		indices.push_back(start + 2);
-
-		indices.push_back(start + 0);
-		indices.push_back(start + 2);
-		indices.push_back(start + 3);
-	}
-}
-
-void Level::AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
-{
-	if (type == "Floor" || type == "Ceiling") {
-		vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH, y_coord * CEILING_HEIGHT, z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[2]) });
-		vertices.push_back(Vertex{ glm::vec3((x_coord + 1) * FLOOR_WIDTH, y_coord * CEILING_HEIGHT, z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[2]) });
-		vertices.push_back(Vertex{ glm::vec3((x_coord + 1) * FLOOR_WIDTH, y_coord * CEILING_HEIGHT, (z_coord + 1) * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[3]) });
-		vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH, y_coord * CEILING_HEIGHT, (z_coord + 1) * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[3]) });
-	}
-	else if (type == "Wall")
-	{
-		if (!invert) {
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH,       y_coord * CEILING_HEIGHT,      z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[2]) });
-			vertices.push_back(Vertex{ glm::vec3((x_coord + 1) * FLOOR_WIDTH,  y_coord * CEILING_HEIGHT,      z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[2]) });
-			vertices.push_back(Vertex{ glm::vec3((x_coord + 1) * FLOOR_WIDTH, (y_coord + 1) * CEILING_HEIGHT, z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[3]) });
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH,      (y_coord + 1) * CEILING_HEIGHT, z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[3]) });
-		}
-		else {
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH,  y_coord * CEILING_HEIGHT,       z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[2]) });
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH,  y_coord * CEILING_HEIGHT,      (z_coord + 1) * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[2]) });
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH, (y_coord + 1) * CEILING_HEIGHT, (z_coord + 1) * FLOOR_LENGTH), glm::vec2(texture_coords[0], texture_coords[3]) });
-			vertices.push_back(Vertex{ glm::vec3(x_coord * FLOOR_WIDTH, (y_coord + 1) * CEILING_HEIGHT,  z_coord * FLOOR_LENGTH), glm::vec2(texture_coords[1], texture_coords[3]) });
-		}
-	}
-	else {
-	}
-}
-
-std::vector<float> Level::CalculateTextureCoords(int texture_number)
-{
-	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
-	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
-	std::vector<float> texture_coords;
-
-	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);
-	texture_coords.push_back((texture_coords[0] - (1.0f / NUM_TEXTURES_X)));
-	texture_coords.push_back((1.0f / NUM_TEXTURES_Y) + (1.0f / NUM_TEXTURES_Y) * texture_y);
-	texture_coords.push_back((texture_coords[2] - (1.0f / NUM_TEXTURES_Y)));
-
-	return texture_coords;
 }
 
 void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) {
@@ -215,41 +151,35 @@ void Level::GenerateLevel(std::string const& file_name)
 
 	for (int i = 0; i < dimensions_.x; i++) {
 		for (int j = 0; j < dimensions_.y; j++) {
-			// Floor & Ceiling Generation
 			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+
 				// Floor Generation
-				AddIndices(indices, vertices.size(), true);
-				AddVertices(vertices, "Floor", false, i, 0, j, CalculateTextureCoords(0));
+				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 0, j), glm::vec3(0.0f), Wall::Type::kFloor));
 
 				// Ceiling Generation
-				AddIndices(indices, vertices.size(), false);
-				AddVertices(vertices, "Ceiling", false, i, 1, j, CalculateTextureCoords(22));			
+				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(0.0f), Wall::Type::kCeiling));
 
 				// Wall Generation
 				if (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) {
-					AddIndices(indices, vertices.size(), false);
-					AddVertices(vertices, "Wall", false, i, 0, j, CalculateTextureCoords(3));
+					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 				}
 
 				if (!nodes_[i * dimensions_.x + (j + 1)].m_Node.test(Node::NodeType::Location)) {
-					AddIndices(indices, vertices.size(), true);
-					AddVertices(vertices, "Wall", false, i, 0, (j + 1), CalculateTextureCoords(3));
+					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j + 1), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
 				if (!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
-					AddIndices(indices, vertices.size(), true);
-					AddVertices(vertices, "Wall", true, i * CEILING_HEIGHT, 0, j, CalculateTextureCoords(3));
+					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
 				if (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
-					AddIndices(indices, vertices.size(), false);
-					AddVertices(vertices, "Wall", true, (i + 1), 0, j, CalculateTextureCoords(3));
+					m_LevelGeometry.emplace_back(Wall(glm::vec3(i + 1, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
@@ -276,7 +206,6 @@ void Level::GenerateLevel(std::string const& file_name)
 		}
 	}
 	enemies_temp_ = enemies_;
-	mesh_.InitializeMesh(vertices, indices);
 }
 
 glm::vec3 Level::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, float width, float length)

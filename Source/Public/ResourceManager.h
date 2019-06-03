@@ -11,7 +11,8 @@ public:
 	enum class Type
 	{
 		kShader,
-		kTexture
+		kTexture,
+		kMesh
 	};
 
 	ResourceManager() = default;
@@ -26,6 +27,7 @@ private:
 	static ResourceManager* m_Instance;
 	static const std::string m_TextureDir;
 	static const std::string m_ShaderDir;
+	static const std::string m_MeshDir;
 	std::unordered_map<std::string, std::unique_ptr<Resource>> m_Resources;
 };
 

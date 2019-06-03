@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Shader.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 const float SCALE = 0.5f;
@@ -34,12 +35,7 @@ Player::Player(glm::vec3 position, float yaw, float pitch)
 	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
 	transform_->SetCamera(camera_);
 
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	AddIndices(indices, vertices.size(), false);
-	AddVertices(vertices, false, 0, 0, 0, CalculateTextureCoords(27));
-
-	mesh_.InitializeMesh(vertices, indices);
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
 
 void Player::Damage(int damage_points)
@@ -147,7 +143,7 @@ void Player::Render()
 	shader->Bind();
 	shader->SetMat4("transform", transform_->GetModelProjection());
 	m_CurrentAnimation->Bind();
-	mesh_.Draw();
+	m_Mesh->Draw();
 	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
 }
 
@@ -194,40 +190,6 @@ void Player::RenderText(std::string const& text, glm::vec2 position)
 Camera* Player::GetCamera()
 {
 	return camera_;
-}
-
-void Player::AddIndices(std::vector<unsigned int>& indices, int start, bool direction)
-{
-	indices.push_back(start + 0);
-	indices.push_back(start + 1);
-	indices.push_back(start + 2);
-
-	indices.push_back(start + 0);
-	indices.push_back(start + 2);
-	indices.push_back(start + 3);
-
-}
-
-void Player::AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords)
-{
-	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[0], texture_coords[2]) });
-	vertices.push_back(Vertex{ glm::vec3(-LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[0], texture_coords[3]) });
-	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, HEIGHT, z_coord), glm::vec2(texture_coords[1], texture_coords[3]) });
-	vertices.push_back(Vertex{ glm::vec3(LENGTH / 2, y_coord, z_coord), glm::vec2(texture_coords[1], texture_coords[2]) });
-}
-
-std::vector<float> Player::CalculateTextureCoords(int texture_number)
-{
-	float texture_x = (float)(texture_number % NUM_TEXTURES_X);
-	float texture_y = (float)(texture_number / NUM_TEXTURES_X);
-	std::vector<float> texture_coords;
-
-	texture_coords.push_back((1.0f / NUM_TEXTURES_X) + (1.0f / NUM_TEXTURES_X) * texture_x);
-	texture_coords.push_back((texture_coords[0] - (1.0f / NUM_TEXTURES_X)));
-	texture_coords.push_back((1.0f / NUM_TEXTURES_Y) + (1.0f / NUM_TEXTURES_Y) * texture_y);
-	texture_coords.push_back((texture_coords[2] - (1.0f / NUM_TEXTURES_Y)));
-
-	return texture_coords;
 }
 
 void Player::InitText()

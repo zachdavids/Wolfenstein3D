@@ -1,26 +1,70 @@
 #include "Mesh.h"
 
-Mesh::Mesh()
-{
-	glGenVertexArrays(1, &m_VAO);
-	glGenBuffers(1, &m_VBO);
-	glGenBuffers(1, &m_EBO);
-	size_ = 0;
-}
+#include <glad/glad.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
-Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices) :
-	m_Vertices(vertices),
-	m_Indices(indices)
+Mesh::Mesh(std::string const& path) : Resource(path)
 {
 }
 
 void Mesh::Create()
 {
+	Assimp::Importer import;
+	const aiScene* scene = import.ReadFile(m_Path, aiProcess_TransformUVCoords | aiProcessPreset_TargetRealtime_MaxQuality);
+	ProcessMesh(scene->mRootNode, scene);
+
 	CreateVAO();
 	CreateEBO();
 	CreateVBO();
 	EnableAttributes();
 	UnbindVAO();
+}
+
+void Mesh::ProcessMesh(aiNode* node, const aiScene* scene)
+{
+	for (unsigned int i = 0; i != node->mNumMeshes; ++i)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		CreateVertices(mesh);
+		CreateIndices(mesh);
+	}
+	for (unsigned int i = 0; i != node->mNumChildren; ++i)
+	{
+		ProcessMesh(node->mChildren[i], scene);
+	}
+}
+
+void Mesh::CreateVertices(aiMesh* mesh)
+{
+	for (unsigned int i = 0; i != mesh->mNumVertices; ++i)
+	{
+		Vertex vertex;
+
+		vertex.m_Position.x = mesh->mVertices[i].x;
+		vertex.m_Position.y = mesh->mVertices[i].y;
+		vertex.m_Position.z = mesh->mVertices[i].z;
+
+		if (mesh->HasTextureCoords(0))
+		{
+			vertex.m_UV.x = mesh->mTextureCoords[0][i].x;
+			vertex.m_UV.y = mesh->mTextureCoords[0][i].y;
+		}
+		m_Vertices.emplace_back(vertex);
+	}
+}
+
+void Mesh::CreateIndices(aiMesh* mesh)
+{
+	for (unsigned int i = 0; i != mesh->mNumFaces; ++i)
+	{
+		aiFace face = mesh->mFaces[i];
+		for (unsigned int j = 0; j != face.mNumIndices; ++j)
+		{
+			m_Indices.emplace_back(face.mIndices[j]);
+		}
+	}
 }
 
 void Mesh::CreateVAO()
@@ -57,35 +101,10 @@ void Mesh::UnbindVAO() const
 	glBindVertexArray(0);
 }
 
-void Mesh::InitializeMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
-{
-	size_ = indices.size();// * Vertex::SIZE;
-
-	glBindVertexArray(m_VAO);
-
-	// Vertex Buffer
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices.front(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)sizeof(glm::vec3));
-
-	// Indices Buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices.front(), GL_STATIC_DRAW);
-}
-
-void Mesh::Draw()
+void Mesh::Draw() const
 {
 	glBindVertexArray(m_VAO);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	glDrawElements(GL_TRIANGLES, size_, GL_UNSIGNED_INT, 0);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-
+	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 

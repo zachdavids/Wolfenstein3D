@@ -1,5 +1,4 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "Camera.h"
 #include "Level.h"
@@ -11,6 +10,8 @@
 #include "TextShader.h"
 #include <freetype/ft2build.h>
 #include FT_FREETYPE_H
+
+#include <glad/glad.h>
 
 class Texture;
 
@@ -50,19 +51,14 @@ private:
 	glm::vec3 collision_vector_;
 	glm::vec3 movement_vector_;
 
-	Mesh mesh_;
+	Mesh* m_Mesh = nullptr;
 	Transform* transform_;
 	Audio* audio_;
 	TextShader* text_shader_;
 
 	Texture* m_CurrentAnimation = nullptr;
 
-	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);
-	void AddVertices(std::vector<Vertex>& vertices, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
-	std::vector<float> CalculateTextureCoords(int texture_number);
 	void InitText();
 	void RenderText(std::string const& text, glm::vec2 position);
 	std::map<GLchar, Character> characters_;
 };
-
-#endif;

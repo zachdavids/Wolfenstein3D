@@ -26,18 +26,21 @@ if(NOT WIN32)
 	find_library(IRRKLANG_LIB irrKlang)
     find_library(PUGIXML_LIB SFML)
 	find_library(GLFW_LIB glfw3)
+	find_library(ASSIMP_LIB assimp)
 
 elseif(WIN32)
 	find_library(FREETYPE_LIB freetyped HINTS ${LIBRARY_PATH}/lib/freetype)
 	find_library(IRRKLANG_LIB irrKlang HINTS ${LIBRARY_PATH}/lib/irrKlang)
     find_library(PUGIXML_LIB pugixml HINTS ${LIBRARY_PATH}/lib/pugixml)
 	find_library(GLFW_LIB glfw3 HINTS ${LIBRARY_PATH}/lib/GLFW)
+	find_library(ASSIMP_LIB assimp HINTS ${LIBRARY_PATH}/lib/assimp)
 endif(NOT WIN32)
 
 target_link_libraries(Wolfenstein3D ${FREETYPE_LIB})
 target_link_libraries(Wolfenstein3D ${IRRKLANG_LIB})
 target_link_libraries(Wolfenstein3D ${PUGIXML_LIB})
 target_link_libraries(Wolfenstein3D ${GLFW_LIB})
+target_link_libraries(Wolfenstein3D ${ASSIMP_LIB})
 
 # The rules here are specific to Windows Systems
 if(WIN32)

@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "Medkit.h"
 #include "AudioManager.h"
+#include "Wall.h"
 
 #include <GLM/gtx\rotate_vector.hpp>
 #include <string>
@@ -43,9 +44,10 @@ private:
 	Player* player_;
 	Camera* camera_;
 	Transform* transform_;
-	Mesh mesh_;
+	Mesh* mesh_;
 	Enemy* enemy_;
 
+	std::vector<Wall> m_LevelGeometry;
 	std::vector<Door> doors_;
 	std::vector<Enemy> enemies_;
 	std::vector<Medkit> medkits_;

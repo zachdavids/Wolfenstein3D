@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Mesh.h"
 
 #include <iostream>
 #include <filesystem>
@@ -9,6 +10,7 @@ ResourceManager* ResourceManager::m_Instance;
 
 const std::string ResourceManager::m_TextureDir = "Resources/Textures/";
 const std::string ResourceManager::m_ShaderDir = "Resources/Shaders/";
+const std::string ResourceManager::m_MeshDir = "Resources/Meshes/";
 
 void ResourceManager::Create()
 {
@@ -19,6 +21,11 @@ void ResourceManager::Create()
 		ResourceManager::Type::kShader,
 		"DefaultShader",
 		"Default/"
+	);
+
+		ResourceManager::Get()->AddResourceFolder(
+		ResourceManager::Type::kMesh,
+		""
 	);
 
 	ResourceManager::Get()->AddResourceFolder(
@@ -52,6 +59,9 @@ void ResourceManager::AddResource(Type type, std::string const& name, std::strin
 	case Type::kTexture:
 		m_Resources.try_emplace(name, std::make_unique<Texture>(m_TextureDir + filename));
 		break;
+	case Type::kMesh:
+		m_Resources.try_emplace(name, std::make_unique<Mesh>(m_MeshDir + filename));
+		break;
 	}
 	m_Resources.find(name)->second->Create();
 }
@@ -66,6 +76,9 @@ void ResourceManager::AddResourceFolder(Type type, std::string const& folder)
 		break;
 	case Type::kTexture:
 		directory = m_TextureDir + folder;
+		break;
+	case Type::kMesh:
+		directory = m_MeshDir + folder;
 		break;
 	}
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Mesh.h"
 #include "Transform.h"
 #include "Player.h"
 #include "AudioManager.h"
@@ -40,7 +39,6 @@ private:
 	glm::vec3 position_;
 
 	Texture* m_CurrentAnimation;
-	Mesh mesh_;
 	Transform* transform_;
 
 	void Idle(glm::vec3 orientation, float distance);

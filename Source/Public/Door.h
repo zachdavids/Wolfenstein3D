@@ -1,7 +1,5 @@
-#ifndef DOOR_H
-#define DOOR_H
+#pragma once
 
-#include "Mesh.h"
 #include "Level.h"
 #include "Transform.h"
 #include "Player.h"
@@ -21,8 +19,6 @@ public:
 	void Update();
 	void Render();
 
-	Mesh GetMesh() { return mesh_; };
-
 	glm::vec3 GetDimensions();
 	glm::vec3 GetTranslation() { return transform_->GetTranslation(); };
 
@@ -39,12 +35,5 @@ private:
 	glm::vec3 open_position_;
 	glm::vec3 close_position_;
 
-	Mesh mesh_;
 	Transform* transform_;
-
-	void AddIndices(std::vector<unsigned int>& indices, int start, bool direction);
-	void AddVertices(std::vector<Vertex>& vertices, std::string type, bool invert, float x_coord, float y_coord, float z_coord, std::vector<float> texture_coords);
-	std::vector<float> CalculateTextureCoords(int texture_number);
 };
-
-#endif;
