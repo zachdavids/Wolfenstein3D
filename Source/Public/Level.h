@@ -43,9 +43,11 @@ private:
 
 	Player* player_;
 	Camera* camera_;
-	Transform* transform_;
 	Mesh* mesh_;
 	Enemy* enemy_;
+
+	Shader* m_TextShader; //temp
+	Shader* m_DefaultShader; //temp
 
 	std::vector<Wall> m_LevelGeometry;
 	std::vector<Door> doors_;

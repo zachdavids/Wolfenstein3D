@@ -36,8 +36,10 @@ Level::Level(std::string filename, Player* player)
 	player_ = player;
 	nearest_enemy_num = -1;
 
-	transform_ = new Transform();
-	transform_->SetCamera(player_->GetCamera());
+	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_DefaultShader->SetMat4("projection", player->GetCamera()->GetProjectionMatrix());
+
+	//m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
 	GenerateLevel(filename);
 
@@ -83,6 +85,8 @@ void Level::Update()
 
 void Level::Render()
 {
+	m_DefaultShader->SetMat4("view", player_->GetCamera()->GetViewMatrix());
+
 	for (Wall wall : m_LevelGeometry)
 	{
 		wall.Render();

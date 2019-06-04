@@ -19,6 +19,9 @@ private:
 
 	bool m_bViewHasChanged = true;
 	bool m_bProjectionHasChanged = true;
+	static const float m_FOV;
+	static const float m_Near;
+	static const float m_Far;
 	glm::mat4 m_ViewMatrix;
 	glm::mat4 m_ProjectionMatrix;
 	glm::mat4 GetRotationMatrix() const;

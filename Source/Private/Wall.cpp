@@ -7,7 +7,6 @@
 
 Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 {
-	m_Transform.SetCamera(Player::GetCamera());
 	m_Transform.SetRotation(rotation);
 	m_Transform.SetPosition(position);
 
