@@ -1,47 +1,40 @@
 #pragma once
 
-#include "Camera.h"
+#include <GLM/vec3.hpp>
+#include <GLM/mat4x4.hpp>
 
-#include <GLM/glm.hpp>
-#include <GLM/gtc\matrix_transform.hpp>
+class Camera;
 
 class Transform
 {
 public:
 
-	Transform();
+	void Translate(glm::vec3 translation);
+	void Translate(float x, float y, float z);
+	void Rotate(glm::vec3 rotate);
+	void Rotate(float roll, float yaw, float pitch);
+	void Scale(glm::vec3 scale);
+	void Scale(float x, float y, float z);
 
-	Camera* GetCamera() { return camera_; };
-	void SetCamera(Camera* camera) { camera_ = camera; };
-
-	glm::vec3 GetTranslation() { return translation_; };
-	void SetTranslation(glm::vec3 translation) { translation_ = translation; };
-	void SetTranslation(float x, float y, float z);
-
-	glm::vec3 GetRotation() { return rotation_; };
-	void SetRotation(glm::vec3 rotation) { rotation_ = rotation; };
-	void SetRotation(float x, float y, float z);
-
-	glm::vec3 GetScale() { return scale_; };
-	void SetScale(glm::vec3 scale) { scale_ = scale; };
-	void SetScale(float x, float y, float z);
-
+	Camera* GetCamera() { return m_Camera; };
+	glm::vec3 GetPosition() const { return m_Position; };
+	glm::vec3 GetRotation() const { return m_Rotation; };
+	glm::vec3 GetScale() const { return m_Scale; };
 	glm::mat4 GetModelMatrix();
 	glm::mat4 GetModelProjection();
 
-	void SetProjection(float fov, int width, int height, float near_plane, float far_plane);
+	void SetCamera(Camera* camera) { m_Camera = camera; };
+	void SetPosition(glm::vec3 translation) { m_Position = translation; };
+	void SetPosition(float x, float y, float z);
+	void SetRotation(glm::vec3 rotation) { m_Rotation = rotation; };
+	void SetRotation(float x, float y, float z);
+	void SetScale(glm::vec3 scale) { m_Scale = scale; };
+	void SetScale(float x, float y, float z);
 
 private:
 
-	float fov_;
-	float width_;
-	float height_;
-	float near_plane_;
-	float far_plane_;
-	
-	glm::vec3 translation_;
-	glm::vec3 rotation_;
-	glm::vec3 scale_;
-
-	Camera* camera_;
+	glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	Camera* m_Camera;
 };

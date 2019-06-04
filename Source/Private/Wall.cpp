@@ -5,12 +5,11 @@
 #include "Mesh.h"
 #include "Player.h"
 
-Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type) :
-	m_Position(position)
+Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 {
-	transform_.SetCamera(Player::GetCamera());
-	transform_.SetRotation(rotation);
-	transform_.SetTranslation(position);
+	m_Transform.SetCamera(Player::GetCamera());
+	m_Transform.SetRotation(rotation);
+	m_Transform.SetPosition(position);
 
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Wall");
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
@@ -32,7 +31,7 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type) :
 void Wall::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("transform", transform_.GetModelProjection());
+	m_Shader->SetMat4("transform", m_Transform.GetModelProjection());
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

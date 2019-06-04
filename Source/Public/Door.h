@@ -1,39 +1,25 @@
 #pragma once
 
-#include "Level.h"
-#include "Transform.h"
-#include "Player.h"
-#include "TimeManager.h"
-#include "AudioManager.h"
+#include "Actor.h"
 
-#include <GLM/gtx\compatibility.hpp>
-
-class Door
+class Door : public Actor
 {
 public:
 	
 	Door(glm::vec3 position, glm::vec3 open_position, bool rotation);
-
 	void Open();
-
-	void Update();
-	void Render();
-
+	virtual void Update() override;
+	virtual void Render() override;
 	glm::vec3 GetDimensions();
-	glm::vec3 GetTranslation() { return transform_->GetTranslation(); };
-
-	glm::vec3 GetPosition() { return position_; };
-	void SetPosition(glm::vec3 position) { position_ = position; };
+	glm::vec3 GetPosition() { return m_Transform.GetPosition(); };
 
 private:
 
 	bool is_open_;
-	double open_start_, open_time_;
-	double close_start_, close_time_;
-
-	glm::vec3 position_;
+	double open_start_;
+	double open_time_;
+	double close_start_;
+	double close_time_;
 	glm::vec3 open_position_;
 	glm::vec3 close_position_;
-
-	Transform* transform_;
 };

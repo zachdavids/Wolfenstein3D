@@ -1,24 +1,25 @@
 #pragma once
 
-#include <GLM/vec3.hpp>
-#include <GLM/mat4x4.hpp>
+#include "Actor.h"
 
-class Camera
+class Camera : public Actor
 {
 public:
 
-	Camera(glm::vec3 const& position, float yaw, float pitch);
+	Camera(glm::vec3 const& position, glm::vec3 const& rotation);
 	glm::vec3 GetPosition() const;
 	glm::vec3 GetRight() const;
 	glm::vec3 GetForward() const;
-	glm::mat4 GetViewMatrix() const;
+	glm::mat4& GetViewMatrix();
+	glm::mat4& GetProjectionMatrix();
 	void MoveCamera(glm::vec3 const& movement_vector, float speed);
 	void MouseControl(float mouse_x, float mouse_y);
 
 private:
 
-	float m_Yaw;
-	float m_Pitch;
-	glm::vec3 m_Position;
+	bool m_bViewHasChanged = true;
+	bool m_bProjectionHasChanged = true;
+	glm::mat4 m_ViewMatrix;
+	glm::mat4 m_ProjectionMatrix;
 	glm::mat4 GetRotationMatrix() const;
 };

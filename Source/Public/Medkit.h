@@ -1,23 +1,18 @@
 #pragma once
 
-#include "Level.h"
-#include "Transform.h"
-#include "AudioManager.h"
+#include "Actor.h"
 
-class Medkit
+class Medkit : public Actor
 {
 public:
 
 	Medkit(glm::vec3 position);
 
-	void Update();
-	void Render();
-	bool GetEaten() { return eaten_; };
+	virtual void Update() override;
+	virtual void Render() override;
+	bool GetEaten();
 
 private:
 
-	bool eaten_;
-
-	glm::vec3 position_;
-	Transform* transform_;
+	bool m_bIsEaten = false;
 };

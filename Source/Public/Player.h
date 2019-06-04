@@ -1,21 +1,17 @@
 #pragma once
 
-#include "Camera.h"
-#include "Level.h"
-#include "Game.h"
-#include "Vertex.h"
-#include "Mesh.h"
-#include "Transform.h"
-#include "AudioManager.h"
-#include "TextShader.h"
-#include <freetype/ft2build.h>
-#include FT_FREETYPE_H
+#include "Actor.h"
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <map>
 
 class Texture;
+class Mesh;
+class Camera;
+class TextShader;
 
-class Player
+class Player : public Actor
 {
 public:
 
@@ -27,7 +23,7 @@ public:
 		GLuint Advance;    // Horizontal offset to advance to next glyph
 	};
 
-	Player(glm::vec3 position, float yaw, float pitch);
+	Player(glm::vec3 position, glm::vec3 rotation);
 
 	static void Damage(int damage_points);
 
@@ -52,8 +48,6 @@ private:
 	glm::vec3 movement_vector_;
 
 	Mesh* m_Mesh = nullptr;
-	Transform* transform_;
-	Audio* audio_;
 	TextShader* text_shader_;
 
 	Texture* m_CurrentAnimation = nullptr;

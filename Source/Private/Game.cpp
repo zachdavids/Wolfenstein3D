@@ -8,7 +8,7 @@
 
 Game::Game()
 {
-	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
+	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), glm::vec3(0.0f));
 	m_Level = new Level("Level1.xml", m_Player_);
 
 	m_IsActive = true;
@@ -20,7 +20,7 @@ void Game::ResetGame()
 	delete m_Player_;
 	delete m_Level;
 
-	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), 0, 0);
+	m_Player_ = new Player(glm::vec3(1.5f, 0.4375f, 1.5f), glm::vec3(0.0f));
 	m_Level = new Level("Level1.xml", m_Player_);
 }
 

@@ -3,10 +3,17 @@
 #include "WindowManager.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Camera.h"
+#include "TextShader.h"
+#include "TimeManager.h"
+#include "AudioManager.h"
+#include "Level.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <freetype/ft2build.h>
+#include FT_FREETYPE_H
 #include <iostream>
+#include <GLM/gtc\matrix_transform.hpp>
 
 const float SCALE = 0.5f;
 const float LENGTH = 1.0f;
@@ -22,19 +29,19 @@ const float SHOOT_DISTANCE = 10.0f;
 static int health_;
 static Camera* camera_;
 
-Player::Player(glm::vec3 position, float yaw, float pitch)
+Player::Player(glm::vec3 position, glm::vec3 rotation)
 {
 	health_ = HP;
 	shot_ = false;
-	camera_ = new Camera(position, yaw, pitch);
+	camera_ = new Camera(position, rotation);
 	movement_vector_ = glm::vec3(0.0f);
 	text_shader_ = new TextShader();
 	InitText();
 
-	transform_ = new Transform();
-	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
-	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
-	transform_->SetCamera(camera_);
+	m_Transform.SetPosition(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
+	m_Transform.SetRotation(rotation);
+	m_Transform.SetScale(glm::vec3(SCALE, SCALE, SCALE));
+	m_Transform.SetCamera(camera_);
 
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
@@ -122,8 +129,8 @@ void Player::Update()
 
 	camera_->MoveCamera(movement_vector_, MOVEMENT_SPEED);
 
-	transform_->SetTranslation(glm::vec3(camera_->GetPosition().x + camera_->GetForward().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetForward().z * 0.29f));
-	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
+	m_Transform.SetPosition(glm::vec3(camera_->GetPosition().x + camera_->GetForward().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetForward().z * 0.29f));
+	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, m_Transform.GetCamera()->GetPosition().y, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
@@ -131,7 +138,7 @@ void Player::Update()
 	}
 	else {
 	}
-	transform_->SetRotation(0, camera_angle, 0);
+	m_Transform.SetRotation(0, camera_angle, 0);
 }
 
 int Player::GetHealth() {
@@ -142,7 +149,7 @@ void Player::Render()
 {
 	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader->Bind();
-	shader->SetMat4("transform", transform_->GetModelProjection());
+	shader->SetMat4("transform", m_Transform.GetModelProjection());
 	m_CurrentAnimation->Bind();
 	m_Mesh->Draw();
 	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));

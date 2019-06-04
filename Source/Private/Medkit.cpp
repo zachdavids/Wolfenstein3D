@@ -3,6 +3,10 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Player.h"
+#include "Camera.h"
+
+#include <GLM/gtc/constants.hpp>
 
 const float LENGTH = 1.0f;
 const float HEIGHT = 1.0f;
@@ -17,18 +21,14 @@ const int NUM_TEXTURES_Y = 1;
 
 Medkit::Medkit(glm::vec3 position)
 {
-	eaten_ = false;
-	position_ = position;
-
-	transform_ = new Transform();
-	transform_->SetTranslation(position_);
-	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
-	transform_->SetCamera(Player::GetCamera());
+	m_Transform.SetPosition(position);
+	m_Transform.SetScale(glm::vec3(SCALE));
+	m_Transform.SetCamera(Player::GetCamera());
 }
 
 void Medkit::Update()
 {
-	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, transform_->GetCamera()->GetPosition().y, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
+	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, m_Transform.GetCamera()->GetPosition().y, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
@@ -37,12 +37,12 @@ void Medkit::Update()
 	else {
 	}
 
-	transform_->SetRotation(0, camera_angle, 0);
+	m_Transform.SetRotation(0, camera_angle, 0);
 
 	if (glm::length(camera_direction) < PICKUP_DISTANCE) {
 		//audio_->PlayMedkit();
 		Player::Damage(-HEAL_AMOUNT);
-		eaten_ = true;
+		m_bIsEaten = true;
 	}
 }
 
@@ -50,7 +50,12 @@ void Medkit::Render()
 {
 	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	shader->Bind();
-	shader->SetMat4("transform", transform_->GetModelProjection());
+	shader->SetMat4("transform", m_Transform.GetModelProjection());
 	ResourceManager::Get()->GetResource<Texture>("Medkit")->Bind();
 	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
+}
+
+bool Medkit::GetEaten()
+{
+	return m_bIsEaten;
 }

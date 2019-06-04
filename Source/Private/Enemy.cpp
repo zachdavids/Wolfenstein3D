@@ -1,8 +1,15 @@
 #include "Enemy.h"
 #include "ResourceManager.h"
+#include "Player.h"
+#include "AudioManager.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "Camera.h"
+#include "Level.h"
+#include "TimeManager.h"
+
+#include <random>
 
 const float SCALE = 0.73f;
 const float LENGTH = 1.0f;
@@ -31,6 +38,10 @@ const int NUM_TEXTURES_Y = 1;
 
 Enemy::Enemy(glm::vec3 position)
 {
+	m_Transform.SetPosition(position);
+	m_Transform.SetScale(glm::vec3(SCALE, SCALE, SCALE));
+	m_Transform.SetCamera(Player::GetCamera());
+
 	hp_ = HIT_POINTS;
 	death_time_ = 0;
 	hurt_time_ = 0;
@@ -38,20 +49,13 @@ Enemy::Enemy(glm::vec3 position)
 	dead_ = false;
 	can_look_ = false;
 	can_attack_ = false;
-
-	position_ = position;
-
-	transform_ = new Transform();
-	transform_->SetTranslation(position_);
-	transform_->SetScale(glm::vec3(SCALE, SCALE, SCALE));
-	transform_->SetCamera(Player::GetCamera());
 }
 
 void Enemy::Idle(glm::vec3 orientation, float distance)
 {
 	m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Idle");
 
-	glm::vec3 line_origin = transform_->GetTranslation();
+	glm::vec3 line_origin = m_Transform.GetPosition();
 	glm::vec3 line_direction = orientation;
 	glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
@@ -84,14 +88,14 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 		else {
 		}
 
-		glm::vec3 old_position = transform_->GetTranslation();
-		glm::vec3 new_position = transform_->GetTranslation() + (orientation * MOVEMENT_SPEED);
+		glm::vec3 old_position = m_Transform.GetPosition();
+		glm::vec3 new_position = m_Transform.GetPosition() + (orientation * MOVEMENT_SPEED);
 		glm::vec3 collision_vector = Level::CheckCollision(old_position, new_position, BODY_WIDTH, BODY_LENGTH);
 
 		glm::vec3 movement_vector = collision_vector * orientation;
 
 		if (glm::length(movement_vector) > 0) {
-			transform_->SetTranslation(transform_->GetTranslation() + (movement_vector * MOVEMENT_SPEED));
+			m_Transform.SetPosition(m_Transform.GetPosition() + (movement_vector * MOVEMENT_SPEED));
 			//audio_->PlayStep();
 		}
 	}
@@ -119,7 +123,7 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			std::uniform_real_distribution<float> distribution(0.0f, 10.0f);
 			float random = distribution(generator);
 
-			glm::vec3 line_origin = transform_->GetTranslation();
+			glm::vec3 line_origin = m_Transform.GetPosition();
 			glm::vec3 line_direction = orientation;
 			glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
@@ -185,12 +189,12 @@ void Enemy::FaceCamera(glm::vec3 orientation)
 	else {
 	}
 
-	transform_->SetRotation(0, camera_angle, 0);
+	m_Transform.SetRotation(0, camera_angle, 0);
 }
 
 void Enemy::Update()
 {
-	glm::vec3 camera_direction(transform_->GetCamera()->GetPosition().x - transform_->GetTranslation().x, 0, transform_->GetCamera()->GetPosition().z - transform_->GetTranslation().z);
+	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, 0, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_distance = glm::length(camera_direction);
 
 	glm::vec3 camera_orientation = camera_direction / camera_distance;
@@ -219,7 +223,7 @@ void Enemy::Update()
 void Enemy::Render()
 {
 	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->SetMat4("transform", transform_->GetModelProjection());
+	shader->SetMat4("transform", m_Transform.GetModelProjection());
 	m_CurrentAnimation->Bind();
 	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
 }

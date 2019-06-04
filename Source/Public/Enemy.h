@@ -1,29 +1,21 @@
 #pragma once
 
-#include "Transform.h"
-#include "Player.h"
-#include "AudioManager.h"
-
-#include <GLM/glm.hpp>
-#include <GLM/gtx/intersect.hpp>
-
-#include <random>
+#include "Actor.h"
 
 class Texture;
 
-class Enemy
+class Enemy : public Actor
 {
 public:
 
-	Enemy() {};
 	Enemy(glm::vec3 position);
 
-	void Update();
-	void Render();
+	virtual void Update() override;
+	virtual void Render() override;
 
 	glm::vec2 GetSize();
 
-	glm::vec3 GetTranslation() { return transform_->GetTranslation(); };
+	glm::vec3 GetTranslation() { return m_Transform.GetPosition(); };
 	void Damage(int damage_points);
 
 private:
@@ -36,10 +28,7 @@ private:
 	bool can_look_;
 	bool can_attack_;
 
-	glm::vec3 position_;
-
 	Texture* m_CurrentAnimation;
-	Transform* transform_;
 
 	void Idle(glm::vec3 orientation, float distance);
 	void Chase(glm::vec3 orientation, float distance);

@@ -1,45 +1,63 @@
 #include "Transform.h"
 #include "WindowManager.h"
+#include "Camera.h"
 
-Transform::Transform()
+#include <GLM/gtc/matrix_transform.hpp>
+
+void Transform::Translate(glm::vec3 translation)
 {
-	translation_ = glm::vec3(0.0f, 0.0f, 0.0f);
-	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
-	scale_ = glm::vec3(1.0f, 1.0f, 1.0f);
-	fov_ = glm::radians(70.0f);
-	width_ = WindowManager::Get()->GetWidth();
-	height_ = WindowManager::Get()->GetHeight();
-	near_plane_ = 0.1f;
-	far_plane_ = 1000.0f;
+	m_Position += translation;
 }
 
-void Transform::SetTranslation(float x, float y, float z)
+void Transform::Translate(float x, float y, float z)
 {
-	translation_ = glm::vec3(x, y, z);
+	Translate(glm::vec3(x, y, z));
+}
+
+void Transform::Rotate(glm::vec3 rotate)
+{
+	m_Rotation += rotate;
+}
+
+void Transform::Rotate(float roll, float yaw, float pitch)
+{
+	Rotate(glm::vec3(roll, yaw, pitch));
+}
+
+void Transform::Scale(glm::vec3 scale)
+{
+	m_Scale += scale;
+}
+
+void Transform::Scale(float x, float y, float z)
+{
+	Scale(glm::vec3(x, y, z));
+}
+
+void Transform::SetPosition(float x, float y, float z)
+{
+	m_Position = glm::vec3(x, y, z);
 }
 
 void Transform::SetRotation(float x, float y, float z)
 {
-	rotation_ = glm::vec3(x, y, z);
+	m_Rotation = glm::vec3(x, y, z);
 }
 
 void Transform::SetScale(float x, float y, float z)
 {
-	scale_ = glm::vec3(x, y, z);
+	m_Scale = glm::vec3(x, y, z);
 }
 
 glm::mat4 Transform::GetModelMatrix()
 {
-	// Translate
-	glm::mat4 model_matrix = translate(glm::mat4(1.0f), translation_);
+	glm::mat4 model_matrix = translate(glm::mat4(1.0f), m_Position);
 
-	// Scale
-	model_matrix = scale(model_matrix, scale_);
+	model_matrix = scale(model_matrix, m_Scale);
 
-	// Rotate
-	model_matrix = rotate(model_matrix, rotation_.x, glm::vec3(1, 0, 0));
-	model_matrix = rotate(model_matrix, rotation_.y, glm::vec3(0, 1, 0));
-	model_matrix = rotate(model_matrix, rotation_.z, glm::vec3(0, 0, 1));
+	model_matrix = rotate(model_matrix, m_Rotation.x, glm::vec3(1, 0, 0));
+	model_matrix = rotate(model_matrix, m_Rotation.y, glm::vec3(0, 1, 0));
+	model_matrix = rotate(model_matrix, m_Rotation.z, glm::vec3(0, 0, 1));
 
 	return model_matrix;
 }
@@ -47,17 +65,8 @@ glm::mat4 Transform::GetModelMatrix()
 glm::mat4 Transform::GetModelProjection()
 {
 	glm::mat4 model_matrix = GetModelMatrix();
-	glm::mat4 projection_matrix = glm::perspective(fov_, (float)(width_/height_), near_plane_, far_plane_);
-	glm::mat4 view_matrix = camera_->GetViewMatrix();
+	glm::mat4 projection_matrix = m_Camera->GetProjectionMatrix();
+	glm::mat4 view_matrix = m_Camera->GetViewMatrix();
 
 	return projection_matrix * view_matrix * model_matrix;
-}
-
-void Transform::SetProjection(float fov, int width, int height, float near_plane, float far_plane)
-{
-	width_ = (float)width;
-	height_ = (float)height;
-	near_plane_ = near_plane;
-	far_plane_ = far_plane;
-	fov_ = fov;
 }
