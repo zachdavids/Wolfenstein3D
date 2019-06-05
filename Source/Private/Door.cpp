@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "Player.h"
 #include "TimeManager.h"
 
 #include <GLM/gtx/compatibility.hpp>
@@ -27,12 +26,15 @@ Door::Door(glm::vec3 position, glm::vec3 open_position, bool rotation)
 	close_position_ = position;
 
 	m_Transform.SetPosition(position);
-	m_Transform.SetCamera(Player::GetCamera());
 
 	if (rotation) 
 	{
 		m_Transform.SetRotation(glm::vec3(0, glm::radians(-90.0f), 0));
 	}
+
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_Texture = ResourceManager::Get()->GetResource<Texture>("DoorTile");
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Door");
 }
 
 void Door::Open()
@@ -71,11 +73,10 @@ void Door::Update()
 
 void Door::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->Bind();
-	shader->SetMat4("transform", m_Transform.GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("DoorTile")->Bind();
-	ResourceManager::Get()->GetResource<Mesh>("Door")->Draw();
+	m_Shader->Bind();
+	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Texture->Bind();
+	m_Mesh->Draw();
 }
 
 glm::vec3 Door::GetDimensions()

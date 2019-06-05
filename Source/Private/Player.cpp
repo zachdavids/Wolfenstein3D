@@ -4,7 +4,6 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "TextShader.h"
 #include "TimeManager.h"
 #include "AudioManager.h"
 #include "Level.h"
@@ -35,13 +34,14 @@ Player::Player(glm::vec3 position, glm::vec3 rotation)
 	shot_ = false;
 	camera_ = new Camera(position, rotation);
 	movement_vector_ = glm::vec3(0.0f);
-	text_shader_ = new TextShader();
 	InitText();
 
 	m_Transform.SetPosition(glm::vec3(camera_->GetPosition().x, 0, camera_->GetPosition().z));
 	m_Transform.SetRotation(rotation);
 	m_Transform.SetScale(glm::vec3(SCALE, SCALE, SCALE));
-	m_Transform.SetCamera(camera_);
+
+	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
@@ -130,7 +130,7 @@ void Player::Update()
 	camera_->MoveCamera(movement_vector_, MOVEMENT_SPEED);
 
 	m_Transform.SetPosition(glm::vec3(camera_->GetPosition().x + camera_->GetForward().x * 0.30f, 0.22f, camera_->GetPosition().z + camera_->GetForward().z * 0.29f));
-	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, m_Transform.GetCamera()->GetPosition().y, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
+	glm::vec3 camera_direction(camera_->GetPosition().x - m_Transform.GetPosition().x, camera_->GetPosition().y, camera_->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
@@ -147,9 +147,8 @@ int Player::GetHealth() {
 
 void Player::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->Bind();
-	shader->SetMat4("transform", m_Transform.GetModelProjection());
+	m_DefaultShader->Bind();
+	m_DefaultShader->SetMat4("model", m_Transform.GetModelMatrix());
 	m_CurrentAnimation->Bind();
 	m_Mesh->Draw();
 	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
@@ -157,8 +156,7 @@ void Player::Render()
 
 void Player::RenderText(std::string const& text, glm::vec2 position)
 {
-	text_shader_->Bind();
-	text_shader_->UpdateUniforms(glm::vec3(0.5, 0.8f, 0.2f));
+	m_TextShader->Bind();
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO_);
 

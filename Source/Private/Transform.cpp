@@ -61,12 +61,3 @@ glm::mat4 Transform::GetModelMatrix()
 
 	return model_matrix;
 }
-
-glm::mat4 Transform::GetModelProjection()
-{
-	glm::mat4 model_matrix = GetModelMatrix();
-	glm::mat4 projection_matrix = m_Camera->GetProjectionMatrix();
-	glm::mat4 view_matrix = m_Camera->GetViewMatrix();
-
-	return projection_matrix * view_matrix * model_matrix;
-}

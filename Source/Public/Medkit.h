@@ -2,6 +2,10 @@
 
 #include "Actor.h"
 
+class Mesh;
+class Texture;
+class Shader;
+
 class Medkit : public Actor
 {
 public:
@@ -15,4 +19,7 @@ public:
 private:
 
 	bool m_bIsEaten = false;
+	Shader* m_Shader;
+	Texture* m_Texture;
+	Mesh* m_Mesh;
 };

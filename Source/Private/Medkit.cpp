@@ -23,12 +23,15 @@ Medkit::Medkit(glm::vec3 position)
 {
 	m_Transform.SetPosition(position);
 	m_Transform.SetScale(glm::vec3(SCALE));
-	m_Transform.SetCamera(Player::GetCamera());
+
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_Texture = ResourceManager::Get()->GetResource<Texture>("Medkit");
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
 
 void Medkit::Update()
 {
-	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, m_Transform.GetCamera()->GetPosition().y, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
+	glm::vec3 camera_direction(Player::GetCamera()->GetPosition().x - m_Transform.GetPosition().x, Player::GetCamera()->GetPosition().y, Player::GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
@@ -48,11 +51,10 @@ void Medkit::Update()
 
 void Medkit::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->Bind();
-	shader->SetMat4("transform", m_Transform.GetModelProjection());
-	ResourceManager::Get()->GetResource<Texture>("Medkit")->Bind();
-	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
+	m_Shader->Bind();
+	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Texture->Bind();
+	m_Mesh->Draw();
 }
 
 bool Medkit::GetEaten()

@@ -24,7 +24,7 @@ class Level
 {
 public:
 
-	Level(std::string filename, Player* player);
+	Level(std::string filename);
 
 	void Input();
 	void Update();
@@ -41,7 +41,7 @@ public:
 
 private:
 
-	Player* player_;
+	Player* m_Player;
 	Camera* camera_;
 	Mesh* mesh_;
 	Enemy* enemy_;

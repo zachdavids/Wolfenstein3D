@@ -10,6 +10,7 @@ class Texture;
 class Mesh;
 class Camera;
 class TextShader;
+class Shader;
 
 class Player : public Actor
 {
@@ -48,7 +49,8 @@ private:
 	glm::vec3 movement_vector_;
 
 	Mesh* m_Mesh = nullptr;
-	TextShader* text_shader_;
+	Shader* m_DefaultShader = nullptr;
+	Shader* m_TextShader = nullptr;
 
 	Texture* m_CurrentAnimation = nullptr;
 

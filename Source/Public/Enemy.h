@@ -3,6 +3,8 @@
 #include "Actor.h"
 
 class Texture;
+class Mesh;
+class Shader;
 
 class Enemy : public Actor
 {
@@ -29,6 +31,8 @@ private:
 	bool can_attack_;
 
 	Texture* m_CurrentAnimation;
+	Mesh* m_Mesh;
+	Shader* m_Shader;
 
 	void Idle(glm::vec3 orientation, float distance);
 	void Chase(glm::vec3 orientation, float distance);

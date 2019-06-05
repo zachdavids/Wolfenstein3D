@@ -40,7 +40,6 @@ Enemy::Enemy(glm::vec3 position)
 {
 	m_Transform.SetPosition(position);
 	m_Transform.SetScale(glm::vec3(SCALE, SCALE, SCALE));
-	m_Transform.SetCamera(Player::GetCamera());
 
 	hp_ = HIT_POINTS;
 	death_time_ = 0;
@@ -49,6 +48,10 @@ Enemy::Enemy(glm::vec3 position)
 	dead_ = false;
 	can_look_ = false;
 	can_attack_ = false;
+
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
 
 void Enemy::Idle(glm::vec3 orientation, float distance)
@@ -194,7 +197,7 @@ void Enemy::FaceCamera(glm::vec3 orientation)
 
 void Enemy::Update()
 {
-	glm::vec3 camera_direction(m_Transform.GetCamera()->GetPosition().x - m_Transform.GetPosition().x, 0, m_Transform.GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
+	glm::vec3 camera_direction(Player::GetCamera()->GetPosition().x - m_Transform.GetPosition().x, 0, Player::GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
 	float camera_distance = glm::length(camera_direction);
 
 	glm::vec3 camera_orientation = camera_direction / camera_distance;
@@ -222,10 +225,10 @@ void Enemy::Update()
 
 void Enemy::Render()
 {
-	Shader* shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	shader->SetMat4("transform", m_Transform.GetModelProjection());
+	m_Shader->Bind();
+	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
 	m_CurrentAnimation->Bind();
-	ResourceManager::Get()->GetResource<Mesh>("Billboard")->Draw();
+	m_Mesh->Draw();
 }
 
 glm::vec2 Enemy::GetSize()

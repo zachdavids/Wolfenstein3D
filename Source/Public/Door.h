@@ -2,6 +2,10 @@
 
 #include "Actor.h"
 
+class Shader;
+class Texture;
+class Mesh;
+
 class Door : public Actor
 {
 public:
@@ -20,6 +24,9 @@ private:
 	double open_time_;
 	double close_start_;
 	double close_time_;
+	Shader* m_Shader;
+	Texture* m_Texture;
+	Mesh* m_Mesh;
 	glm::vec3 open_position_;
 	glm::vec3 close_position_;
 };

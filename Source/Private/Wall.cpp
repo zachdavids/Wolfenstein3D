@@ -30,7 +30,7 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 void Wall::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("transform", m_Transform.GetModelProjection());
+	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

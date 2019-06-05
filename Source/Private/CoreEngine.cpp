@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreEngine.h"
-#include "Game.h"
 #include "TimeManager.h"
 
 #define FRAME_CAP 5000; 
@@ -20,8 +19,8 @@ CoreEngine::CoreEngine()
 	m_WindowManager.Create(800, 600);
 	m_ResourceManager.Create();
 	m_AudioManager.Create();
+	m_GameManager.Create();
 
-	m_Game = new Game();
 	m_IsActive = false;
 }
 
@@ -74,8 +73,8 @@ void CoreEngine::Run()
 
 			TimeManager::SetDelta(frame_time);
 
-			m_Game->Input();
-			m_Game->Update();
+			GameManager::Get()->Input();
+			GameManager::Get()->Update();
 
 			Render();
 
@@ -99,7 +98,7 @@ void CoreEngine::Run()
 void CoreEngine::Render()
 {
 	WindowManager::Get()->Clear();
-	m_Game->Render();
+	GameManager::Get()->Render();
 	WindowManager::Get()->SwapAndPoll();
 }
 

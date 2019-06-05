@@ -3,8 +3,7 @@
 #include "ResourceManager.h"
 #include "WindowManager.h"
 #include "AudioManager.h"
-
-class Game;
+#include "GameManager.h"
 
 class CoreEngine
 {
@@ -20,9 +19,9 @@ public:
 private:
 
 	bool m_IsActive = false;
-	Game* m_Game;
 
 	WindowManager m_WindowManager;
 	ResourceManager m_ResourceManager;
 	AudioManager m_AudioManager;
+	GameManager m_GameManager;
 };

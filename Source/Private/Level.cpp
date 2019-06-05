@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "GameManager.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -31,15 +32,13 @@ static int nearest_enemy_num;
 static std::vector<Door> doors_temp_;
 static std::vector<Enemy> enemies_temp_; 
 
-Level::Level(std::string filename, Player* player)
+Level::Level(std::string filename)
 {
-	player_ = player;
 	nearest_enemy_num = -1;
 
+	m_Player = GameManager::Get()->GetPlayer();
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	m_DefaultShader->SetMat4("projection", player->GetCamera()->GetProjectionMatrix());
-
-	//m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
+	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
 	GenerateLevel(filename);
 
@@ -49,10 +48,10 @@ Level::Level(std::string filename, Player* player)
 void Level::Input()
 {
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E)) {
-		OpenDoors(player_->GetCamera()->GetPosition(), true);
+		OpenDoors(m_Player->GetCamera()->GetPosition(), true);
 	}
 
-	player_->Input();
+	m_Player->Input();
 
 	for (unsigned int i = 0; i < enemies_.size(); i++) {
 		OpenDoors(enemies_[i].GetTranslation(), false);
@@ -65,7 +64,7 @@ void Level::Update()
 		doors_[i].Update();
 	}
 
-	player_->Update();
+	m_Player->Update();
 
 	for (unsigned int i = 0; i < enemies_.size(); i++) {
 		enemies_[i].Update();
@@ -85,7 +84,17 @@ void Level::Update()
 
 void Level::Render()
 {
-	m_DefaultShader->SetMat4("view", player_->GetCamera()->GetViewMatrix());
+	//TODO Move Rendering to a Rendering Engine
+	//Seperate objects by shader to reduce binds and group by mesh
+	//to reduce vao bind calls.
+
+	m_DefaultShader->Bind();
+	m_DefaultShader->SetMat4("projection", m_Player->GetCamera()->GetProjectionMatrix());
+	m_DefaultShader->SetMat4("view", m_Player->GetCamera()->GetViewMatrix());
+
+	m_TextShader->Bind();
+	m_TextShader->SetVec3("color", glm::vec3(0.5, 0.8f, 0.2f));
+	m_TextShader->SetMat4("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
 	for (Wall wall : m_LevelGeometry)
 	{
@@ -104,7 +113,7 @@ void Level::Render()
 		medkits_[i].Render();
 	}
 
-	player_->Render();
+	m_Player->Render();
 }
 
 void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) {

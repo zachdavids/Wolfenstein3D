@@ -23,6 +23,12 @@ void ResourceManager::Create()
 		"Default/"
 	);
 
+	ResourceManager::Get()->AddResource(
+		ResourceManager::Type::kShader,
+		"TextShader",
+		"Text/"
+	);
+
 		ResourceManager::Get()->AddResourceFolder(
 		ResourceManager::Type::kMesh,
 		""
