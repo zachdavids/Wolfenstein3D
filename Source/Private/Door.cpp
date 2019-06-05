@@ -18,18 +18,23 @@ const float TIME_TO_CLOSE = 1.0f;
 const int NUM_TEXTURES_X = 6;
 const int NUM_TEXTURES_Y = 19;
 
-Door::Door(glm::vec3 position, glm::vec3 open_position, bool rotation)
+Door::Door(glm::vec3 position, bool rotation)
 {
 	is_open_ = false;
 
-	open_position_ = open_position;
-	close_position_ = position;
+	m_OpenPosition = position;
+	m_ClosePosition = position;
 
 	m_Transform.SetPosition(position);
 
 	if (rotation) 
 	{
 		m_Transform.SetRotation(glm::vec3(0, glm::radians(-90.0f), 0));
+		m_OpenPosition.z -= 0.9f;
+	}
+	else
+	{
+		m_OpenPosition.x += 0.9f;
 	}
 
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
@@ -54,18 +59,18 @@ void Door::Update()
 	if (is_open_) {
 		double time = TimeManager::GetTime();
 		if (time < open_time_) {
-			m_Transform.SetPosition(glm::lerp(close_position_, open_position_, (float)(time - open_start_ / TIME_TO_OPEN)));
+			m_Transform.SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - open_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorOpen();
 		}
 		else if (time < close_start_) {
-			m_Transform.SetPosition(open_position_);
+			m_Transform.SetPosition(m_OpenPosition);
 		}
 		else if (time < close_time_) {
-			m_Transform.SetPosition(glm::lerp(open_position_, close_position_, (float)(time - close_start_ / TIME_TO_OPEN)));
+			m_Transform.SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - close_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorClose();
 		}
 		else {
-			m_Transform.SetPosition(close_position_);
+			m_Transform.SetPosition(m_ClosePosition);
 			is_open_ = false;
 		}
 	}

@@ -116,20 +116,6 @@ void Level::Render()
 	m_Player->Render();
 }
 
-void Level::AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation) {
-	if (x_orientation ^ y_orientation) {
-		if (x_orientation) {
-			doors_.push_back(Door(position, glm::vec3(position.x, position.y, position.z - 0.9), true));
-		}
-		else {
-			doors_.push_back(Door(position, glm::vec3(position.x + 0.9, position.y, position.z), false));
-		}
-	}
-	else {
-	}
-	doors_temp_ = doors_;
-}
-
 void Level::OpenDoors(glm::vec3 position, bool exit)
 {
 	for (unsigned int i = 0; i < doors_.size(); i++) {
@@ -160,63 +146,77 @@ void Level::GenerateLevel(std::string const& file_name)
 	nodes_ = parser.GetNodes();
 	dimensions_ = parser.GetDimensions();
 
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-
-	for (int i = 0; i < dimensions_.x; i++) {
-		for (int j = 0; j < dimensions_.y; j++) {
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
-
-				// Floor Generation
+	for (int i = 0; i < dimensions_.x; i++) 
+	{
+		for (int j = 0; j < dimensions_.y; j++) 
+		{
+			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) 
+			{
+				//Floor
 				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 0, j), glm::vec3(0.0f), Wall::Type::kFloor));
 
-				// Ceiling Generation
+				//Ceiling
 				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(0.0f), Wall::Type::kCeiling));
 
-				// Wall Generation
-				if (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) {
+				//Wall
+				if (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) 
+				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[i * dimensions_.x + (j + 1)].m_Node.test(Node::NodeType::Location)) {
+				if (!nodes_[i * dimensions_.x + (j + 1)].m_Node.test(Node::NodeType::Location)) 
+				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j + 1), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+				if (!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) 
+				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3(i * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3(i * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 
-				if (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) {
+				if (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) 
+				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i + 1, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 					collision_start.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, j * FLOOR_WIDTH));
 					collision_end.push_back(glm::vec3((i + 1) * FLOOR_WIDTH, 0, (j + 1) * FLOOR_WIDTH));
 				}
 			}
 			// Door Generation
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Door)) {
-				bool x_orientation = ((!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) && (!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)));
-				bool y_orientation = ((!nodes_[(i - 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)) && (!nodes_[(i + 1) * dimensions_.x + j].m_Node.test(Node::NodeType::Location)));
-
-				AddDoor(glm::vec3(i, 0, j), x_orientation, y_orientation);
+			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Door)) 
+			{
+				bool x_orientation = ((!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)) && 
+					(!nodes_[i * dimensions_.x + (j - 1)].m_Node.test(Node::NodeType::Location)));
+				if (x_orientation)
+				{
+					doors_.push_back(Door(glm::vec3(i, 0, j), true));
+				}
+				else
+				{
+					doors_.push_back(Door(glm::vec3(i, 0, j), false));
+				}
+				doors_temp_ = doors_;
 			}
-			// Enemy
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Enemy)) {
+			//Enemy
+			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Enemy)) 
+			{
 				enemies_.push_back(Enemy(glm::vec3(i, 0, j)));
 			}
-			// Medkits
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Medkit)) {
+			//Medkit
+			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Medkit)) 
+			{
 				medkits_.push_back(Medkit(glm::vec3(i, 0, j)));
 			}
-			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Endpoint)) {
+			//Endpoint
+			if (nodes_[i * dimensions_.x + j].m_Node.test(Node::NodeType::Endpoint)) 
+			{
 				endpoints_.push_back(glm::vec3(i, 0, j));
 			}
-
 		}
 	}
 	enemies_temp_ = enemies_;

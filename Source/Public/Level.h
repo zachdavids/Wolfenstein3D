@@ -55,8 +55,6 @@ private:
 	std::vector<Medkit> medkits_;
 	std::vector<glm::vec3> endpoints_;
 
-	void AddDoor(glm::vec3 position, bool x_orientation, bool y_orientation);
-
 	void GenerateLevel(std::string const& file_name);
 	void RemoveMedkit();
 };
