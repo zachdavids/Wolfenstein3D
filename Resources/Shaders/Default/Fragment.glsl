@@ -11,5 +11,12 @@ uniform sampler2D sampler;
 
 void main(void)
 {
-	out_color = texture(sampler, i.uv);
+	vec4 sampled_color = texture(sampler, i.uv);
+	
+	if (sampled_color.a < 0.1)
+	{
+		discard;
+	}
+	
+	out_color = sampled_color; 
 }

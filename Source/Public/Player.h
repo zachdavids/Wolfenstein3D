@@ -34,7 +34,7 @@ public:
 
 	static int GetHealth();
 
-	static Camera* GetCamera();
+	Camera* GetCamera();
 
 private:
 

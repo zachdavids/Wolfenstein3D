@@ -1,5 +1,6 @@
 #include "Medkit.h"
 #include "ResourceManager.h"
+#include "GameManager.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "Mesh.h"
@@ -31,7 +32,8 @@ Medkit::Medkit(glm::vec3 position)
 
 void Medkit::Update()
 {
-	glm::vec3 camera_direction(Player::GetCamera()->GetPosition().x - m_Transform.GetPosition().x, Player::GetCamera()->GetPosition().y, Player::GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
+	glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+	glm::vec3 camera_direction(player_position.x - m_Transform.GetPosition().x, player_position.y, player_position.z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {

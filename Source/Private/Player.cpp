@@ -42,7 +42,6 @@ Player::Player(glm::vec3 position, glm::vec3 rotation)
 
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
-
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
 
@@ -136,12 +135,11 @@ void Player::Update()
 	if (camera_direction.x > 0) {
 		camera_angle += glm::pi<float>();
 	}
-	else {
-	}
 	m_Transform.SetRotation(0, camera_angle, 0);
 }
 
-int Player::GetHealth() {
+int Player::GetHealth() 
+{
 	return health_;
 }
 

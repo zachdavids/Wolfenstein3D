@@ -16,13 +16,13 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 	switch (type)
 	{
 	case Type::kFloor:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("DoorTile");
+		m_Texture = ResourceManager::Get()->GetResource<Texture>("FloorTile");
 		break;
 	case Type::kCeiling:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("DoorTile");
+		m_Texture = ResourceManager::Get()->GetResource<Texture>("CeilingTile");
 		break;
 	case Type::kWall:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("DoorTile");
+		m_Texture = ResourceManager::Get()->GetResource<Texture>("WallTile");
 		break;
 	}
 }

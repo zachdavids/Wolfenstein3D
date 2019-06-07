@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "ResourceManager.h"
+#include "GameManager.h"
 #include "Player.h"
 #include "AudioManager.h"
 #include "Shader.h"
@@ -63,7 +64,8 @@ void Enemy::Idle(glm::vec3 orientation, float distance)
 	glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
 	glm::vec3 collision_vector = Level::CheckIntersection(line_origin, line_end, false);
-	glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(Player::GetCamera()->GetPosition().x, 0, Player::GetCamera()->GetPosition().z), 0.2f, 0.2f);
+	glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+	glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
 
 	if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
 		glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
@@ -131,7 +133,8 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
 			glm::vec3 collision_vector = Level::CheckIntersection(line_origin, line_end, false);
-			glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(Player::GetCamera()->GetPosition().x, 0, Player::GetCamera()->GetPosition().z), 0.2f, 0.2f);
+			glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+			glm::vec3 player_collision = Level::LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
 
 			if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
 				glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
@@ -197,7 +200,8 @@ void Enemy::FaceCamera(glm::vec3 orientation)
 
 void Enemy::Update()
 {
-	glm::vec3 camera_direction(Player::GetCamera()->GetPosition().x - m_Transform.GetPosition().x, 0, Player::GetCamera()->GetPosition().z - m_Transform.GetPosition().z);
+	glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+	glm::vec3 camera_direction(player_position.x - m_Transform.GetPosition().x, 0, player_position.z - m_Transform.GetPosition().z);
 	float camera_distance = glm::length(camera_direction);
 
 	glm::vec3 camera_orientation = camera_direction / camera_distance;

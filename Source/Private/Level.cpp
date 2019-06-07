@@ -48,7 +48,7 @@ Level::Level(std::string filename)
 void Level::Input()
 {
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E)) {
-		OpenDoors(m_Player->GetCamera()->GetPosition(), true);
+		OpenDoors(m_Player->m_Transform.GetPosition(), true);
 	}
 
 	m_Player->Input();
