@@ -5,40 +5,35 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "TimeManager.h"
+#include "Mesh.h"
 #include "AudioManager.h"
 #include "Level.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <freetype/ft2build.h>
 #include FT_FREETYPE_H
 #include <iostream>
 #include <GLM/gtc\matrix_transform.hpp>
 
-const float SCALE = 0.5f;
-const float LENGTH = 1.0f;
-const float HEIGHT = 1.0f;
-const int NUM_TEXTURES_X = 1;
-const int NUM_TEXTURES_Y = 1;
+const int Player::m_TotalHealth = 100;
+const float Player::m_MovementSpeed = 0.035f;
+const float Player::m_ShootDistance = 10.0f;
 
-const int HP = 100;
 const float SIZE1 = 0.2f;
-const float MOVEMENT_SPEED = 0.035f;
-const float SHOOT_DISTANCE = 10.0f;
-
 static int health_;
-static Camera* camera_;
 
 Player::Player(glm::vec3 position, glm::vec3 rotation)
 {
-	health_ = HP;
+	health_ = m_TotalHealth;
 	shot_ = false;
-	camera_ = new Camera(position, rotation);
+	m_Camera = new Camera(position, rotation);
 	movement_vector_ = glm::vec3(0.0f);
 	InitText();
 
 	m_Transform.SetPosition(position);
 	m_Transform.SetRotation(rotation);
-	m_Transform.SetScale(glm::vec3(SCALE, SCALE, SCALE));
+	m_Transform.SetScale(glm::vec3(0.5f));
 
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
@@ -47,10 +42,12 @@ Player::Player(glm::vec3 position, glm::vec3 rotation)
 
 void Player::Damage(int damage_points)
 {
-	if (health_ > HP) {
-		health_ = HP;
+	if (health_ > m_TotalHealth) 
+	{
+		health_ = m_TotalHealth;
 	}
 	health_ -= damage_points;
+
 	if (health_ <= 0) {
 		std::cout << "Game Over! Press escape to exit" << "\n";
 		//Game::GameOver();
@@ -75,34 +72,34 @@ void Player::Input()
 	float window_height = (float)WindowManager::Get()->GetHeight();
 
 	if (mouse_x != window_width / 2.0f && mouse_y != window_height / 2.0f) {
-		camera_->MouseControl(mouse_x - window_width / 2.0f, mouse_y - window_height / 2.0f);
+		m_Camera->MouseControl(mouse_x - window_width / 2.0f, mouse_y - window_height / 2.0f);
 	}
 
 	movement_vector_ = glm::vec3(0.0f);
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
-		movement_vector_ = movement_vector_ - camera_->m_Transform.GetRight();
+		movement_vector_ = movement_vector_ - m_Camera->m_Transform.GetRight();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
-		movement_vector_ = movement_vector_ + camera_->m_Transform.GetRight();
+		movement_vector_ = movement_vector_ + m_Camera->m_Transform.GetRight();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
-		movement_vector_ = movement_vector_ + camera_->m_Transform.GetForward();
+		movement_vector_ = movement_vector_ + m_Camera->m_Transform.GetForward();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
-		movement_vector_ = movement_vector_ - camera_->m_Transform.GetForward();
+		movement_vector_ = movement_vector_ - m_Camera->m_Transform.GetForward();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
 		AudioManager::Get()->PlayPlayerGunshot();
-		glm::vec3 line_origin = glm::vec3(camera_->m_Transform.GetPosition().x, 0, camera_->m_Transform.GetPosition().z);
-		glm::vec3 line_direction = glm::normalize(glm::vec3(camera_->m_Transform.GetForward().x, 0, camera_->m_Transform.GetForward().z));
-		glm::vec3 line_end = line_origin + (line_direction * SHOOT_DISTANCE);
+		glm::vec3 line_origin = glm::vec3(m_Camera->m_Transform.GetPosition().x, 0, m_Camera->m_Transform.GetPosition().z);
+		glm::vec3 line_direction = glm::normalize(glm::vec3(m_Camera->m_Transform.GetForward().x, 0, m_Camera->m_Transform.GetForward().z));
+		glm::vec3 line_end = line_origin + (line_direction * m_ShootDistance);
 		Level::CheckIntersection(line_origin, line_end, true);
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
@@ -120,16 +117,16 @@ void Player::Update()
 		glm::normalize(movement_vector_);
 	}
 
-	old_position_ = camera_->m_Transform.GetPosition();
-	new_position_ = old_position_ + (movement_vector_ * MOVEMENT_SPEED);
-	collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
+	glm::vec3 old_position_ = m_Camera->m_Transform.GetPosition();
+	glm::vec3 new_position_ = old_position_ + (movement_vector_ * m_MovementSpeed);
+	glm::vec3 collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
 	
 	movement_vector_ *= collision_vector_;
 
-	camera_->MoveCamera(movement_vector_, MOVEMENT_SPEED);
+	m_Camera->MoveCamera(movement_vector_, m_MovementSpeed);
 
-	m_Transform.SetPosition(glm::vec3(camera_->m_Transform.GetPosition().x + camera_->m_Transform.GetForward().x * 0.30f, 0.22f, camera_->m_Transform.GetPosition().z + camera_->m_Transform.GetForward().z * 0.29f));
-	glm::vec3 camera_direction(camera_->m_Transform.GetPosition().x - m_Transform.GetPosition().x, camera_->m_Transform.GetPosition().y, camera_->m_Transform.GetPosition().z - m_Transform.GetPosition().z);
+	m_Transform.SetPosition(glm::vec3(m_Camera->m_Transform.GetPosition().x + m_Camera->m_Transform.GetForward().x * 0.30f, 0.22f, m_Camera->m_Transform.GetPosition().z + m_Camera->m_Transform.GetForward().z * 0.29f));
+	glm::vec3 camera_direction(m_Camera->m_Transform.GetPosition().x - m_Transform.GetPosition().x, m_Camera->m_Transform.GetPosition().y, m_Camera->m_Transform.GetPosition().z - m_Transform.GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
@@ -193,7 +190,7 @@ void Player::RenderText(std::string const& text, glm::vec2 position)
 
 Camera* Player::GetCamera()
 {
-	return camera_;
+	return m_Camera;
 }
 
 void Player::InitText()

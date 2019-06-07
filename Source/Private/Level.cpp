@@ -1,11 +1,19 @@
 #include "Level.h"
+
+#include "Player.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Camera.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "AudioManager.h"
 #include "GameManager.h"
+#include "XMLParser.h"
 
+#include <GLM/glm.hpp>
 #include <GLFW/glfw3.h>
+#include <GLM/gtc/constants.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
 #include <iostream>
 
 const float FLOOR_LENGTH = 1.0f;

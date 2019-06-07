@@ -10,5 +10,5 @@ public:
 
 private:
 
-	static double delta_;
+	static double m_Delta;
 };

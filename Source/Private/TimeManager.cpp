@@ -3,7 +3,7 @@
 #include <chrono>
 #include <iostream>
 
-double TimeManager::delta_ = 0.0;
+double TimeManager::m_Delta = 0.0;
 
 double TimeManager::GetTime()
 {
@@ -14,10 +14,10 @@ double TimeManager::GetTime()
 
 double TimeManager::GetDelta()
 {
-	return delta_;
+	return m_Delta;
 }
 
 void TimeManager::SetDelta(double delta)
 {
-	delta_ = delta;
+	m_Delta = delta;
 }

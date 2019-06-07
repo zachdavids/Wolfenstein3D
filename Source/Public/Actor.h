@@ -5,6 +5,7 @@
 class Actor
 {
 public:
+
 	Transform m_Transform;
 	virtual void Update() {};
 	virtual void Render() {};

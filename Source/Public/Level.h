@@ -1,24 +1,13 @@
 #pragma once
 
 #include "Player.h"
-#include "Transform.h"
-#include "Camera.h"
-#include "Mesh.h"
-#include "XMLParser.h"
-#include "Node.h"
 #include "Door.h"
 #include "Enemy.h"
 #include "Medkit.h"
-#include "AudioManager.h"
 #include "Wall.h"
 
-#include <GLM/gtx\rotate_vector.hpp>
-#include <string>
-
-class Door;
-class Enemy;
-class Player;
-class Medkit;
+#include <GLM/vec3.hpp>
+#include <vector>
 
 class Level
 {
@@ -43,7 +32,6 @@ private:
 
 	Player* m_Player;
 	Camera* camera_;
-	Mesh* mesh_;
 	Enemy* enemy_;
 
 	Shader* m_TextShader; //temp

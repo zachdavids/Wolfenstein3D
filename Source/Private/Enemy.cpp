@@ -10,6 +10,8 @@
 #include "Level.h"
 #include "TimeManager.h"
 
+#include <GLM/gtc/constants.hpp>
+#include <GLM/glm.hpp>
 #include <random>
 
 const float SCALE = 0.73f;
@@ -181,13 +183,13 @@ void Enemy::Death(glm::vec3 orientation, float distance)
 
 void Enemy::FaceCamera(glm::vec3 orientation)
 {
-	float camera_angle = -atanf(orientation.z / orientation.x) + (90.0f * glm::pi<float>() / 180.0f);
+	float m_Cameraangle = -atanf(orientation.z / orientation.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (orientation.x > 0) {
-		camera_angle += glm::pi<float>();
+		m_Cameraangle += glm::pi<float>();
 	}
 
-	m_Transform.SetRotation(0, camera_angle, 0);
+	m_Transform.SetRotation(0, m_Cameraangle, 0);
 }
 
 void Enemy::Update()

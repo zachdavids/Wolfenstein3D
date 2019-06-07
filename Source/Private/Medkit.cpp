@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "Player.h"
 
+#include <GLM/glm.hpp>
 #include <GLM/gtc/constants.hpp>
 
 const int Medkit::m_HealAmount = 30;
