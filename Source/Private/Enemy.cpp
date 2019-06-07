@@ -90,8 +90,6 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 		else if (time < 1.00f) {
 			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk4");
 		}
-		else {
-		}
 
 		glm::vec3 old_position = m_Transform.GetPosition();
 		glm::vec3 new_position = m_Transform.GetPosition() + (orientation * MOVEMENT_SPEED);
@@ -150,8 +148,6 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			can_attack_ = true;
 		}
 	}
-	else {
-	}
 }
 
 void Enemy::Damage(int damage_points)
@@ -168,8 +164,6 @@ void Enemy::Damage(int damage_points)
 	else if (hp_ <= 0) {
 		//audio_->PlayEnemyDeath();
 		state_ = DEATH_STATE;
-	}
-	else {
 	}
 }
 
@@ -191,8 +185,6 @@ void Enemy::FaceCamera(glm::vec3 orientation)
 
 	if (orientation.x > 0) {
 		camera_angle += glm::pi<float>();
-	}
-	else {
 	}
 
 	m_Transform.SetRotation(0, camera_angle, 0);

@@ -19,6 +19,9 @@ public:
 	glm::vec3 GetPosition() const { return m_Position; };
 	glm::vec3 GetRotation() const { return m_Rotation; };
 	glm::vec3 GetScale() const { return m_Scale; };
+	glm::vec3 GetRight() const;
+	glm::vec3 GetForward() const;
+	glm::mat4 GetRotationMatrix() const;
 	glm::mat4 GetModelMatrix();
 
 	void SetPosition(glm::vec3 translation) { m_Position = translation; };

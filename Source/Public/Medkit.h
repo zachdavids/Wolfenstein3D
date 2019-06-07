@@ -18,6 +18,8 @@ public:
 
 private:
 
+	static const int m_HealAmount;
+	static const float m_PickupDistance;
 	bool m_bIsEaten = false;
 	Shader* m_Shader;
 	Texture* m_Texture;

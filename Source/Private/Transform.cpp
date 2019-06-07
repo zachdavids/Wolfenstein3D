@@ -49,6 +49,29 @@ void Transform::SetScale(float x, float y, float z)
 	m_Scale = glm::vec3(x, y, z);
 }
 
+glm::vec3 Transform::GetRight() const
+{
+	glm::vec4 right_vector = inverse(GetRotationMatrix()) * glm::vec4(1, 0, 0, 1);
+
+	return glm::vec3(right_vector);
+}
+
+glm::vec3 Transform::GetForward() const
+{
+	glm::vec4 view_vector = inverse(GetRotationMatrix()) * glm::vec4(0, 0, -1, 1);
+
+	return glm::vec3(view_vector);
+}
+
+glm::mat4 Transform::GetRotationMatrix() const
+{
+	glm::mat4 rotation_matrix(1.0f);
+	rotation_matrix = rotate(rotation_matrix, m_Rotation.x, glm::vec3(1, 0, 0));
+	rotation_matrix = rotate(rotation_matrix, m_Rotation.y, glm::vec3(0, 1, 0));
+
+	return rotation_matrix;
+}
+
 glm::mat4 Transform::GetModelMatrix()
 {
 	glm::mat4 model_matrix = translate(glm::mat4(1.0f), m_Position);

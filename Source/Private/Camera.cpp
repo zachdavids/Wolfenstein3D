@@ -26,40 +26,11 @@ void Camera::MouseControl(float mouse_x, float mouse_y)
 	m_bViewHasChanged = true;
 }
 
-glm::vec3 Camera::GetPosition() const
-{
-	return m_Transform.GetPosition();
-}
-
-glm::vec3 Camera::GetRight() const
-{
-	glm::vec4 right_vector = inverse(GetRotationMatrix()) * glm::vec4(1, 0, 0, 1);
-
-	return glm::vec3(right_vector);
-}
-
-glm::vec3 Camera::GetForward() const
-{
-	glm::vec4 view_vector = inverse(GetRotationMatrix()) * glm::vec4(0, 0, -1, 1);
-	
-	return glm::vec3(view_vector);
-}
-
-glm::mat4 Camera::GetRotationMatrix() const
-{
-	glm::vec3 current_rotation = m_Transform.GetRotation();
-	glm::mat4 rotation_matrix(1.0f);
-	rotation_matrix = rotate(rotation_matrix, current_rotation.x, glm::vec3(1, 0, 0));
-	rotation_matrix = rotate(rotation_matrix, current_rotation.y, glm::vec3(0, 1, 0));
-
-	return rotation_matrix;
-}
-
 glm::mat4& Camera::GetViewMatrix()
 {
 	if (m_bViewHasChanged)
 	{
-		m_ViewMatrix = GetRotationMatrix() * glm::inverse(glm::translate(glm::mat4(), m_Transform.GetPosition()));
+		m_ViewMatrix = m_Transform.GetRotationMatrix() * glm::inverse(glm::translate(glm::mat4(), m_Transform.GetPosition()));
 	}
 
 	return m_ViewMatrix;

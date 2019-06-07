@@ -44,7 +44,8 @@ Door::Door(glm::vec3 position, bool rotation)
 
 void Door::Open()
 {
-	if (!is_open_) {
+	if (!is_open_) 
+	{
 		is_open_ = true;
 
 		open_start_ = TimeManager::GetTime();
@@ -56,20 +57,25 @@ void Door::Open()
 
 void Door::Update()
 {
-	if (is_open_) {
+	if (is_open_)
+	{
 		double time = TimeManager::GetTime();
-		if (time < open_time_) {
+		if (time < open_time_) 
+		{
 			m_Transform.SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - open_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorOpen();
 		}
-		else if (time < close_start_) {
+		else if (time < close_start_) 
+		{
 			m_Transform.SetPosition(m_OpenPosition);
 		}
-		else if (time < close_time_) {
+		else if (time < close_time_) 
+		{
 			m_Transform.SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - close_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorClose();
 		}
-		else {
+		else 
+		{
 			m_Transform.SetPosition(m_ClosePosition);
 			is_open_ = false;
 		}
@@ -86,10 +92,12 @@ void Door::Render()
 
 glm::vec3 Door::GetDimensions()
 {
-	if (m_Transform.GetRotation().y == glm::radians(-90.0f)) {
+	if (m_Transform.GetRotation().y == glm::radians(-90.0f)) 
+	{
 		return glm::vec3(DOOR_LENGTH, 0, DOOR_WIDTH);
 	}
-	else {
+	else 
+	{
 		return glm::vec3(DOOR_WIDTH, 0, DOOR_LENGTH);
 	}
 }
