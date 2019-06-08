@@ -41,10 +41,17 @@ void Mesh::CreateVertices(aiMesh* mesh)
 	for (unsigned int i = 0; i != mesh->mNumVertices; ++i)
 	{
 		Vertex vertex;
-
 		vertex.m_Position.x = mesh->mVertices[i].x;
 		vertex.m_Position.y = mesh->mVertices[i].y;
 		vertex.m_Position.z = mesh->mVertices[i].z;
+
+		m_AABB.m_Min.x = std::min(m_AABB.m_Min.x, vertex.m_Position.x);
+		m_AABB.m_Min.y = std::min(m_AABB.m_Min.y, vertex.m_Position.y);
+		m_AABB.m_Min.z = std::min(m_AABB.m_Min.z, vertex.m_Position.z);
+
+		m_AABB.m_Max.x = std::max(m_AABB.m_Max.x, vertex.m_Position.x);
+		m_AABB.m_Max.y = std::max(m_AABB.m_Max.y, vertex.m_Position.y);
+		m_AABB.m_Min.z = std::min(m_AABB.m_Min.z, vertex.m_Position.z);
 
 		if (mesh->HasTextureCoords(0))
 		{
@@ -65,6 +72,16 @@ void Mesh::CreateIndices(aiMesh* mesh)
 			m_Indices.emplace_back(face.mIndices[j]);
 		}
 	}
+}
+
+glm::vec3 Mesh::GetSize()
+{
+	return m_AABB.m_Max - m_AABB.m_Min;
+}
+
+AABB& Mesh::GetAABB()
+{
+	return m_AABB;
 }
 
 void Mesh::CreateVAO()

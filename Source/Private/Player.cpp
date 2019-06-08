@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "GameManager.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -100,7 +101,7 @@ void Player::Input()
 		glm::vec3 line_origin = glm::vec3(m_Camera->m_Transform.GetPosition().x, 0, m_Camera->m_Transform.GetPosition().z);
 		glm::vec3 line_direction = glm::normalize(glm::vec3(m_Camera->m_Transform.GetForward().x, 0, m_Camera->m_Transform.GetForward().z));
 		glm::vec3 line_end = line_origin + (line_direction * m_ShootDistance);
-		Level::CheckIntersection(line_origin, line_end, true);
+		GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, true);
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
 		exit(1);
@@ -119,7 +120,7 @@ void Player::Update()
 
 	glm::vec3 old_position_ = m_Camera->m_Transform.GetPosition();
 	glm::vec3 new_position_ = old_position_ + (movement_vector_ * m_MovementSpeed);
-	glm::vec3 collision_vector_ = Level::CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
+	glm::vec3 collision_vector_ = GameManager::Get()->GetLevel()->CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
 	
 	movement_vector_ *= collision_vector_;
 

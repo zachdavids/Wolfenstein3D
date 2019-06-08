@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include "AABB.h"
 
 #include <glm/vec3.hpp>
 
@@ -21,6 +22,7 @@ public:
 	
 	Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type);
 	virtual void Render() override;
+	AABB GetAABB();
 
 private:
 

@@ -15,6 +15,7 @@ public:
 	void ResetGame();
 	bool GetActive();
 	Player* GetPlayer();
+	Level* GetLevel();
 	static GameManager* Get() { return m_Instance; }
 
 private:

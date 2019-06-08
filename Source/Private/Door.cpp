@@ -15,9 +15,6 @@ const float TIME_TO_OPEN = 1.0f;
 const float DELAY = 3.0f;
 const float TIME_TO_CLOSE = 1.0f;
 
-const int NUM_TEXTURES_X = 6;
-const int NUM_TEXTURES_Y = 19;
-
 Door::Door(glm::vec3 position, bool rotation)
 {
 	is_open_ = false;

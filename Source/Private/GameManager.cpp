@@ -61,3 +61,8 @@ Player* GameManager::GetPlayer()
 {
 	return m_Player;
 }
+
+Level* GameManager::GetLevel()
+{
+	return m_Level;
+}

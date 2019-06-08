@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Vertex.h"
 #include "Resource.h"
+#include "Vertex.h"
+#include "AABB.h"
 
 #include <vector>
 
@@ -19,12 +20,15 @@ public:
 	void CreateVertices(aiMesh* mesh);
 	void CreateIndices(aiMesh* mesh);
 	void Draw() const;
+	glm::vec3 GetSize();
+	AABB& GetAABB();
 
 private:
 
 	unsigned int m_VAO;
 	unsigned int m_VBO;
 	unsigned int m_EBO;
+	AABB m_AABB;
 	std::vector<Vertex> m_Vertices;
 	std::vector<unsigned int> m_Indices;
 	void CreateVAO();

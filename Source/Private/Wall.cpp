@@ -34,3 +34,8 @@ void Wall::Render()
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }
+
+AABB Wall::GetAABB()
+{
+	return m_Mesh->GetAABB();
+}
