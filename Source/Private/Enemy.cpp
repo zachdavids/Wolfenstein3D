@@ -58,14 +58,14 @@ void Enemy::Idle(glm::vec3 orientation, float distance)
 	glm::vec3 line_direction = orientation;
 	glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
-	glm::vec3 collision_vector = GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, false);
-	glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
-	glm::vec3 player_collision = GameManager::Get()->GetLevel()->LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
+	//glm::vec3 collision_vector = GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, false);
+	//glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+	//glm::vec3 player_collision = GameManager::Get()->GetLevel()->LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
 
-	if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
-		glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
-		state_ = CHASE_STATE;
-	}
+	//if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
+	//	glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
+	//	state_ = CHASE_STATE;
+	//}
 }
 
 void Enemy::Chase(glm::vec3 orientation, float distance)
@@ -125,17 +125,17 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			glm::vec3 line_direction = orientation;
 			glm::vec3 line_end = line_origin + (line_direction * 100.0f);
 
-			glm::vec3 collision_vector = GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, false);
-			glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
-			glm::vec3 player_collision = GameManager::Get()->GetLevel()->LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
+			//glm::vec3 collision_vector = GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, false);
+			//glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
+			//glm::vec3 player_collision = GameManager::Get()->GetLevel()->LineIntersectionRectangle(line_origin, line_end, glm::vec3(player_position.x, 0, player_position.z), 0.2f, 0.2f);
 
-			if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
-				glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
-				Player::Damage(DAMAGE_AMOUNT);
-				
-				state_ = CHASE_STATE;
-			}
-			can_attack_ = false;
+			//if (player_collision != glm::vec3(NULL) && collision_vector == glm::vec3(NULL) ||
+			//	glm::length(player_collision - line_origin) < glm::length(collision_vector - line_origin)) {
+			//	Player::Damage(DAMAGE_AMOUNT);
+			//	
+			//	state_ = CHASE_STATE;
+			//}
+			//can_attack_ = false;
 		}
 		else {
 			state_ = CHASE_STATE;

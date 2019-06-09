@@ -19,7 +19,7 @@
 
 const int Player::m_TotalHealth = 100;
 const float Player::m_MovementSpeed = 0.035f;
-const float Player::m_ShootDistance = 10.0f;
+const float Player::m_ShootDistance = 20.0f;
 
 const float SIZE1 = 0.2f;
 static int health_;

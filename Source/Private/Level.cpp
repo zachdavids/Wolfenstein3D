@@ -302,62 +302,60 @@ glm::vec3 Level::RectangularCollision(glm::vec3 old_position, glm::vec3 new_posi
 
 glm::vec3 Level::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end, bool attack)
 {
-	glm::vec3 nearest_intersection(NULL);
-
-	for (unsigned int i = 0; i < m_LevelGeometry.size(); i++)
+	glm::vec3 closest(0.0f);
+	for (unsigned int i = 0; i < collision_start.size(); i++)
 	{
-		glm::vec3 collision_vector;
-		if (LineIntersection(line_start, line_end, m_LevelGeometry[i].GetAABB().m_Min, m_LevelGeometry[i].GetAABB().m_Max, collision_vector))
+		glm::vec3 result;
+		if (LineIntersection(line_start, line_end, collision_start[i], collision_end[i], result))
 		{
-			if (collision_vector != glm::vec3(NULL) && nearest_intersection == glm::vec3(NULL) ||
-				glm::length(nearest_intersection - line_start) > glm::length(collision_vector - line_start))
+			if (glm::length(result - line_start) < glm::length(closest - line_start))
 			{
-				nearest_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
+				closest = result;
 			}
 		}
 	}
 
-	for (unsigned int i = 0; i < doors_temp_.size(); i++) 
-	{
-		glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, doors_temp_[i].GetPosition(), doors_temp_[i].GetDimensions().x, doors_temp_[i].GetDimensions().y);
+	//for (unsigned int i = 0; i < doors_temp_.size(); i++) 
+	//{
+	//	glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, doors_temp_[i].GetPosition(), doors_temp_[i].GetDimensions().x, doors_temp_[i].GetDimensions().y);
 
-		if (collision_vector != glm::vec3(NULL) && nearest_intersection == glm::vec3(NULL) ||
-			glm::length(nearest_intersection - line_start) > glm::length(collision_vector - line_start)) 
-		{
-			nearest_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
-		}
-	}
+	//	if (nearest_intersection == glm::vec3(NULL) ||
+	//		glm::length(nearest_intersection - line_start) > glm::length(collision_vector - line_start)) 
+	//	{
+	//		nearest_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
+	//	}
+	//}
 
-	if (attack) 
-	{
-		glm::vec3 nearest_enemy_intersection(NULL);
-		glm::vec3 collision_vector(NULL);
+	//if (attack) 
+	//{
+	//	glm::vec3 nearest_enemy_intersection(NULL);
+	//	glm::vec3 collision_vector(NULL);
 
-		for (unsigned int i = 0; i < enemies_temp_.size(); i++) 
-		{
-			glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, enemies_temp_[i].GetTranslation(), enemies_temp_[i].GetSize().x, enemies_temp_[i].GetSize().y);
+	//	for (unsigned int i = 0; i < enemies_temp_.size(); i++) 
+	//	{
+	//		glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, enemies_temp_[i].GetTranslation(), enemies_temp_[i].GetSize().x, enemies_temp_[i].GetSize().y);
 
-			glm::vec3 last_enemy_intersection = nearest_enemy_intersection;
-			nearest_enemy_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
+	//		glm::vec3 last_enemy_intersection = nearest_enemy_intersection;
+	//		nearest_enemy_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
 
-			if (nearest_enemy_intersection == collision_vector) 
-			{
-				nearest_enemy_num = i;
-			}
-		}
-	}
+	//		if (nearest_enemy_intersection == collision_vector) 
+	//		{
+	//			nearest_enemy_num = i;
+	//		}
+	//	}
+	//}
 
-	return nearest_intersection;
+	return closest;
 }
 
 bool Level::LineIntersection(glm::vec3 l1_start, glm::vec3 l1_end, glm::vec3 l2_start, glm::vec3 l2_end, glm::vec3& result)
 {
 	float a1 = l1_end.z - l1_start.z;
-	float b1 = l1_start.x - l1_start.x;
+	float b1 = l1_start.x - l1_end.x;
 	float c1 = a1*l1_start.x + b1*l1_start.z;
 
 	float a2 = l2_end.z - l2_start.z;
-	float b2 = l2_start.x - l2_start.x;
+	float b2 = l2_start.x - l2_end.x;
 	float c2 = a2*l2_start.x + b2*l2_start.z;
 
 	float determinant = a1*b2 - a2*b1;
@@ -372,7 +370,7 @@ bool Level::LineIntersection(glm::vec3 l1_start, glm::vec3 l1_end, glm::vec3 l2_
 		result.y = 0;
 		result.z = (a1 * c2 - a2 * c1) / determinant;
 
-		return true;
+		return true; 
 	}
 }
 
@@ -380,34 +378,33 @@ glm::vec3 Level::LineIntersectionRectangle(glm::vec3 line_start, glm::vec3 line_
 {
 	glm::vec3 result = glm::vec3(NULL);
 
-	glm::vec3 collision_vector;
-	if (LineIntersection(line_start, line_end, position, glm::vec3(position.x + width, 0, position.z), collision_vector))
-	{
-		result = NearestIntersection(result, collision_vector, line_start);
-	}
+	//glm::vec3 collision_vector;
+	//if (LineIntersection(line_start, line_end, position, glm::vec3(position.x + width, 0, position.z), collision_vector))
+	//{
+	//	result = NearestIntersection(result, collision_vector, line_start);
+	//}
 
-	if (LineIntersection(line_start, line_end, position, glm::vec3(position.x, 0, position.z + length), collision_vector))
-	{
-		result = NearestIntersection(result, collision_vector, line_start);
-	}
+	//if (LineIntersection(line_start, line_end, position, glm::vec3(position.x, 0, position.z + length), collision_vector))
+	//{
+	//	result = NearestIntersection(result, collision_vector, line_start);
+	//}
 
-	if (LineIntersection(line_start, line_end, glm::vec3(position.x, 0, position.z + length), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
-	{
-		result = NearestIntersection(result, collision_vector, line_start);
-	}
+	//if (LineIntersection(line_start, line_end, glm::vec3(position.x, 0, position.z + length), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
+	//{
+	//	result = NearestIntersection(result, collision_vector, line_start);
+	//}
 
-	if (LineIntersection(line_start, line_end, glm::vec3(position.x + width, 0, position.z), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
-	{
-		result = NearestIntersection(result, collision_vector, line_start);
-	}
+	//if (LineIntersection(line_start, line_end, glm::vec3(position.x + width, 0, position.z), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
+	//{
+	//	result = NearestIntersection(result, collision_vector, line_start);
+	//}
 
 	return result;
 }
 
 glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::vec3 nearest)
 {
-	if (line_2 != glm::vec3(NULL) && line_1 == glm::vec3(NULL) ||
-		glm::length(line_1 - nearest) > glm::length(line_2 - nearest)) 
+	if (glm::length(line_1 - nearest) > glm::length(line_2 - nearest)) 
 	{
 		return line_2;
 	}
