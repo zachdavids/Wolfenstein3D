@@ -302,154 +302,44 @@ glm::vec3 Level::RectangularCollision(glm::vec3 old_position, glm::vec3 new_posi
 	return result;
 }
 
-glm::vec3 Level::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end, bool attack)
+void Level::CheckRayCollision(Ray ray)
 {
-	glm::vec3 closest(0.0f);
-	for (unsigned int i = 0; i < collision_start.size(); i++)
-	{
-		glm::vec3 result;
-		if (LineIntersection(line_start, line_end, collision_start[i], collision_end[i], result))
-		{
-			if (glm::length(result - line_start) < glm::length(closest - line_start))
-			{
-				closest = result;
-			}
-		}
-	}
-
-	//for (unsigned int i = 0; i < doors_temp_.size(); i++) 
-	//{
-	//	glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, doors_temp_[i].GetPosition(), doors_temp_[i].GetDimensions().x, doors_temp_[i].GetDimensions().y);
-
-	//	if (nearest_intersection == glm::vec3(NULL) ||
-	//		glm::length(nearest_intersection - line_start) > glm::length(collision_vector - line_start)) 
-	//	{
-	//		nearest_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
-	//	}
-	//}
-
-	//if (attack) 
-	//{
-	//	glm::vec3 nearest_enemy_intersection(NULL);
-	//	glm::vec3 collision_vector(NULL);
-
-	//	for (unsigned int i = 0; i < enemies_temp_.size(); i++) 
-	//	{
-	//		glm::vec3 collision_vector = LineIntersectionRectangle(line_start, line_end, enemies_temp_[i].GetTranslation(), enemies_temp_[i].GetSize().x, enemies_temp_[i].GetSize().y);
-
-	//		glm::vec3 last_enemy_intersection = nearest_enemy_intersection;
-	//		nearest_enemy_intersection = NearestIntersection(nearest_intersection, collision_vector, line_start);
-
-	//		if (nearest_enemy_intersection == collision_vector) 
-	//		{
-	//			nearest_enemy_num = i;
-	//		}
-	//	}
-	//}
-
-	return closest;
-}
-
-bool Level::LineIntersection(glm::vec3 l1_start, glm::vec3 l1_end, glm::vec3 l2_start, glm::vec3 l2_end, glm::vec3& result)
-{
-	float a1 = l1_end.z - l1_start.z;
-	float b1 = l1_start.x - l1_end.x;
-	float c1 = a1*l1_start.x + b1*l1_start.z;
-
-	float a2 = l2_end.z - l2_start.z;
-	float b2 = l2_start.x - l2_end.x;
-	float c2 = a2*l2_start.x + b2*l2_start.z;
-
-	float determinant = a1*b2 - a2*b1;
-
-	if (determinant == 0.0f)
-	{
-		return false;
-	}
-	else
-	{
-		result.x = (b2 * c1 - b1 * c2) / determinant;
-		result.y = 0;
-		result.z = (a1 * c2 - a2 * c1) / determinant;
-
-		return true; 
-	}
-}
-
-glm::vec3 Level::LineIntersectionRectangle(glm::vec3 line_start, glm::vec3 line_end, glm::vec3 position, float width, float length)
-{
-	glm::vec3 result = glm::vec3(NULL);
-
-	//glm::vec3 collision_vector;
-	//if (LineIntersection(line_start, line_end, position, glm::vec3(position.x + width, 0, position.z), collision_vector))
-	//{
-	//	result = NearestIntersection(result, collision_vector, line_start);
-	//}
-
-	//if (LineIntersection(line_start, line_end, position, glm::vec3(position.x, 0, position.z + length), collision_vector))
-	//{
-	//	result = NearestIntersection(result, collision_vector, line_start);
-	//}
-
-	//if (LineIntersection(line_start, line_end, glm::vec3(position.x, 0, position.z + length), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
-	//{
-	//	result = NearestIntersection(result, collision_vector, line_start);
-	//}
-
-	//if (LineIntersection(line_start, line_end, glm::vec3(position.x + width, 0, position.z), glm::vec3(position.x + width, 0, position.z + length), collision_vector))
-	//{
-	//	result = NearestIntersection(result, collision_vector, line_start);
-	//}
-
-	return result;
-}
-
-glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::vec3 nearest)
-{
-	if (glm::length(line_1 - nearest) > glm::length(line_2 - nearest)) 
-	{
-		return line_2;
-	}
-	return line_1;
-}
-
-void Level::TestProjectileCollision(Ray ray, Actor& hit)
-{
-	std::vector<Enemy> collisions;
-	for (Wall wall : m_LevelGeometry)
-	{
-		if (Collision::RayAABBIntersection(ray, wall.GetAABB()))
-		{
-			//collisions.emplace_back(wall);
-		}
-	}
-
-	for (Enemy enemy : enemies_)
+	std::vector<Actor*> collisions;
+	for (Enemy& enemy : enemies_)
 	{
 		if (Collision::RayAABBIntersection(ray, enemy.GetAABB()))
 		{
-			collisions.emplace_back(enemy);
+			collisions.emplace_back(&enemy);
 		}
 	}
 
 	if (collisions.size() > 0)
 	{
-		hit = collisions[0];
-		for (Actor actor : collisions)
+		for (Wall& wall : m_LevelGeometry)
 		{
-			float new_length = glm::length(actor.m_Transform.GetPosition() - ray.m_Origin);
-			float current_length = glm::length(hit.m_Transform.GetPosition() - ray.m_Origin);
-			if (new_length < current_length)
+			if (Collision::RayAABBIntersection(ray, wall.GetAABB()))
 			{
-				hit = actor;
+				//todo rotate wall aabbs by their relative rotation
+				//collisions.emplace_back(&wall);
 			}
 		}
-		//todo remove this & switch to dynamic cast
-		std::cout << hit.m_Transform.GetPosition().x << ":" << hit.m_Transform.GetPosition().y << ":" << hit.m_Transform.GetPosition().z << std::endl;
-		Actor* temp = &hit;
-		if (dynamic_cast<Enemy*>(temp))
+
+		Actor* closest = collisions[0];
+		for (Actor* actor : collisions)
 		{
-			std::cout << "Enemy Cast" << std::endl;
+			float new_length = glm::length(actor->m_Transform.GetPosition() - ray.m_Origin);
+			float current_length = glm::length(closest->m_Transform.GetPosition() - ray.m_Origin);
+			if (new_length < current_length)
+			{
+				closest = actor;
+			}
+		}
+
+		Enemy* enemy = dynamic_cast<Enemy*>(closest);
+		if (enemy)
+		{
+			std::cout << enemy->m_Transform.GetPosition().x << enemy->m_Transform.GetPosition().y << enemy->m_Transform.GetPosition().z << std::endl;
+			enemy->Damage(PLAYER_DAMAGE);
 		}
 	}
 }

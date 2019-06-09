@@ -99,20 +99,12 @@ void Player::Input()
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
 		AudioManager::Get()->PlayPlayerGunshot();
-		glm::vec3 line_origin = glm::vec3(m_Camera->m_Transform.GetPosition().x, 0, m_Camera->m_Transform.GetPosition().z);
-		glm::vec3 line_direction = glm::normalize(glm::vec3(m_Camera->m_Transform.GetForward().x, 0, m_Camera->m_Transform.GetForward().z));
-		glm::vec3 line_end = line_origin + (line_direction * m_ShootDistance);
-		GameManager::Get()->GetLevel()->CheckIntersection(line_origin, line_end, true);
 
-		//------------------------------------------
 		Ray ray;
 		ray.m_Origin = glm::vec3(m_Camera->m_Transform.GetPosition().x, 0, m_Camera->m_Transform.GetPosition().z);
 		ray.m_Direction = glm::normalize(glm::vec3(m_Camera->m_Transform.GetForward().x, 0, m_Camera->m_Transform.GetForward().z));
 		ray.m_InvDirection = 1.0f / ray.m_Direction;
-		Actor hit;
-		GameManager::Get()->GetLevel()->TestProjectileCollision(ray, hit);
-		//------------------------------------------
-
+		GameManager::Get()->GetLevel()->CheckRayCollision(ray);
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
 		exit(1);

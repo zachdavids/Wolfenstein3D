@@ -68,8 +68,8 @@ bool Collision::RayAABBIntersection(Ray ray, AABB box)
 	double tmin = std::min(tx1, tx2);
 	double tmax = std::max(tx1, tx2);
 
-	double ty1 = (box.m_Min.y - ray.m_Origin.y) * ray.m_InvDirection.y;
-	double ty2 = (box.m_Max.y - ray.m_Origin.y) * ray.m_InvDirection.y;
+	double ty1 = (box.m_Min.z - ray.m_Origin.z) * ray.m_InvDirection.z;
+	double ty2 = (box.m_Max.z - ray.m_Origin.z) * ray.m_InvDirection.z;
 
 	tmin = std::max(tmin, std::min(ty1, ty2));
 	tmax = std::min(tmax, std::max(ty1, ty2));
