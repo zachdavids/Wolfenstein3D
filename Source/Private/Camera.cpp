@@ -21,8 +21,7 @@ void Camera::MoveCamera(glm::vec3 const& movement_vector, float speed)
 
 void Camera::MouseControl(float mouse_x, float mouse_y)
 {
-	glm::vec3 current_rotation = m_Transform.GetRotation();
-	m_Transform.Rotate(mouse_y * 0.001f, mouse_x * 0.001f, 0);
+	m_Transform.Rotate(0, mouse_x * 0.001f, 0);
 	m_bViewHasChanged = true;
 }
 

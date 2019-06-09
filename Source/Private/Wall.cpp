@@ -5,6 +5,8 @@
 #include "Mesh.h"
 #include "Player.h"
 
+//todo Calculate model matrix only once - static mesh
+
 Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 {
 	m_Transform.SetRotation(rotation);
@@ -37,5 +39,8 @@ void Wall::Render()
 
 AABB Wall::GetAABB()
 {
-	return m_Mesh->GetAABB();
+	AABB update;
+	update.m_Min = m_Transform.GetPosition() * m_Mesh->GetAABB().m_Min;
+	update.m_Max = m_Transform.GetPosition() * m_Mesh->GetAABB().m_Max;
+	return update;
 }
