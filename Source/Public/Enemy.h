@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include "AABB.h"
 
 class Texture;
 class Mesh;
@@ -18,6 +19,7 @@ public:
 	glm::vec2 GetSize();
 
 	glm::vec3 GetTranslation() { return m_Transform.GetPosition(); };
+	AABB GetAABB();
 	void Damage(int damage_points);
 
 private:

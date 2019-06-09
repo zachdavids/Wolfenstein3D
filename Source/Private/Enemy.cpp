@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Level.h"
 #include "TimeManager.h"
+#include "AABB.h"
 
 #include <GLM/gtc/constants.hpp>
 #include <GLM/glm.hpp>
@@ -143,6 +144,14 @@ void Enemy::Attack(glm::vec3 orientation, float distance)
 			can_attack_ = true;
 		}
 	}
+}
+
+AABB Enemy::GetAABB()
+{
+	AABB aabb;
+	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1) + m_Transform.GetPosition();;
+	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Transform.GetPosition();;
+	return aabb;
 }
 
 void Enemy::Damage(int damage_points)

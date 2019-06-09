@@ -415,23 +415,41 @@ glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::ve
 
 void Level::TestProjectileCollision(Ray ray, Actor& hit)
 {
-	std::vector<Wall> collisions;
+	std::vector<Enemy> collisions;
 	for (Wall wall : m_LevelGeometry)
 	{
 		if (Collision::RayAABBIntersection(ray, wall.GetAABB()))
 		{
-			std::cout << "Hit" << std::endl;
-			collisions.emplace_back(wall);
+			//collisions.emplace_back(wall);
 		}
 	}
 
-	for (Wall wall : collisions)
+	for (Enemy enemy : enemies_)
 	{
-		float new_length = glm::length(wall.m_Transform.GetPosition() - ray.m_Origin);
-		float current_length = glm::length(hit.m_Transform.GetPosition() - ray.m_Origin);
-		if (new_length < current_length)
+		if (Collision::RayAABBIntersection(ray, enemy.GetAABB()))
 		{
-			hit = wall;
+			collisions.emplace_back(enemy);
+		}
+	}
+
+	if (collisions.size() > 0)
+	{
+		hit = collisions[0];
+		for (Actor actor : collisions)
+		{
+			float new_length = glm::length(actor.m_Transform.GetPosition() - ray.m_Origin);
+			float current_length = glm::length(hit.m_Transform.GetPosition() - ray.m_Origin);
+			if (new_length < current_length)
+			{
+				hit = actor;
+			}
+		}
+		//todo remove this & switch to dynamic cast
+		std::cout << hit.m_Transform.GetPosition().x << ":" << hit.m_Transform.GetPosition().y << ":" << hit.m_Transform.GetPosition().z << std::endl;
+		Actor* temp = &hit;
+		if (dynamic_cast<Enemy*>(temp))
+		{
+			std::cout << "Enemy Cast" << std::endl;
 		}
 	}
 }
