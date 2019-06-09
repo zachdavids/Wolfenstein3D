@@ -10,6 +10,8 @@
 #include "GameManager.h"
 #include "XMLParser.h"
 #include "AABB.h"
+#include "Ray.h"
+#include "Collision.h"
 
 #include <GLM/glm.hpp>
 #include <GLFW/glfw3.h>
@@ -409,6 +411,29 @@ glm::vec3 Level::NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::ve
 		return line_2;
 	}
 	return line_1;
+}
+
+void Level::TestProjectileCollision(Ray ray, Actor& hit)
+{
+	std::vector<Wall> collisions;
+	for (Wall wall : m_LevelGeometry)
+	{
+		if (Collision::RayAABBIntersection(ray, wall.GetAABB()))
+		{
+			std::cout << "Hit" << std::endl;
+			collisions.emplace_back(wall);
+		}
+	}
+
+	for (Wall wall : collisions)
+	{
+		float new_length = glm::length(wall.m_Transform.GetPosition() - ray.m_Origin);
+		float current_length = glm::length(hit.m_Transform.GetPosition() - ray.m_Origin);
+		if (new_length < current_length)
+		{
+			hit = wall;
+		}
+	}
 }
 
 void Level::RemoveMedkit()

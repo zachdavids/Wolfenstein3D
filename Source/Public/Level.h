@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Medkit.h"
 #include "Wall.h"
+#include "Ray.h"
 
 #include <GLM/vec3.hpp>
 #include <vector>
@@ -27,6 +28,8 @@ public:
 	bool LineIntersection(glm::vec3 l1_start, glm::vec3 l1_end, glm::vec3 l2_start, glm::vec3 l2_end, glm::vec3& result);
 	glm::vec3 LineIntersectionRectangle(glm::vec3 line_start, glm::vec3 line_end, glm::vec3 position, float width, float length);
 	glm::vec3 NearestIntersection(glm::vec3 line_1, glm::vec3 line_2, glm::vec3 nearest);
+
+	void TestProjectileCollision(Ray ray, Actor& hit);
 
 private:
 

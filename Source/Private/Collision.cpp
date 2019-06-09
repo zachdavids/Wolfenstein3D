@@ -1,5 +1,7 @@
 #include "Collision.h"
 
+#include <algorithm>
+
 glm::vec3 Collision::CheckCollision(glm::vec3 old_position, glm::vec3 new_position, float width, float length)
 {
 	glm::vec3 collision_vector = glm::vec3(1, 0, 1);
@@ -106,29 +108,21 @@ glm::vec3 Collision::CheckIntersection(glm::vec3 line_start, glm::vec3 line_end,
 	return nearest_intersection;
 }
 
-glm::vec3 Collision::LineIntersection(glm::vec3 line_start, glm::vec3 line_end, glm::vec3 line_start2, glm::vec3 line_end2)
+bool Collision::RayAABBIntersection(Ray ray, AABB box)
 {
-	//glm::vec3 line_1 = line_end - line_start;
-	//glm::vec3 line_2 = line_end2 - line_start2;
+	double tx1 = (box.m_Min.x - ray.m_Origin.x) * ray.m_InvDirection.x;
+	double tx2 = (box.m_Max.x - ray.m_Origin.x) * ray.m_InvDirection.x;
 
-	//float cross = (line_1.x * line_2.z) - (line_1.z * line_2.x);
+	double tmin = std::min(tx1, tx2);
+	double tmax = std::max(tx1, tx2);
 
-	//if (cross == 0)
-	//{
-	//	return glm::vec3(NULL);
-	//}
+	double ty1 = (box.m_Min.y - ray.m_Origin.y) * ray.m_InvDirection.y;
+	double ty2 = (box.m_Max.y - ray.m_Origin.y) * ray.m_InvDirection.y;
 
-	//glm::vec3 distance_between = line_start2 - line_start;
+	tmin = std::max(tmin, std::min(ty1, ty2));
+	tmax = std::min(tmax, std::max(ty1, ty2));
 
-	//float a = ((distance_between.x * line_2.z) - (distance_between.z * line_2.x)) / cross;
-	//float b = ((distance_between.x * line_1.z) - (distance_between.z * line_1.x)) / cross;
-
-	//if ((a > 0.0f && a < 1.0f) && (b > 0.0f && b < 1.0f))
-	//{
-	//	return line_start + (line_1 * a);
-	//}
-
-	return glm::vec3(NULL);
+	return tmax >= tmin;
 }
 
 glm::vec3 Collision::LineIntersectionRectangle(glm::vec3 line_start, glm::vec3 line_end, glm::vec3 position, float width, float length)
