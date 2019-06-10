@@ -19,13 +19,9 @@ public:
 	void Input();
 	void Update();
 	void Render();
-
 	void OpenDoors(glm::vec3 position, bool exit);
-
-	glm::vec3 CheckCollision(glm::vec3 old_position, glm::vec3 new_position, float width, float length);
-	glm::vec3 RectangularCollision(glm::vec3 old_position, glm::vec3 new_position, glm::vec3 size_1, glm::vec3 position_2, glm::vec3 size_2);
-
-	void CheckRayCollision(Ray ray);
+	bool CheckRayCollision(Ray& ray);
+	bool CheckAABBCollision(AABB& one);
 
 private:
 
@@ -37,6 +33,7 @@ private:
 	Shader* m_DefaultShader; //temp
 
 	std::vector<Wall> m_LevelGeometry;
+	std::vector<AABB> m_CollisionGeometry;
 	std::vector<Door> doors_;
 	std::vector<Enemy> enemies_;
 	std::vector<Medkit> medkits_;

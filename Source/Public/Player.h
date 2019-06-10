@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include "AABB.h"
 
 #include <GLM/vec3.hpp>
 #include <GLM/detail/type_vec2.hpp>
@@ -34,6 +35,7 @@ public:
 
 	static int GetHealth();
 	Camera* GetCamera();
+	AABB GetAABB();
 
 private:
 

@@ -89,9 +89,12 @@ void Enemy::Chase(glm::vec3 orientation, float distance)
 
 		glm::vec3 old_position = m_Transform.GetPosition();
 		glm::vec3 new_position = m_Transform.GetPosition() + (orientation * MOVEMENT_SPEED);
-		glm::vec3 collision_vector = GameManager::Get()->GetLevel()->CheckCollision(old_position, new_position, BODY_WIDTH, BODY_LENGTH);
+		glm::vec3 movement_vector = orientation;
 
-		glm::vec3 movement_vector = collision_vector * orientation;
+		if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()))
+		{
+			movement_vector = glm::vec3(0.0f);
+		}
 
 		if (glm::length(movement_vector) > 0) {
 			m_Transform.SetPosition(m_Transform.GetPosition() + (movement_vector * MOVEMENT_SPEED));

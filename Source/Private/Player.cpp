@@ -117,15 +117,18 @@ void Player::Update()
 {
 	movement_vector_.y = 0;
 
-	if (movement_vector_.length() > 0) {
+	if (movement_vector_.length() > 0) 
+	{
 		glm::normalize(movement_vector_);
 	}
 
 	glm::vec3 old_position_ = m_Camera->m_Transform.GetPosition();
 	glm::vec3 new_position_ = old_position_ + (movement_vector_ * m_MovementSpeed);
-	glm::vec3 collision_vector_ = GameManager::Get()->GetLevel()->CheckCollision(old_position_, new_position_, SIZE1, SIZE1);
-	
-	movement_vector_ *= collision_vector_;
+
+	if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()))
+	{
+		movement_vector_ = glm::vec3(0.0f);
+	}
 
 	m_Camera->MoveCamera(movement_vector_, m_MovementSpeed);
 
@@ -195,6 +198,14 @@ void Player::RenderText(std::string const& text, glm::vec2 position)
 Camera* Player::GetCamera()
 {
 	return m_Camera;
+}
+
+AABB Player::GetAABB()
+{
+	AABB aabb;
+	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + m_Camera->m_Transform.GetPosition();;
+	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Camera->m_Transform.GetPosition();;
+	return aabb;
 }
 
 void Player::InitText()

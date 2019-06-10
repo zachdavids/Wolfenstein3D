@@ -36,11 +36,3 @@ void Wall::Render()
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }
-
-AABB Wall::GetAABB()
-{
-	AABB update;
-	update.m_Min = m_Transform.GetPosition() + m_Mesh->GetAABB().m_Min;
-	update.m_Max = m_Transform.GetPosition() + m_Mesh->GetAABB().m_Max;
-	return update;
-}

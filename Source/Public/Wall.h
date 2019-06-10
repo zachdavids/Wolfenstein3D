@@ -22,7 +22,6 @@ public:
 	
 	Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type);
 	virtual void Render() override;
-	AABB GetAABB();
 
 private:
 
