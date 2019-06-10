@@ -33,7 +33,7 @@ void Level::Input()
 
 	for (Enemy& enemy : m_Enemies)
 	{
-		OpenDoors(enemy.GetTranslation(), false);
+		OpenDoors(enemy.GetPosition(), false);
 	}
 }
 
@@ -212,22 +212,22 @@ bool Level::CheckRayCollision(Ray& ray)
 		}
 	}
 
+	std::sort(EnemyCollisions.begin(), EnemyCollisions.end(),
+		[&ray](Enemy* enemy_one, Enemy* enemy_two) -> bool
+	{
+		float distance_one = glm::length(enemy_one->GetPosition() - ray.m_Origin);
+		float distance_two = glm::length(enemy_two->GetPosition() - ray.m_Origin);
+		return distance_one < distance_two;
+	}
+	);
+
 	if (EnemyCollisions.size() > 0)
 	{
-		std::sort(EnemyCollisions.begin(), EnemyCollisions.end(),
-			[&ray](Enemy* enemy_one, Enemy* enemy_two) -> bool
-			{
-				float distance_one = glm::length(enemy_one->m_Transform.GetPosition() - ray.m_Origin);
-				float distance_two = glm::length(enemy_two->m_Transform.GetPosition() - ray.m_Origin);
-				return distance_one < distance_two;
-			}
-		);
-
 		for (AABB& box : m_CollisionGeometry)
 		{
 			if (Collision::RayAABBIntersection(ray, box))
 			{
-				float enemy_distance = glm::length(EnemyCollisions[0]->m_Transform.GetPosition() - ray.m_Origin);
+				float enemy_distance = glm::length(EnemyCollisions[0]->GetPosition() - ray.m_Origin);
 				float wall_distance = glm::length(box.m_Position - ray.m_Origin);
 				if (wall_distance < enemy_distance)
 				{

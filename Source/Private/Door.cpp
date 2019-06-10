@@ -15,18 +15,18 @@ const float TIME_TO_OPEN = 1.0f;
 const float DELAY = 3.0f;
 const float TIME_TO_CLOSE = 1.0f;
 
-Door::Door(glm::vec3 position, bool rotation)
+Door::Door(glm::vec3 const& position, bool rotation)
 {
 	is_open_ = false;
 
 	m_OpenPosition = position;
 	m_ClosePosition = position;
 
-	m_Transform.SetPosition(position);
+	SetPosition(position);
 
 	if (rotation) 
 	{
-		m_Transform.SetRotation(glm::vec3(0, glm::radians(-90.0f), 0));
+		SetRotation(glm::vec3(0, glm::radians(-90.0f), 0));
 		m_OpenPosition.z -= 0.9f;
 	}
 	else
@@ -59,21 +59,21 @@ void Door::Update()
 		double time = TimeManager::GetTime();
 		if (time < open_time_) 
 		{
-			m_Transform.SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - open_start_ / TIME_TO_OPEN)));
+			SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - open_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorOpen();
 		}
 		else if (time < close_start_) 
 		{
-			m_Transform.SetPosition(m_OpenPosition);
+			SetPosition(m_OpenPosition);
 		}
 		else if (time < close_time_) 
 		{
-			m_Transform.SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - close_start_ / TIME_TO_OPEN)));
+			SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - close_start_ / TIME_TO_OPEN)));
 			//audio_->PlayDoorClose();
 		}
 		else 
 		{
-			m_Transform.SetPosition(m_ClosePosition);
+			SetPosition(m_ClosePosition);
 			is_open_ = false;
 		}
 	}
@@ -82,14 +82,14 @@ void Door::Update()
 void Door::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Shader->SetMat4("model", GetModelMatrix());
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }
 
 glm::vec3 Door::GetDimensions()
 {
-	if (m_Transform.GetRotation().y == glm::radians(-90.0f)) 
+	if (GetRotation().y == glm::radians(-90.0f)) 
 	{
 		return glm::vec3(DOOR_LENGTH, 0, DOOR_WIDTH);
 	}

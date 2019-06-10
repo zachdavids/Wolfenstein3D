@@ -5,7 +5,7 @@
 
 namespace Collision
 {
-	bool AABBIntersection(AABB& box_one, AABB& box_two);
-	bool RayAABBIntersection(Ray& ray, AABB& box);
+	bool AABBIntersection(AABB const& box_one, AABB const& box_two);
+	bool RayAABBIntersection(Ray const& ray, AABB const& box);
 }
 

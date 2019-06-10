@@ -3,14 +3,11 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "Player.h"
-
-//todo Calculate model matrix only once - static mesh
 
 Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 {
-	m_Transform.SetRotation(rotation);
-	m_Transform.SetPosition(position);
+	SetRotation(rotation);
+	SetPosition(position);
 
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Wall");
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
@@ -32,7 +29,7 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
 void Wall::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Shader->SetMat4("model", GetModelMatrix());
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

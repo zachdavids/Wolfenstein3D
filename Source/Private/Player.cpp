@@ -18,22 +18,22 @@
 #include <iostream>
 #include <GLM/gtc\matrix_transform.hpp>
 
-const int Player::m_TotalHealth = 100;
-const float Player::m_MovementSpeed = 0.035f;
+const int Player::s_MaxHP = 100;
+const float Player::s_MovementSpeed = 0.035f;
 
 static int health_;
 
 Player::Player(glm::vec3 position, glm::vec3 rotation)
 {
-	health_ = m_TotalHealth;
+	health_ = s_MaxHP;
 	shot_ = false;
 	m_Camera = new Camera(position, rotation);
 	movement_vector_ = glm::vec3(0.0f);
 	InitText();
 
-	m_Transform.SetPosition(position);
-	m_Transform.SetRotation(rotation);
-	m_Transform.SetScale(glm::vec3(0.5f));
+	SetPosition(position);
+	SetRotation(rotation);
+	SetScale(glm::vec3(0.5f));
 
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
@@ -42,9 +42,9 @@ Player::Player(glm::vec3 position, glm::vec3 rotation)
 
 void Player::Damage(int damage_points)
 {
-	if (health_ > m_TotalHealth) 
+	if (health_ > s_MaxHP) 
 	{
-		health_ = m_TotalHealth;
+		health_ = s_MaxHP;
 	}
 	health_ -= damage_points;
 
@@ -78,24 +78,24 @@ void Player::Input()
 	movement_vector_ = glm::vec3(0.0f);
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
-		movement_vector_ = movement_vector_ - m_Camera->m_Transform.GetRight();
+		movement_vector_ = movement_vector_ - m_Camera->GetRight();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
-		movement_vector_ = movement_vector_ + m_Camera->m_Transform.GetRight();
+		movement_vector_ = movement_vector_ + m_Camera->GetRight();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
-		movement_vector_ = movement_vector_ + m_Camera->m_Transform.GetForward();
+		movement_vector_ = movement_vector_ + m_Camera->GetForward();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
-		movement_vector_ = movement_vector_ - m_Camera->m_Transform.GetForward();
+		movement_vector_ = movement_vector_ - m_Camera->GetForward();
 		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E))
 	{
-		GameManager::Get()->GetLevel()->OpenDoors(m_Transform.GetPosition(), true);
+		GameManager::Get()->GetLevel()->OpenDoors(GetPosition(), true);
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
@@ -103,8 +103,8 @@ void Player::Input()
 		AudioManager::Get()->PlayPlayerGunshot();
 
 		Ray ray;
-		ray.m_Origin = glm::vec3(m_Camera->m_Transform.GetPosition().x, 0, m_Camera->m_Transform.GetPosition().z);
-		ray.m_Direction = glm::normalize(glm::vec3(m_Camera->m_Transform.GetForward().x, 0, m_Camera->m_Transform.GetForward().z));
+		ray.m_Origin = glm::vec3(m_Camera->GetPosition().x, 0, m_Camera->GetPosition().z);
+		ray.m_Direction = glm::normalize(glm::vec3(m_Camera->GetForward().x, 0, m_Camera->GetForward().z));
 		ray.m_InvDirection = 1.0f / ray.m_Direction;
 		GameManager::Get()->GetLevel()->CheckRayCollision(ray);
 	}
@@ -124,24 +124,24 @@ void Player::Update()
 		glm::normalize(movement_vector_);
 	}
 
-	glm::vec3 old_position_ = m_Camera->m_Transform.GetPosition();
-	glm::vec3 new_position_ = old_position_ + (movement_vector_ * m_MovementSpeed);
+	glm::vec3 old_position_ = m_Camera->GetPosition();
+	glm::vec3 new_position_ = old_position_ + (movement_vector_ * s_MovementSpeed);
 
 	if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()))
 	{
 		movement_vector_ = glm::vec3(0.0f);
 	}
 
-	m_Camera->MoveCamera(movement_vector_, m_MovementSpeed);
+	m_Camera->MoveCamera(movement_vector_, s_MovementSpeed);
 
-	m_Transform.SetPosition(glm::vec3(m_Camera->m_Transform.GetPosition().x + m_Camera->m_Transform.GetForward().x * 0.30f, 0.22f, m_Camera->m_Transform.GetPosition().z + m_Camera->m_Transform.GetForward().z * 0.29f));
-	glm::vec3 camera_direction(m_Camera->m_Transform.GetPosition().x - m_Transform.GetPosition().x, m_Camera->m_Transform.GetPosition().y, m_Camera->m_Transform.GetPosition().z - m_Transform.GetPosition().z);
+	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x * 0.30f, 0.22f, m_Camera->GetPosition().z + m_Camera->GetForward().z * 0.29f));
+	glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0) {
 		camera_angle += glm::pi<float>();
 	}
-	m_Transform.SetRotation(0, camera_angle, 0);
+	SetRotation(glm::vec3(0, camera_angle, 0));
 }
 
 int Player::GetHealth() 
@@ -152,7 +152,7 @@ int Player::GetHealth()
 void Player::Render()
 {
 	m_DefaultShader->Bind();
-	m_DefaultShader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_DefaultShader->SetMat4("model", GetModelMatrix());
 	m_CurrentAnimation->Bind();
 	m_Mesh->Draw();
 	RenderText("HP: " + std::to_string(GetHealth()), glm::vec2(25.0f, 25.0f));
@@ -205,8 +205,8 @@ Camera* Player::GetCamera()
 AABB Player::GetAABB()
 {
 	AABB aabb;
-	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + m_Camera->m_Transform.GetPosition();;
-	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Camera->m_Transform.GetPosition();;
+	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + m_Camera->GetPosition();;
+	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Camera->GetPosition();;
 	return aabb;
 }
 

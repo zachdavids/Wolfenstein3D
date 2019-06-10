@@ -15,8 +15,8 @@ const float Medkit::m_PickupDistance = 0.5f;
 
 Medkit::Medkit(glm::vec3 position)
 {
-	m_Transform.SetPosition(position);
-	m_Transform.SetScale(glm::vec3(0.2f));
+	SetPosition(position);
+	SetScale(glm::vec3(0.2f));
 
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	m_Texture = ResourceManager::Get()->GetResource<Texture>("Medkit");
@@ -25,15 +25,15 @@ Medkit::Medkit(glm::vec3 position)
 
 void Medkit::Update()
 {
-	glm::vec3 player_position = GameManager::Get()->GetPlayer()->m_Transform.GetPosition();
-	glm::vec3 camera_direction = player_position - m_Transform.GetPosition();
+	glm::vec3 player_position = GameManager::Get()->GetPlayer()->GetPosition();
+	glm::vec3 camera_direction = player_position - GetPosition();
 
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 	if (camera_direction.x > 0) 
 	{
 		camera_angle += glm::pi<float>();
 	}
-	m_Transform.SetRotation(0, camera_angle, 0);
+	SetRotation(glm::vec3(0, camera_angle, 0));
 
 	if (glm::length(camera_direction) < m_PickupDistance) 
 	{
@@ -46,7 +46,7 @@ void Medkit::Update()
 void Medkit::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("model", m_Transform.GetModelMatrix());
+	m_Shader->SetMat4("model", GetModelMatrix());
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

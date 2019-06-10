@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-bool Collision::AABBIntersection(AABB& box_one, AABB& box_two)
+bool Collision::AABBIntersection(AABB const& box_one, AABB const& box_two)
 {
 	double d1x = box_two.m_Min.x - box_one.m_Max.x;
 	double d1z = box_two.m_Min.z - box_one.m_Max.z;
@@ -15,7 +15,7 @@ bool Collision::AABBIntersection(AABB& box_one, AABB& box_two)
 	return !(d1 || d2);
 }
 
-bool Collision::RayAABBIntersection(Ray& ray, AABB& box)
+bool Collision::RayAABBIntersection(Ray const& ray, AABB const& box)
 {
 	double tx1 = (box.m_Min.x - ray.m_Origin.x) * ray.m_InvDirection.x;
 	double tx2 = (box.m_Max.x - ray.m_Origin.x) * ray.m_InvDirection.x;

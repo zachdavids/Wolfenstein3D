@@ -11,36 +11,46 @@ class Enemy : public Actor
 {
 public:
 
-	Enemy(glm::vec3 position);
+	enum State : int
+	{
+		kIdle,
+		kChase,
+		kAttack,
+		kHurt,
+		kDeath
+	};
 
+	Enemy(glm::vec3 const& position);
 	virtual void Update() override;
 	virtual void Render() override;
-
-	glm::vec2 GetSize();
-
-	glm::vec3 GetTranslation() { return m_Transform.GetPosition(); };
 	AABB GetAABB();
 	void Damage(int damage_points);
 
 private:
 
-	int hp_;
+	int m_CurrentHP;
 	int hurt_time_;
 	int death_time_;
-	int state_;
+	int m_CurrentState;
 	bool dead_;
 	bool can_look_;
 	bool can_attack_;
+
+	static const int s_MaxHP;
+	static const float s_MovementSpeed;
+	static const float s_SightRange;
+
+	glm::vec3 m_PlayerDirection;
+	float m_DistanceToPlayer;
 
 	Texture* m_CurrentAnimation;
 	Mesh* m_Mesh;
 	Shader* m_Shader;
 
-	void Idle(glm::vec3 orientation, float distance);
-	void Chase(glm::vec3 orientation, float distance);
-	void Attack(glm::vec3 orientation, float distance);
-	void Hurt(glm::vec3 orientation, float distance);
-
-	void Death(glm::vec3 orientation, float distance);
-	void FaceCamera(glm::vec3 orientation);
+	void Idle();
+	void Chase();
+	void Attack();
+	void Hurt();
+	void Death();
+	void FaceCamera();
 };

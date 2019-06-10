@@ -9,19 +9,19 @@ const float Camera::m_Far = 1000.0f;
 
 Camera::Camera(glm::vec3 const& position, glm::vec3 const& rotation)
 {
-	m_Transform.SetPosition(position);
-	m_Transform.SetRotation(rotation);
+	SetPosition(position);
+	SetRotation(rotation);
 }
 
 void Camera::MoveCamera(glm::vec3 const& movement_vector, float speed)
 {
-	m_Transform.Translate(movement_vector * speed);
+	Translate(movement_vector * speed);
 	m_bViewHasChanged = true;
 }
 
 void Camera::MouseControl(float mouse_x, float mouse_y)
 {
-	m_Transform.Rotate(0, mouse_x * 0.001f, 0);
+	Rotate(glm::vec3(0, mouse_x * 0.001f, 0));
 	m_bViewHasChanged = true;
 }
 
@@ -29,7 +29,7 @@ glm::mat4& Camera::GetViewMatrix()
 {
 	if (m_bViewHasChanged)
 	{
-		m_ViewMatrix = m_Transform.GetRotationMatrix() * glm::inverse(glm::translate(glm::mat4(), m_Transform.GetPosition()));
+		m_ViewMatrix = GetRotationMatrix() * glm::inverse(glm::translate(glm::mat4(), GetPosition()));
 	}
 
 	return m_ViewMatrix;

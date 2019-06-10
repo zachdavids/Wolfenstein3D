@@ -40,8 +40,8 @@ public:
 private:
 
 	bool shot_;
-	static const int m_TotalHealth;
-	static const float m_MovementSpeed;
+	static const int s_MaxHP;
+	static const float s_MovementSpeed;
 
 	unsigned int VAO_;
 	unsigned int VBO_;

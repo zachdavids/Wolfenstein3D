@@ -10,12 +10,11 @@ class Door : public Actor
 {
 public:
 	
-	Door(glm::vec3 position, bool rotation);
+	Door(glm::vec3 const& position, bool rotation);
 	void Open();
 	virtual void Update() override;
 	virtual void Render() override;
 	glm::vec3 GetDimensions();
-	glm::vec3 GetPosition() { return m_Transform.GetPosition(); };
 
 private:
 
