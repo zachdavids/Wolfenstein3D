@@ -1,7 +1,6 @@
 #include "Collision.h"
 
 #include <algorithm>
-#include <GLM/geometric.hpp>
 
 bool Collision::AABBIntersection(AABB& box_one, AABB& box_two)
 {
@@ -16,7 +15,7 @@ bool Collision::AABBIntersection(AABB& box_one, AABB& box_two)
 	return !(d1 || d2);
 }
 
-bool Collision::RayAABBIntersection(Ray ray, AABB box)
+bool Collision::RayAABBIntersection(Ray& ray, AABB& box)
 {
 	double tx1 = (box.m_Min.x - ray.m_Origin.x) * ray.m_InvDirection.x;
 	double tx2 = (box.m_Max.x - ray.m_Origin.x) * ray.m_InvDirection.x;

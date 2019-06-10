@@ -1,5 +1,4 @@
 #include "Level.h"
-
 #include "Player.h"
 #include "Texture.h"
 #include "Shader.h"
@@ -22,7 +21,7 @@
 
 const int PLAYER_DAMAGE = 34;
 
-Level::Level(std::string filename)
+Level::Level(std::string const& filename)
 {
 	m_Player = GameManager::Get()->GetPlayer();
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
@@ -107,7 +106,7 @@ void Level::Render()
 	m_Player->Render();
 }
 
-void Level::OpenDoors(glm::vec3 position, bool exit)
+void Level::OpenDoors(glm::vec3& position, bool exit)
 {
 	for (unsigned int i = 0; i < doors_.size(); i++) 
 	{
