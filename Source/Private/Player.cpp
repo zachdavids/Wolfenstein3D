@@ -79,19 +79,15 @@ void Player::Input()
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A)) {
 		movement_vector_ = movement_vector_ - m_Camera->GetRight();
-		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_D)) {
 		movement_vector_ = movement_vector_ + m_Camera->GetRight();
-		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_W)) {
 		movement_vector_ = movement_vector_ + m_Camera->GetForward();
-		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
 		movement_vector_ = movement_vector_ - m_Camera->GetForward();
-		AudioManager::Get()->PlayStep();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E))
 	{
@@ -100,13 +96,13 @@ void Player::Input()
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
-		AudioManager::Get()->PlayPlayerGunshot();
+		AudioManager::Get()->PlayPistol();
 
 		Ray ray;
 		ray.m_Origin = glm::vec3(m_Camera->GetPosition().x, 0, m_Camera->GetPosition().z);
 		ray.m_Direction = glm::normalize(glm::vec3(m_Camera->GetForward().x, 0, m_Camera->GetForward().z));
 		ray.m_InvDirection = 1.0f / ray.m_Direction;
-		GameManager::Get()->GetLevel()->CheckRayCollision(ray);
+		GameManager::Get()->GetLevel()->CheckPlayerRayCollision(ray);
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE)) {
 		exit(1);

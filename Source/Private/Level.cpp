@@ -201,7 +201,7 @@ void Level::GenerateLevel(std::string const& file_name)
 	}
 }
 
-bool Level::CheckRayCollision(Ray& ray)
+bool Level::CheckPlayerRayCollision(Ray& ray)
 {
 	std::vector<Enemy*> EnemyCollisions;
 	for (Enemy& enemy : m_Enemies)
@@ -239,6 +239,28 @@ bool Level::CheckRayCollision(Ray& ray)
 		return true;
 	}
 	return false;
+}
+
+bool Level::CheckEnemyRayCollision(Ray& ray)
+{
+	if (Collision::RayAABBIntersection(ray, m_Player->GetAABB()) == false)
+	{
+		return false;
+	}
+
+	for (AABB& box : m_CollisionGeometry)
+	{
+		if (Collision::RayAABBIntersection(ray, box))
+		{
+			float player_distance = glm::length(m_Player->GetPosition() - ray.m_Origin);
+			float wall_distance = glm::length(box.m_Position - ray.m_Origin);
+			if (wall_distance < player_distance)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 bool Level::CheckAABBCollision(AABB& one)

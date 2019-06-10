@@ -29,24 +29,19 @@ public:
 private:
 
 	int m_CurrentHP;
-	int hurt_time_;
-	int death_time_;
 	int m_CurrentState;
-	bool dead_;
-	bool can_look_;
-	bool can_attack_;
-
+	bool m_bCanAttack;
+	float m_DistanceToPlayer;
+	glm::vec3 m_PlayerDirection;
 	static const int s_MaxHP;
+	static const int s_Damage;
 	static const float s_MovementSpeed;
 	static const float s_SightRange;
-
-	glm::vec3 m_PlayerDirection;
-	float m_DistanceToPlayer;
-
+	static const float s_AttackRange;
 	Texture* m_CurrentAnimation;
 	Mesh* m_Mesh;
 	Shader* m_Shader;
-
+	bool CheckSightline();
 	void Idle();
 	void Chase();
 	void Attack();

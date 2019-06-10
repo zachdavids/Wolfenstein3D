@@ -27,18 +27,7 @@ void AudioManager::PlayMusic()
 	m_Music->setVolume(0.10f);
 }
 
-void AudioManager::PlayStep()
-{
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Step.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/Step.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
-}
-
-void AudioManager::PlayPlayerGunshot()
+void AudioManager::PlayPistol()
 {
 	m_SoundEngine->play3D(
 		"Resources/Sounds/Pistol.wav",

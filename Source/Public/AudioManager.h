@@ -10,8 +10,7 @@ public:
 	void Create();
 	void Destroy();
 	void PlayMusic();
-	void PlayStep();
-	void PlayPlayerGunshot();
+	void PlayPistol();
 	void PlayPlayerDeath();
 	void PlayEnemyGunshot();
 	void PlayEnemyDeath();
