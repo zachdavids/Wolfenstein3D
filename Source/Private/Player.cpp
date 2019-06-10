@@ -20,9 +20,7 @@
 
 const int Player::m_TotalHealth = 100;
 const float Player::m_MovementSpeed = 0.035f;
-const float Player::m_ShootDistance = 20.0f;
 
-const float SIZE1 = 0.2f;
 static int health_;
 
 Player::Player(glm::vec3 position, glm::vec3 rotation)
@@ -94,6 +92,10 @@ void Player::Input()
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_S)) {
 		movement_vector_ = movement_vector_ - m_Camera->m_Transform.GetForward();
 		AudioManager::Get()->PlayStep();
+	}
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E))
+	{
+		GameManager::Get()->GetLevel()->OpenDoors(m_Transform.GetPosition(), true);
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");

@@ -6,6 +6,7 @@
 #include "Wall.h"
 #include "Ray.h"
 
+#include <GLM/vec2.hpp>
 #include <GLM/vec3.hpp>
 #include <vector>
 
@@ -30,10 +31,12 @@ private:
 	Shader* m_DefaultShader; //temp
 	std::vector<Wall> m_LevelGeometry;
 	std::vector<AABB> m_CollisionGeometry;
-	std::vector<Door> doors_;
-	std::vector<Enemy> enemies_;
-	std::vector<Medkit> medkits_;
-	std::vector<glm::vec3> endpoints_;
+	std::vector<Door> m_Doors;
+	std::vector<Enemy> m_Enemies;
+	std::vector<Medkit> m_Medkits;
+	glm::vec3 m_Endpoint;
+	glm::vec2 m_LevelDimensions;
 	void GenerateLevel(std::string const& file_name);
+	int FlatIndex(int x, int y);
 	void RemoveMedkit();
 };

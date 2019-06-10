@@ -1,23 +1,18 @@
 #include "Level.h"
-#include "Player.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "Camera.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
 #include "AudioManager.h"
 #include "GameManager.h"
+#include "Player.h"
+#include "Shader.h"
+#include "Camera.h"
 #include "XMLParser.h"
-#include "AABB.h"
-#include "Ray.h"
 #include "Collision.h"
 
-#include <GLM/glm.hpp>
-#include <GLFW/glfw3.h>
-#include <GLM/gtc/constants.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <algorithm>
+#include <GLM/geometric.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
 
 const int PLAYER_DAMAGE = 34;
 
@@ -27,43 +22,38 @@ Level::Level(std::string const& filename)
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
-	GenerateLevel(filename);
-
 	AudioManager::Get()->PlayMusic();
+
+	GenerateLevel(filename);
 }
 
 void Level::Input()
 {
-	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E)) 
-	{
-		OpenDoors(m_Player->m_Transform.GetPosition(), true);
-	}
-
 	m_Player->Input();
 
-	for (unsigned int i = 0; i < enemies_.size(); i++) 
+	for (Enemy& enemy : m_Enemies)
 	{
-		OpenDoors(enemies_[i].GetTranslation(), false);
+		OpenDoors(enemy.GetTranslation(), false);
 	}
 }
 
 void Level::Update()
 {
-	for (unsigned int i = 0; i < doors_.size(); i++) 
-	{
-		doors_[i].Update();
-	}
-
 	m_Player->Update();
 
-	for (unsigned int i = 0; i < enemies_.size(); i++) 
+	for (Door& door : m_Doors)
 	{
-		enemies_[i].Update();
+		door.Update();
 	}
 
-	for (unsigned int i = 0; i < medkits_.size(); i++) 
+	for (Enemy& enemy : m_Enemies)
 	{
-		medkits_[i].Update();
+		enemy.Update();
+	}
+
+	for (Medkit& medkit : m_Medkits)
+	{
+		medkit.Update();
 	}
 
 	RemoveMedkit();
@@ -74,6 +64,7 @@ void Level::Render()
 	//TODO Move Rendering to a Rendering Engine
 	//Seperate objects by shader to reduce binds and group by mesh
 	//to reduce vao bind calls.
+	//Bind projection and view only if changed
 
 	m_DefaultShader->Bind();
 	m_DefaultShader->SetMat4("projection", m_Player->GetCamera()->GetProjectionMatrix());
@@ -83,54 +74,56 @@ void Level::Render()
 	m_TextShader->SetVec3("color", glm::vec3(0.5, 0.8f, 0.2f));
 	m_TextShader->SetMat4("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
-	for (Wall wall : m_LevelGeometry)
+	m_Player->Render();
+
+	for (Wall& wall : m_LevelGeometry)
 	{
 		wall.Render();
 	}
 
-	for (unsigned int i = 0; i < doors_.size(); i++) 
+	for (Door& door : m_Doors) 
 	{
-		doors_[i].Render();
+		door.Render();
 	}
 
-	for (unsigned int i = 0; i < enemies_.size(); i++) 
+	for (Enemy& enemy : m_Enemies) 
 	{
-		enemies_[i].Render();
+		enemy.Render();
 	}
 
-	for (unsigned int i = 0; i < medkits_.size(); i++) 
+	for (Medkit& medkit : m_Medkits) 
 	{
-		medkits_[i].Render();
+		medkit.Render();
 	}
-
-	m_Player->Render();
 }
 
 void Level::OpenDoors(glm::vec3& position, bool exit)
 {
-	for (unsigned int i = 0; i < doors_.size(); i++) 
+	for (Door& door : m_Doors)
 	{
-		if (glm::length(doors_[i].GetPosition() - position) < 1.0f) 
+		if (glm::length(door.GetPosition() - position) < 1.0f) 
 		{
-			doors_[i].Open();
+			door.Open();
 		}
 	}
+
 	if (exit) 
 	{
-		for (unsigned int i = 0; i < endpoints_.size(); i++) 
+		if (glm::length(m_Endpoint - position) < 1.0f) 
 		{
-			if (glm::length(endpoints_[i] - position) < 1.0f) 
-			{
-				//audio_->PlayLevelEnd();
-				//Game::LoadNextLevel();
-			}
+			//audio_->PlayLevelEnd();
+			//Game::LoadNextLevel();
 		}
 	}
 }
 
+int Level::FlatIndex(int x, int y)
+{
+	return x * m_LevelDimensions.x + y;
+}
+
 void Level::GenerateLevel(std::string const& file_name)
 {
-	/**/
 	XMLParser parser(file_name);
 	if (!parser.TryParse())
 	{
@@ -139,69 +132,60 @@ void Level::GenerateLevel(std::string const& file_name)
 	}
 
 	std::vector<Node> nodes = parser.GetNodes();
-	glm::vec2 dimensions = parser.GetDimensions();
+	m_LevelDimensions = parser.GetDimensions();
 
-	for (int i = 0; i < dimensions.x; i++)
+	for (int i = 0; i < m_LevelDimensions.x; i++)
 	{
-		for (int j = 0; j < dimensions.y; j++)
+		for (int j = 0; j < m_LevelDimensions.y; j++)
 		{
-			if (nodes[i * dimensions.x + j].m_Node.test(Node::NodeType::Location))
+			if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Location))
 			{
-				//Floor
 				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 0, j), glm::vec3(0.0f), Wall::Type::kFloor));
-
-				//Ceiling
 				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(0.0f), Wall::Type::kCeiling));
 
-				//Wall
-				if (!nodes[i * dimensions.x + (j - 1)].m_Node.test(Node::NodeType::Location))
+				if (!nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location))
 				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 				}
 
-				if (!nodes[i * dimensions.x + (j + 1)].m_Node.test(Node::NodeType::Location))
+				if (!nodes[FlatIndex(i, j + 1)].m_Node.test(Node::NodeType::Location))
 				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j + 1), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
 				}
 
-				if (!nodes[(i - 1) * dimensions.x + j].m_Node.test(Node::NodeType::Location))
+				if (!nodes[FlatIndex(i - 1, j)].m_Node.test(Node::NodeType::Location))
 				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 				}
 
-				if (!nodes[(i + 1) * dimensions.x + j].m_Node.test(Node::NodeType::Location))
+				if (!nodes[FlatIndex(i + 1, j)].m_Node.test(Node::NodeType::Location))
 				{
 					m_LevelGeometry.emplace_back(Wall(glm::vec3(i + 1, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
 				}
-
-				// Door Generation
-				if (nodes[i * dimensions.x + j].m_Node.test(Node::NodeType::Door))
+				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Door))
 				{
-					bool x_orientation = ((!nodes[i * dimensions.x + (j - 1)].m_Node.test(Node::NodeType::Location)) &&
-						(!nodes[i * dimensions.x + (j - 1)].m_Node.test(Node::NodeType::Location)));
-					if (x_orientation)
+					bool positive_z = !nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location);
+					bool negative_z = !nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location);
+					if (positive_z && negative_z)
 					{
-						doors_.push_back(Door(glm::vec3(i, 0, j), true));
+						m_Doors.emplace_back(Door(glm::vec3(i, 0, j), true));
 					}
 					else
 					{
-						doors_.push_back(Door(glm::vec3(i, 0, j), false));
+						m_Doors.emplace_back(Door(glm::vec3(i, 0, j), false));
 					}
 				}
-				//Enemy
-				if (nodes[i * dimensions.x + j].m_Node.test(Node::NodeType::Enemy))
+				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Enemy))
 				{
-					enemies_.push_back(Enemy(glm::vec3(i, 0, j)));
+					m_Enemies.emplace_back(Enemy(glm::vec3(i, 0, j)));
 				}
-				//Medkit
-				if (nodes[i * dimensions.x + j].m_Node.test(Node::NodeType::Medkit))
+				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Medkit))
 				{
-					medkits_.push_back(Medkit(glm::vec3(i, 0, j)));
+					m_Medkits.emplace_back(Medkit(glm::vec3(i, 0, j)));
 				}
-				//Endpoint
-				if (nodes[i * dimensions.x + j].m_Node.test(Node::NodeType::Endpoint))
+				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Endpoint))
 				{
-					endpoints_.push_back(glm::vec3(i, 0, j));
+					m_Endpoint = glm::vec3(i, 0, j);
 				}
 			}
 			else
@@ -220,7 +204,7 @@ void Level::GenerateLevel(std::string const& file_name)
 bool Level::CheckRayCollision(Ray& ray)
 {
 	std::vector<Enemy*> EnemyCollisions;
-	for (Enemy& enemy : enemies_)
+	for (Enemy& enemy : m_Enemies)
 	{
 		if (Collision::RayAABBIntersection(ray, enemy.GetAABB()))
 		{
@@ -271,11 +255,11 @@ bool Level::CheckAABBCollision(AABB& one)
 
 void Level::RemoveMedkit()
 {
-	for (unsigned int i = 0; i < medkits_.size(); i++) 
+	for (int i = 0; i != m_Medkits.size(); ++i) 
 	{
-		if (medkits_[i].GetEaten()) 
+		if (m_Medkits[i].GetEaten()) 
 		{
-			medkits_.erase(medkits_.begin() + i);
+			m_Medkits.erase(m_Medkits.begin() + i);
 		}
 	}
 }
