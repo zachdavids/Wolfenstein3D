@@ -15,11 +15,6 @@ HUD::HUD()
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 }
 
-void HUD::Render()
-{
-	RenderText("HP: " + std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(25.0f, 25.0f));
-}
-
 void HUD::InitText()
 {
 	glGenVertexArrays(1, &m_VAO);
@@ -82,6 +77,11 @@ void HUD::InitText()
 	FT_Done_FreeType(ft);
 }
 
+void HUD::Render()
+{
+	RenderText("HP: " + std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(25.0f, 25.0f));
+}
+
 void HUD::RenderText(std::string const& text, glm::vec2 position)
 {
 	m_TextShader->Bind();
@@ -93,13 +93,13 @@ void HUD::RenderText(std::string const& text, glm::vec2 position)
 	{
 		Character ch = characters_[*c];
 
-		GLfloat xpos = position.x + ch.Bearing.x;
-		GLfloat ypos = position.y - (ch.Size.y - ch.Bearing.y);
+		float xpos = position.x + ch.Bearing.x;
+		float ypos = position.y - (ch.Size.y - ch.Bearing.y);
 
-		GLfloat w = ch.Size.x;
-		GLfloat h = ch.Size.y;
+		int w = ch.Size.x;
+		int h = ch.Size.y;
 
-		GLfloat vertices[6][4] = {
+		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
 			{ xpos,     ypos,       0.0, 1.0 },
 			{ xpos + w, ypos,       1.0, 1.0 },

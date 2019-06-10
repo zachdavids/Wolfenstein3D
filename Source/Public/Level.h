@@ -36,7 +36,7 @@ private:
 	std::vector<Enemy> m_Enemies;
 	std::vector<Medkit> m_Medkits;
 	glm::vec3 m_Endpoint;
-	glm::vec2 m_LevelDimensions;
+	glm::ivec2 m_LevelDimensions;
 	void GenerateLevel(std::string const& file_name);
 	int FlatIndex(int x, int y);
 	void RemoveMedkit();

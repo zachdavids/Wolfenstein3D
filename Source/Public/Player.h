@@ -17,8 +17,8 @@ class Shader;
 struct FireRate
 {
 	bool bFireable;
-	float rate;
-	float last_interval;
+	double rate;
+	double last_interval;
 };
 
 class Player : public Actor
