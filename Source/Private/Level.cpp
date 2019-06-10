@@ -97,7 +97,7 @@ void Level::Render()
 	m_Player->Render();
 }
 
-void Level::OpenDoors(glm::vec3& position, bool exit)
+void Level::OpenDoors(glm::vec3 const& position, bool exit)
 {
 	for (Door& door : m_Doors)
 	{

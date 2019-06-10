@@ -82,7 +82,7 @@ void HUD::Render()
 	RenderText("HP: " + std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(25.0f, 25.0f));
 }
 
-void HUD::RenderText(std::string const& text, glm::vec2 position)
+void HUD::RenderText(std::string const& text, glm::vec2& position)
 {
 	m_TextShader->Bind();
 	glActiveTexture(GL_TEXTURE0);

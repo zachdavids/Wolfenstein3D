@@ -13,7 +13,7 @@
 const int Medkit::m_HealAmount = 30;
 const float Medkit::m_PickupDistance = 0.5f;
 
-Medkit::Medkit(glm::vec3 position)
+Medkit::Medkit(glm::vec3 const& position)
 {
 	SetPosition(position);
 	SetScale(glm::vec3(0.2f));

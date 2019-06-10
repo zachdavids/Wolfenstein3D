@@ -26,7 +26,7 @@ private:
 	unsigned int m_VBO;
 	Shader* m_TextShader = nullptr;
 	void InitText();
-	void RenderText(std::string const& text, glm::vec2 position);
+	void RenderText(std::string const& text, glm::vec2& position);
 	std::map<char, Character> characters_;
 };
 
