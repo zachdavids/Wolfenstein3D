@@ -170,6 +170,11 @@ void Enemy::Damage(int damage)
 	}
 }
 
+bool Enemy::IsAlive()
+{
+	return m_CurrentState != kDeath;
+}
+
 void Enemy::Hurt()
 {
 	m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Pain1");

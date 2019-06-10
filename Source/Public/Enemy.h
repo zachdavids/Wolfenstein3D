@@ -25,6 +25,7 @@ public:
 	virtual void Render() override;
 	AABB GetAABB();
 	void Damage(int damage_points);
+	bool IsAlive();
 
 private:
 

@@ -74,8 +74,6 @@ void Level::Render()
 	m_TextShader->SetVec3("color", glm::vec3(0.5, 0.8f, 0.2f));
 	m_TextShader->SetMat4("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
-	m_Player->Render();
-
 	for (Wall& wall : m_LevelGeometry)
 	{
 		wall.Render();
@@ -95,6 +93,8 @@ void Level::Render()
 	{
 		medkit.Render();
 	}
+
+	m_Player->Render();
 }
 
 void Level::OpenDoors(glm::vec3& position, bool exit)
@@ -208,7 +208,10 @@ bool Level::CheckPlayerRayCollision(Ray& ray)
 	{
 		if (Collision::RayAABBIntersection(ray, enemy.GetAABB()))
 		{
-			EnemyCollisions.emplace_back(&enemy);
+			if (enemy.IsAlive())
+			{
+				EnemyCollisions.emplace_back(&enemy);
+			}
 		}
 	}
 
@@ -218,8 +221,7 @@ bool Level::CheckPlayerRayCollision(Ray& ray)
 		float distance_one = glm::length(enemy_one->GetPosition() - ray.m_Origin);
 		float distance_two = glm::length(enemy_two->GetPosition() - ray.m_Origin);
 		return distance_one < distance_two;
-	}
-	);
+	});
 
 	if (EnemyCollisions.size() > 0)
 	{

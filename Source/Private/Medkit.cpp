@@ -38,7 +38,7 @@ void Medkit::Update()
 	if (glm::length(camera_direction) < m_PickupDistance) 
 	{
 		AudioManager::Get()->PlayMedkit();
-		Player::Damage(-m_HealAmount);
+		GameManager::Get()->GetPlayer()->Damage(-m_HealAmount);
 		m_bIsEaten = true;
 	}
 }

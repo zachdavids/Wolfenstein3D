@@ -9,8 +9,8 @@ public:
 	Camera(glm::vec3 const& position, glm::vec3 const& rotation);
 	glm::mat4& GetViewMatrix();
 	glm::mat4& GetProjectionMatrix();
-	void MoveCamera(glm::vec3 const& movement_vector, float speed);
-	void MouseControl(float mouse_x, float mouse_y);
+	void Move(glm::vec3 const& movement);
+	void Aim(float x);
 
 private:
 

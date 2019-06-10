@@ -13,15 +13,15 @@ Camera::Camera(glm::vec3 const& position, glm::vec3 const& rotation)
 	SetRotation(rotation);
 }
 
-void Camera::MoveCamera(glm::vec3 const& movement_vector, float speed)
+void Camera::Move(glm::vec3 const& movement)
 {
-	Translate(movement_vector * speed);
+	Translate(movement);
 	m_bViewHasChanged = true;
 }
 
-void Camera::MouseControl(float mouse_x, float mouse_y)
+void Camera::Aim(float x)
 {
-	Rotate(glm::vec3(0, mouse_x * 0.001f, 0));
+	Rotate(glm::vec3(0, x, 0));
 	m_bViewHasChanged = true;
 }
 

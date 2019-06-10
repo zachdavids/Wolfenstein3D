@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Actor.h"
+#include "Camera.h"
 #include "AABB.h"
+#include "HUD.h"
 
+#include <memory>
 #include <GLM/vec3.hpp>
-#include <GLM/detail/type_vec2.hpp>
-#include <map>
 
 class Texture;
 class Mesh;
@@ -13,49 +14,42 @@ class Camera;
 class TextShader;
 class Shader;
 
+struct FireRate
+{
+	bool bFireable;
+	float rate;
+	float last_interval;
+};
+
 class Player : public Actor
 {
 public:
 
-	struct Character 
-	{
-		unsigned int TextureID;   // ID handle of the glyph texture
-		glm::ivec2 Size;    // Size of glyph
-		glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
-		unsigned int Advance;    // Horizontal offset to advance to next glyph
-	};
-
-	Player(glm::vec3 position, glm::vec3 rotation);
-
-	static void Damage(int damage_points);
-
+	Player(glm::vec3 const& position, glm::vec3 const& rotation);
 	void Input();
 	void Update();
 	void Render();
-
-	static int GetHealth();
+	void Damage(int damage);
+	int GetHealth();
 	Camera* GetCamera();
 	AABB GetAABB();
 
 private:
 
 	bool shot_;
+	int m_CurrentHP;
 	static const int s_MaxHP;
 	static const float s_MovementSpeed;
-
-	unsigned int VAO_;
-	unsigned int VBO_;
-
-	glm::vec3 movement_vector_;
-
+	static const float s_LookSensitivity;
+	static const float s_RateOfFire;
+	glm::vec3 m_Movement;
+	FireRate m_FireRate;
+	HUD m_HUD;
 	Mesh* m_Mesh = nullptr;
-	Camera* m_Camera = nullptr;
 	Shader* m_DefaultShader = nullptr;
-	Shader* m_TextShader = nullptr;
-
 	Texture* m_CurrentAnimation = nullptr;
-
-	void InitText();
-	void RenderText(std::string const& text, glm::vec2 position);
-	std::map<char, Character> characters_;
+	std::unique_ptr<Camera> m_Camera;
+	void Shoot();
+	void MouseInput();
+	void KeyboardInput();
 };
