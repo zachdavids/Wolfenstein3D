@@ -67,6 +67,7 @@ void Player::Update()
 			camera_angle += glm::pi<float>();
 		}
 		SetRotation(glm::vec3(0, camera_angle, 0));
+		AudioManager::Get()->SetListenerPosition(m_Camera->GetPosition(), GetRotation());
 	}
 }
 
@@ -135,7 +136,7 @@ void Player::Shoot()
 	{
 		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
-		AudioManager::Get()->PlayPistol();
+		AudioManager::Get()->PlayPistol(GetPosition());
 
 		Ray ray;
 		ray.m_Origin = glm::vec3(m_Camera->GetPosition().x, 0, m_Camera->GetPosition().z);
@@ -176,5 +177,6 @@ AABB Player::GetAABB()
 	AABB aabb;
 	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + m_Camera->GetPosition();;
 	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Camera->GetPosition();;
+	aabb.m_Position = m_Camera->GetPosition();
 	return aabb;
 }

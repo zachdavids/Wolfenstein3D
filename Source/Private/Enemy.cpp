@@ -11,6 +11,7 @@
 #include "Level.h"
 #include "Ray.h"
 
+#include <iostream>
 #include <GLM/geometric.hpp>
 #include <GLM/gtc/constants.hpp>
 
@@ -34,7 +35,7 @@ Enemy::Enemy(glm::vec3 const& position) :
 
 void Enemy::Update()
 {
-	glm::vec3 player_position = GameManager::Get()->GetPlayer()->GetPosition();
+	glm::vec3 player_position = GameManager::Get()->GetPlayer()->GetCamera()->GetPosition();
 	player_position.y = 0;
 	m_PlayerDirection = glm::normalize(player_position - GetPosition());
 	m_DistanceToPlayer = glm::length(player_position - GetPosition());
@@ -131,21 +132,16 @@ void Enemy::Attack()
 	}
 	else if (time < 1.00f) 
 	{
-		if (m_bCanAttack) 
+		if (m_bCanAttack && CheckSightline())
 		{
-			AudioManager::Get()->PlayPistol();
 			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot3");
-
-			if (CheckSightline())
-			{
-				m_CurrentState = kChase;
-			}
+			AudioManager::Get()->PlayPistol(GetPosition());
 			m_bCanAttack = false;
 		}
 		else 
 		{
-			m_CurrentState = kChase;
 			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Shoot1");
+			m_CurrentState = kChase;
 			m_bCanAttack = true;
 		}
 	}
@@ -153,19 +149,15 @@ void Enemy::Attack()
 
 void Enemy::Damage(int damage)
 {
-	if (m_CurrentState = kIdle) 
-	{
-		m_CurrentState = kChase;
-	}
-
 	m_CurrentHP -= damage;
+
 	if (m_CurrentHP > 0) 
 	{
 		m_CurrentState = kHurt;
 	}
 	else
 	{
-		AudioManager::Get()->PlayEnemyDeath();
+		AudioManager::Get()->PlayEnemyDeath(GetPosition());
 		m_CurrentState = kDeath;
 	}
 }

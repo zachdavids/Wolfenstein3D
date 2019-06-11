@@ -27,31 +27,20 @@ void AudioManager::PlayMusic()
 	m_Music->setVolume(0.10f);
 }
 
-void AudioManager::PlayPistol()
+void AudioManager::PlayPistol(glm::vec3 const& position)
 {
 	m_SoundEngine->play3D(
 		"Resources/Sounds/Pistol.wav",
-		irrklang::vec3df(0.0f, -0.25f, 0.0f)
+		irrklang::vec3df(position.x, 0, position.z)
 	);
 }
 
-void AudioManager::PlayPlayerDeath()
+void AudioManager::PlayPlayerDeath(glm::vec3 const& position)
 {
 	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/PlayerDeath.wav"))
 	//{
 	//	m_SoundEngine->play3D(
 	//		"Resources/Sounds/PlayerDeath.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
-}
-
-void AudioManager::PlayEnemyGunshot()
-{
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/EnemyGunshot.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/EnemyGunshot.wav",
 	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
 	//	);
 	//}
@@ -68,15 +57,15 @@ void AudioManager::PlayMedkit()
 	}
 }
 
-void AudioManager::PlayEnemyDeath()
+void AudioManager::PlayEnemyDeath(glm::vec3 const& position)
 {
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/EnemyDeath.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/EnemyDeath.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/EnemyDeath1.wav"))
+	{
+		m_SoundEngine->play3D(
+			"Resources/Sounds/EnemyDeath1.wav",
+			irrklang::vec3df(position.x, 0, position.z)
+		);
+	}
 }
 
 void AudioManager::PlayDoorOpen()
@@ -110,4 +99,12 @@ void AudioManager::PlayLevelEnd()
 	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
 	//	);
 	//}
+}
+
+void AudioManager::SetListenerPosition(glm::vec3 const& position, glm::vec3 const& direction)
+{
+	m_SoundEngine->setListenerPosition(
+		irrklang::vec3df(position.x, 0, position.z),
+		irrklang::vec3df(direction.x, direction.y, direction.z)
+	);
 }

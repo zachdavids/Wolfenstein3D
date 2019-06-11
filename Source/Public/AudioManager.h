@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GLM/vec3.hpp>
 #include <irrklang/irrKlang.h>
 
 class AudioManager
@@ -10,14 +11,14 @@ public:
 	void Create();
 	void Destroy();
 	void PlayMusic();
-	void PlayPistol();
-	void PlayPlayerDeath();
-	void PlayEnemyGunshot();
-	void PlayEnemyDeath();
+	void PlayPistol(glm::vec3 const& position);
+	void PlayPlayerDeath(glm::vec3 const& position);
+	void PlayEnemyDeath(glm::vec3 const& position);
 	void PlayMedkit();
 	void PlayDoorOpen();
 	void PlayDoorClose();
 	void PlayLevelEnd();
+	void SetListenerPosition(glm::vec3 const& position, glm::vec3 const& rotation);
 	static AudioManager* Get() { return m_Instance; }
 
 private:
