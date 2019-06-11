@@ -70,22 +70,21 @@
     </Node>
     <Node>
         <Location>2,11</Location>
-	
     </Node>
     <Node>
         <Location>2,12</Location>
     </Node>
     <Node>
         <Location>2,13</Location>
-	<Medkit>Medkit</Medkit>
+		<Medkit>Medkit</Medkit>
     </Node>
     <Node>
         <Location>2,14</Location>
-	<Enemy>Enemy</Enemy>
+		<Enemy>Enemy</Enemy>
     </Node>
     <Node>
         <Location>2,15</Location>
-	<Door>Door</Door>
+		<Door>Door</Door>
     </Node>
     <Node>
         <Location>2,16</Location>
@@ -110,7 +109,7 @@
     </Node>
     <Node>
         <Location>5,17</Location>
-	<Enemy>Enemy</Enemy>
+		<Enemy>Enemy</Enemy>
     </Node>
     <Node>
         <Location>6,16</Location>
@@ -156,7 +155,7 @@
     </Node>
     <Node>
         <Location>5,11</Location>
-	<Door>Door</Door>
+		<Door>Door</Door>
     </Node>
     <Node>
         <Location>6,9</Location>
@@ -258,7 +257,7 @@
     </Node>
     <Node>
         <Location>14,11</Location>
-	<Enemy>Enemy</Enemy>
+		<Enemy>Enemy</Enemy>
     </Node>
     <Node>
         <Location>14,12</Location>
@@ -268,7 +267,7 @@
     </Node>
     <Node>
         <Location>15,11</Location>
-	<Medkit>Medkit</Medkit>
+		<Medkit>Medkit</Medkit>
     </Node>
     <Node>
         <Location>15,12</Location>
@@ -284,7 +283,7 @@
     </Node>
     <Node>
         <Location>14,9</Location>
-	<Door>Door</Door>
+		<Door>Door</Door>
     </Node>
     <Node>
         <Location>14,8</Location>
@@ -294,7 +293,7 @@
     </Node>
     <Node>
         <Location>14,6</Location>
-	<Door>Door</Door>
+		<Door>Door</Door>
     </Node>
     <Node>
         <Location>13,5</Location>
@@ -328,11 +327,11 @@
     </Node>
     <Node>
         <Location>13,2</Location>
-	<Enemy>Enemy</Enemy>
+		<Enemy>Enemy</Enemy>
     </Node>
     <Node>
         <Location>14,2</Location>
-	<Medkit>Medkit</Medkit>
+		<Medkit>Medkit</Medkit>
     </Node>
     <Node>
         <Location>15,2</Location>
@@ -385,7 +384,7 @@
     </Node>
     <Node>
         <Location>18,15</Location>
-	<Enemy>Enemy</Enemy>
+		<Enemy>Enemy</Enemy>
     </Node>
     <Node>
         <Location>18,16</Location>
@@ -410,8 +409,8 @@
     </Node>
     <Node>
         <Location>21,15</Location>
-	<Door>Door</Door>
-	<Endpoint>Endpoint</Endpoint>
+		<Door>Door</Door>
+		<Endpoint>Endpoint</Endpoint>
     </Node>
 </Level>
 

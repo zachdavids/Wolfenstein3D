@@ -55,8 +55,6 @@ void Level::Update()
 	{
 		medkit.Update();
 	}
-
-	RemoveMedkit();
 }
 
 void Level::Render()
@@ -195,7 +193,7 @@ void Level::GenerateLevel(std::string const& file_name)
 				box.m_Max = glm::vec3(i + 1, 0, j + 1);
 				box.m_Position.x = (box.m_Max.x + box.m_Min.x) / 2;
 				box.m_Position.z = (box.m_Max.z + box.m_Min.z) / 2;
-				m_CollisionGeometry.emplace_back(box);
+				m_StaticGeometry.emplace_back(box);
 			}
 		}
 	}
@@ -225,21 +223,13 @@ bool Level::CheckPlayerRayCollision(Ray& ray)
 
 	if (EnemyCollisions.size() > 0)
 	{
-		for (AABB& box : m_CollisionGeometry)
+		if (ClosestCollision(ray, EnemyCollisions[0]))
 		{
-			if (Collision::RayAABBIntersection(ray, box))
-			{
-				float enemy_distance = glm::length(EnemyCollisions[0]->GetPosition() - ray.m_Origin);
-				float wall_distance = glm::length(box.m_Position - ray.m_Origin);
-				if (wall_distance < enemy_distance)
-				{
-					return false;
-				}
-			}
+			EnemyCollisions[0]->Damage(PLAYER_DAMAGE);
+			return true;
 		}
-		EnemyCollisions[0]->Damage(PLAYER_DAMAGE);
-		return true;
 	}
+
 	return false;
 }
 
@@ -250,40 +240,62 @@ bool Level::CheckEnemyRayCollision(Ray& ray)
 		return false;
 	}
 
-	for (AABB& box : m_CollisionGeometry)
+	return ClosestCollision(ray, m_Player);
+}
+
+bool Level::ClosestCollision(Ray& ray, Actor* actor)
+{
+	for (AABB& box : m_StaticGeometry)
 	{
 		if (Collision::RayAABBIntersection(ray, box))
 		{
-			float player_distance = glm::length(m_Player->GetPosition() - ray.m_Origin);
-			float wall_distance = glm::length(box.m_Position - ray.m_Origin);
-			if (wall_distance < player_distance)
+			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.m_Position - ray.m_Origin))
 			{
 				return false;
 			}
 		}
 	}
+
+	for (Door& door : m_Doors)
+	{
+		AABB box = door.GetAABB();
+		if (Collision::RayAABBIntersection(ray, box))
+		{
+			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.m_Position - ray.m_Origin))
+			{
+				return false;
+			}
+		}
+	}
+	
 	return true;
+}
+
+bool Level::CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two)
+{
+	float distance_one = glm::length(length_one);
+	float distance_two = glm::length(length_two);
+
+	return distance_one > distance_two;
 }
 
 bool Level::CheckAABBCollision(AABB& one)
 {
-	for (AABB& box: m_CollisionGeometry)
+	for (AABB& box: m_StaticGeometry)
 	{
 		if (Collision::AABBIntersection(one, box))
 		{
 			return true;
 		}
 	}
-	return false;
-}
 
-void Level::RemoveMedkit()
-{
-	for (int i = 0; i != m_Medkits.size(); ++i) 
+	for (Door& door : m_Doors)
 	{
-		if (m_Medkits[i].GetEaten()) 
+		AABB box = door.GetAABB();
+		if (Collision::AABBIntersection(one, box))
 		{
-			m_Medkits.erase(m_Medkits.begin() + i);
+			return true;
 		}
 	}
+	return false;
 }

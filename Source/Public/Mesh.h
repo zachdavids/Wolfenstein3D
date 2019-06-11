@@ -20,8 +20,6 @@ public:
 	void CreateVertices(aiMesh* mesh);
 	void CreateIndices(aiMesh* mesh);
 	void Draw() const;
-	glm::vec3 GetSize();
-	AABB& GetAABB();
 
 private:
 

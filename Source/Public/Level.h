@@ -31,7 +31,7 @@ private:
 	Shader* m_TextShader; //temp
 	Shader* m_DefaultShader; //temp
 	std::vector<Wall> m_LevelGeometry;
-	std::vector<AABB> m_CollisionGeometry;
+	std::vector<AABB> m_StaticGeometry;
 	std::vector<Door> m_Doors;
 	std::vector<Enemy> m_Enemies;
 	std::vector<Medkit> m_Medkits;
@@ -39,5 +39,6 @@ private:
 	glm::ivec2 m_LevelDimensions;
 	void GenerateLevel(std::string const& file_name);
 	int FlatIndex(int x, int y);
-	void RemoveMedkit();
+	bool ClosestCollision(Ray& ray, Actor* actor);
+	bool CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two);
 };

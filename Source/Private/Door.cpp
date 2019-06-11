@@ -1,9 +1,9 @@
 #include "Door.h"
 #include "ResourceManager.h"
+#include "TimeManager.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "TimeManager.h"
 
 #include <GLM/gtx/compatibility.hpp>
 
@@ -19,14 +19,13 @@ Door::Door(glm::vec3 const& position, bool rotation)
 {
 	is_open_ = false;
 
-	m_OpenPosition = position;
-	m_ClosePosition = position;
-
-	SetPosition(position);
+	SetPosition(glm::vec3(position.x + 0.5f, 0, position.z + 0.5f));
+	m_OpenPosition = GetPosition();
+	m_ClosePosition = GetPosition();
 
 	if (rotation) 
 	{
-		SetRotation(glm::vec3(0, glm::radians(-90.0f), 0));
+		SetRotation(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
 		m_OpenPosition.z -= 0.9f;
 	}
 	else
@@ -87,14 +86,22 @@ void Door::Render()
 	m_Mesh->Draw();
 }
 
-glm::vec3 Door::GetDimensions()
+AABB Door::GetAABB()
 {
+	AABB aabb;
+
 	if (GetRotation().y == glm::radians(-90.0f)) 
 	{
-		return glm::vec3(DOOR_LENGTH, 0, DOOR_WIDTH);
+		aabb.m_Min = glm::vec3(-0.0625f, 0.0f, -0.5f) + GetPosition();
+		aabb.m_Max = glm::vec3(0.0625f, 0.0f, 0.5f) + GetPosition();
+		aabb.m_Position = GetPosition();
 	}
 	else 
 	{
-		return glm::vec3(DOOR_WIDTH, 0, DOOR_LENGTH);
+		aabb.m_Min = glm::vec3(-0.5f, 0.0f, -0.0625) + GetPosition();
+		aabb.m_Max = glm::vec3(0.5f, 0.0f, 0.0625) + GetPosition();
+		aabb.m_Position = GetPosition();
 	}
+
+	return aabb;
 }

@@ -25,33 +25,34 @@ Medkit::Medkit(glm::vec3 const& position)
 
 void Medkit::Update()
 {
-	glm::vec3 player_position = GameManager::Get()->GetPlayer()->GetPosition();
-	glm::vec3 camera_direction = player_position - GetPosition();
-
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
-	if (camera_direction.x > 0) 
+	if (m_bIsEaten == false)
 	{
-		camera_angle += glm::pi<float>();
-	}
-	SetRotation(glm::vec3(0, camera_angle, 0));
+		glm::vec3 player_position = GameManager::Get()->GetPlayer()->GetPosition();
+		glm::vec3 camera_direction = player_position - GetPosition();
 
-	if (glm::length(camera_direction) < m_PickupDistance) 
-	{
-		AudioManager::Get()->PlayMedkit();
-		GameManager::Get()->GetPlayer()->Damage(-m_HealAmount);
-		m_bIsEaten = true;
+		float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
+		if (camera_direction.x > 0)
+		{
+			camera_angle += glm::pi<float>();
+		}
+		SetRotation(glm::vec3(0, camera_angle, 0));
+
+		if (glm::length(camera_direction) < m_PickupDistance)
+		{
+			AudioManager::Get()->PlayMedkit();
+			GameManager::Get()->GetPlayer()->Damage(-m_HealAmount);
+			m_bIsEaten = true;
+		}
 	}
 }
 
 void Medkit::Render()
 {
-	m_Shader->Bind();
-	m_Shader->SetMat4("model", GetModelMatrix());
-	m_Texture->Bind();
-	m_Mesh->Draw();
-}
-
-bool Medkit::GetEaten()
-{
-	return m_bIsEaten;
+	if (m_bIsEaten == false)
+	{
+		m_Shader->Bind();
+		m_Shader->SetMat4("model", GetModelMatrix());
+		m_Texture->Bind();
+		m_Mesh->Draw();
+	}
 }

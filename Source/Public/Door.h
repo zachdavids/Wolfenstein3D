@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include "AABB.h"
 
 class Shader;
 class Texture;
@@ -14,7 +15,7 @@ public:
 	void Open();
 	virtual void Update() override;
 	virtual void Render() override;
-	glm::vec3 GetDimensions();
+	AABB GetAABB();
 
 private:
 
