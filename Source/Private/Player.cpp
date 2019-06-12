@@ -29,7 +29,7 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 {
 	SetPosition(position);
 	SetRotation(rotation);
-	SetScale(glm::vec3(0.5f));
+	SetScale(glm::vec3(0.31f, 0.435f, 0.31f));
 
 	m_Camera = std::make_unique<Camera>(position, rotation);
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
@@ -58,7 +58,7 @@ void Player::Update()
 	{
 		m_Camera->Move(m_Movement * s_MovementSpeed);
 
-		SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x * 0.30f, 0.22f, m_Camera->GetPosition().z + m_Camera->GetForward().z * 0.30f));
+		SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x * 0.30f, 0.228f, m_Camera->GetPosition().z + m_Camera->GetForward().z * 0.30f));
 		glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
 		float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 

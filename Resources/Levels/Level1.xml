@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Level>
     <Dimensions>32,32</Dimensions>
-    <Node>
-        <Location>1,1</Location>
+    <Tiles>
+        <X>1</X>
+		<Z></Z>
     </Node>
     <Node>
         <Location>2,2</Location>
