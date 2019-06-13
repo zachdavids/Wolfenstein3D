@@ -9,14 +9,14 @@ int main()
 {
 
 	CoreEngine engine;
-	//engine.Run();
+	engine.Run();
 
 	return 0;
 }
 
 CoreEngine::CoreEngine()
 {
-	m_WindowManager.Create(800, 600);
+	m_WindowManager.Create(800, 800);
 	m_ResourceManager.Create();
 	m_AudioManager.Create();
 	m_GameManager.Create();

@@ -2,25 +2,16 @@
 
 #include <bitset>
 
-/*
-
-*/
-
 struct Node
 {
-	enum Type : const int
+	enum NodeType : const int
 	{
-		Tile,
-		Door
+		Location,
+		Door,
+		Enemy,
+		Medkit,
+		Endpoint
 	};
 
-	int type;
-	int ceiling;
-	int floor;
-	int top_wall;
-	int bottom_wall;
-	int left_wall;
-	int right_wall;
-	int enemy;
-	int item;
+	std::bitset<5> m_Node;
 };

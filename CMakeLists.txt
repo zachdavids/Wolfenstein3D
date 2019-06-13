@@ -3,14 +3,10 @@ cmake_minimum_required(VERSION 2.6)
 # Name of project
 project(Wolfenstein3D)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Specify project files: header files and source files
 file(GLOB SOURCES
     Source/Public/*.h
     Source/Private/*.cpp
-	Source/Private/*.c
 )
 
 # Add executable based on the source files
@@ -28,21 +24,21 @@ include_directories(${LIBRARY_PATH}/include
 if(NOT WIN32)
 	find_library(FREETYPE_LIB freetype)
 	find_library(IRRKLANG_LIB irrKlang)
-	find_library(LUA_LIB lua53)
+    find_library(PUGIXML_LIB SFML)
 	find_library(GLFW_LIB glfw3)
 	find_library(ASSIMP_LIB assimp)
 
 elseif(WIN32)
 	find_library(FREETYPE_LIB freetyped HINTS ${LIBRARY_PATH}/lib/freetype)
 	find_library(IRRKLANG_LIB irrKlang HINTS ${LIBRARY_PATH}/lib/irrKlang)
-	find_library(LUA_LIB lua53 HINTS ${LIBRARY_PATH}/lib/lua)
+    find_library(PUGIXML_LIB pugixml HINTS ${LIBRARY_PATH}/lib/pugixml)
 	find_library(GLFW_LIB glfw3 HINTS ${LIBRARY_PATH}/lib/GLFW)
 	find_library(ASSIMP_LIB assimp HINTS ${LIBRARY_PATH}/lib/assimp)
 endif(NOT WIN32)
 
 target_link_libraries(Wolfenstein3D ${FREETYPE_LIB})
 target_link_libraries(Wolfenstein3D ${IRRKLANG_LIB})
-target_link_libraries(Wolfenstein3D ${LUA_LIB})
+target_link_libraries(Wolfenstein3D ${PUGIXML_LIB})
 target_link_libraries(Wolfenstein3D ${GLFW_LIB})
 target_link_libraries(Wolfenstein3D ${ASSIMP_LIB})
 
