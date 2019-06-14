@@ -84,6 +84,7 @@ void HUD::Render()
 
 void HUD::RenderText(std::string const& text, glm::vec2& position)
 {
+	glDisable(GL_CULL_FACE);
 	m_TextShader->Bind();
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(m_VAO);

@@ -35,6 +35,7 @@ bool WindowManager::Create(int width, int height)
 		return false; 
 	}
 
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
 	glEnable(GL_TEXTURE_2D);

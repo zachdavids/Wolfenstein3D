@@ -16,6 +16,7 @@ class Level
 {
 public:
 
+	Level() = default;
 	Level(std::string const& filename);
 	void Input();
 	void Update();
@@ -30,6 +31,7 @@ private:
 	Player* m_Player;
 	Shader* m_TextShader; //temp
 	Shader* m_DefaultShader; //temp
+	Shader* m_TileShader; //temp
 	std::vector<Wall> m_LevelGeometry;
 	std::vector<AABB> m_StaticGeometry;
 	std::vector<Door> m_Doors;

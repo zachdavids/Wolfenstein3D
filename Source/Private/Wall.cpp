@@ -1,35 +1,27 @@
 #include "Wall.h"
 #include "ResourceManager.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "TextureArray.h"
 #include "Mesh.h"
 
-Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type)
+Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, int t_id, Mesh* mesh) :
+	m_Tid(t_id),
+	m_Mesh(mesh)
 {
-	SetRotation(rotation);
 	SetPosition(position);
+	SetRotation(rotation);
 
-	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Wall");
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_Model = GetModelMatrix();
 
-	switch (type)
-	{
-	case Type::kFloor:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("FloorTile");
-		break;
-	case Type::kCeiling:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("CeilingTile");
-		break;
-	case Type::kWall:
-		m_Texture = ResourceManager::Get()->GetResource<Texture>("WallTile");
-		break;
-	}
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("Tilesheet");
 }
 
 void Wall::Render()
 {
 	m_Shader->Bind();
-	m_Shader->SetMat4("model", GetModelMatrix());
+	m_Shader->SetMat4("model", m_Model);
+	m_Shader->SetInt("index", m_Tid);
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

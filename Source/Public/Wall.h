@@ -6,26 +6,21 @@
 #include <glm/vec3.hpp>
 
 class Mesh;
-class Texture;
+class TextureArray;
 class Shader;
 
 class Wall : public Actor
 {
 public:
-
-	enum class Type
-	{
-		kFloor,
-		kCeiling,
-		kWall
-	};
 	
-	Wall(glm::vec3 const& position, glm::vec3 const& rotation, Type type);
+	Wall(glm::vec3 const& position, glm::vec3 const& rotation, int t_id, Mesh* mesh);
 	virtual void Render() override;
 
 private:
 
+	int m_Tid;
+	glm::mat4 m_Model;
 	Mesh* m_Mesh = nullptr;
 	Shader* m_Shader = nullptr;
-	Texture* m_Texture = nullptr;
+	TextureArray* m_Texture = nullptr;
 };

@@ -6,8 +6,9 @@
 #include "Player.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "XMLParser.h"
 #include "Collision.h"
+
+#include "LevelGenerator.h"
 
 #include <iostream>
 #include <algorithm>
@@ -19,7 +20,9 @@ const int PLAYER_DAMAGE = 34;
 Level::Level(std::string const& filename)
 {
 	m_Player = GameManager::Get()->GetPlayer();
+
 	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_TileShader = ResourceManager::Get()->GetResource<Shader>("TileShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
 	AudioManager::Get()->PlayMusic();
@@ -68,13 +71,17 @@ void Level::Render()
 	m_DefaultShader->SetMat4("projection", m_Player->GetCamera()->GetProjectionMatrix());
 	m_DefaultShader->SetMat4("view", m_Player->GetCamera()->GetViewMatrix());
 
+	m_TileShader->Bind();
+	m_TileShader->SetMat4("projection", m_Player->GetCamera()->GetProjectionMatrix());
+	m_TileShader->SetMat4("view", m_Player->GetCamera()->GetViewMatrix());
+
 	m_TextShader->Bind();
 	m_TextShader->SetVec3("color", glm::vec3(0.5, 0.8f, 0.2f));
 	m_TextShader->SetMat4("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
-	for (Wall& wall : m_LevelGeometry)
+	for (Wall& Wall : m_LevelGeometry)
 	{
-		wall.Render();
+		Wall.Render();
 	}
 
 	for (Door& door : m_Doors) 
@@ -122,81 +129,13 @@ int Level::FlatIndex(int x, int y)
 
 void Level::GenerateLevel(std::string const& file_name)
 {
-	XMLParser parser(file_name);
-	if (!parser.TryParse())
-	{
-		std::cout << "Error parsing level file\n";
-		return;
-	}
-
-	std::vector<Node> nodes = parser.GetNodes();
-	m_LevelDimensions = parser.GetDimensions();
-
-	for (int i = 0; i < m_LevelDimensions.x; i++)
-	{
-		for (int j = 0; j < m_LevelDimensions.y; j++)
-		{
-			if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Location))
-			{
-				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 0, j), glm::vec3(0.0f), Wall::Type::kFloor));
-				m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(0.0f), Wall::Type::kCeiling));
-
-				if (!nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location))
-				{
-					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
-				}
-
-				if (!nodes[FlatIndex(i, j + 1)].m_Node.test(Node::NodeType::Location))
-				{
-					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j + 1), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), Wall::Type::kWall));
-				}
-
-				if (!nodes[FlatIndex(i - 1, j)].m_Node.test(Node::NodeType::Location))
-				{
-					m_LevelGeometry.emplace_back(Wall(glm::vec3(i, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
-				}
-
-				if (!nodes[FlatIndex(i + 1, j)].m_Node.test(Node::NodeType::Location))
-				{
-					m_LevelGeometry.emplace_back(Wall(glm::vec3(i + 1, 1, j), glm::vec3(glm::radians(90.0f), 0.0f, glm::radians(90.0f)), Wall::Type::kWall));
-				}
-				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Door))
-				{
-					bool positive_z = !nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location);
-					bool negative_z = !nodes[FlatIndex(i, j - 1)].m_Node.test(Node::NodeType::Location);
-					if (positive_z && negative_z)
-					{
-						m_Doors.emplace_back(Door(glm::vec3(i, 0, j), true));
-					}
-					else
-					{
-						m_Doors.emplace_back(Door(glm::vec3(i, 0, j), false));
-					}
-				}
-				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Enemy))
-				{
-					m_Enemies.emplace_back(Enemy(glm::vec3(i, 0, j)));
-				}
-				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Medkit))
-				{
-					m_Medkits.emplace_back(Medkit(glm::vec3(i, 0, j)));
-				}
-				if (nodes[FlatIndex(i, j)].m_Node.test(Node::NodeType::Endpoint))
-				{
-					m_Endpoint = glm::vec3(i, 0, j);
-				}
-			}
-			else
-			{
-				AABB box;
-				box.m_Min = glm::vec3(i, 0, j);
-				box.m_Max = glm::vec3(i + 1, 0, j + 1);
-				box.m_Position.x = (box.m_Max.x + box.m_Min.x) / 2;
-				box.m_Position.z = (box.m_Max.z + box.m_Min.z) / 2;
-				m_StaticGeometry.emplace_back(box);
-			}
-		}
-	}
+	Mapdata map;
+	LevelGenerator level_gen;
+	map = level_gen.Generate("Level1.json");
+	m_Player->GetCamera()->SetPosition(map.spawn.position);
+	//m_Player->GetCamera()->SetRotation(map.spawn.rotation);
+	m_LevelGeometry = map.geometry;
+	m_Doors = map.doors;
 }
 
 bool Level::CheckPlayerRayCollision(Ray& ray)

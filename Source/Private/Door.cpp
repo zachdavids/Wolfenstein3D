@@ -2,7 +2,7 @@
 #include "ResourceManager.h"
 #include "TimeManager.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "TextureArray.h"
 #include "Mesh.h"
 
 #include <GLM/gtx/compatibility.hpp>
@@ -15,26 +15,18 @@ const float TIME_TO_OPEN = 1.0f;
 const float DELAY = 3.0f;
 const float TIME_TO_CLOSE = 1.0f;
 
-Door::Door(glm::vec3 const& position, bool rotation)
+Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id) :
+	m_Tid(t_id)
 {
-	is_open_ = false;
+	SetPosition(position);
+	SetRotation(rotation);
 
-	SetPosition(glm::vec3(position.x + 0.5f, 0, position.z + 0.5f));
-	m_OpenPosition = GetPosition();
 	m_ClosePosition = GetPosition();
+	m_OpenPosition = GetPosition();
+	rotation.y == glm::radians(90.0f) ? m_OpenPosition.x += 0.9f : m_OpenPosition.z += 0.9f;
 
-	if (rotation) 
-	{
-		SetRotation(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
-		m_OpenPosition.z -= 0.9f;
-	}
-	else
-	{
-		m_OpenPosition.x += 0.9f;
-	}
-
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
-	m_Texture = ResourceManager::Get()->GetResource<Texture>("DoorTile");
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("Tilesheet");
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Door");
 }
 
@@ -82,6 +74,7 @@ void Door::Render()
 {
 	m_Shader->Bind();
 	m_Shader->SetMat4("model", GetModelMatrix());
+	m_Shader->SetInt("index", m_Tid);
 	m_Texture->Bind();
 	m_Mesh->Draw();
 }

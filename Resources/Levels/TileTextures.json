@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"..\/..\/..\/Resources\/Textures\/Tiles\/TileTextures.png",
+ "imageheight":1216,
+ "imagewidth":384,
+ "margin":0,
+ "name":"TileTextures",
+ "spacing":0,
+ "tilecount":114,
+ "tiledversion":"1.2.4",
+ "tileheight":64,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":1.2
+}
