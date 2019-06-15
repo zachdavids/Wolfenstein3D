@@ -8,7 +8,7 @@
 #include <memory>
 #include <GLM/vec3.hpp>
 
-class Texture;
+class TextureArray;
 class Mesh;
 class Camera;
 class TextShader;
@@ -37,19 +37,21 @@ public:
 private:
 
 	bool shot_;
+	int m_CurrentWeapon;
 	int m_CurrentHP;
+	int m_Tid = 14;
 	static const int s_MaxHP;
 	static const float s_MovementSpeed;
 	static const float s_LookSensitivity;
-	static const float s_RateOfFire;
 	glm::vec3 m_Movement;
 	FireRate m_FireRate;
 	HUD m_HUD;
 	Mesh* m_Mesh = nullptr;
-	Shader* m_DefaultShader = nullptr;
-	Texture* m_CurrentAnimation = nullptr;
+	Shader* m_TileShader = nullptr;
+	TextureArray* m_Texture = nullptr;
 	std::unique_ptr<Camera> m_Camera;
 	void Shoot();
 	void MouseInput();
 	void KeyboardInput();
+	void PlayWeaponAnimation(double last_fire);
 };

@@ -16,7 +16,7 @@ int main()
 
 CoreEngine::CoreEngine()
 {
-	m_WindowManager.Create(800, 800);
+	m_WindowManager.Create();
 	m_ResourceManager.Create();
 	m_AudioManager.Create();
 	m_GameManager.Create();

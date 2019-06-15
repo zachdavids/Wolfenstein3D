@@ -4,7 +4,7 @@
 #include "GameManager.h"
 #include "TimeManager.h"
 #include "AudioManager.h"
-#include "Texture.h"
+#include "TextureArray.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
@@ -17,48 +17,52 @@
 #include <GLM/gtc/constants.hpp>
 
 const int Player::s_MaxHP = 100;
-const float Player::s_MovementSpeed = 0.035f;
+const float Player::s_MovementSpeed = 0.08f;
 const float Player::s_LookSensitivity = 0.001f;
-const float Player::s_RateOfFire = 0.5f;
 
 Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 	m_CurrentHP(s_MaxHP),
 	m_Movement(glm::vec3(0.0f)),
 	shot_(false),
-	m_FireRate{true, 0.7f, 0.0f}
+	m_FireRate{ true, 0.15f, 0.0f },
+	m_CurrentWeapon(2)
 {
 	SetPosition(position);
 	SetRotation(rotation);
-	SetScale(glm::vec3(0.5f));
+	//SetScale(glm::vec3(0.5f));
 
 	m_Camera = std::make_unique<Camera>(position, rotation);
-	m_DefaultShader = ResourceManager::Get()->GetResource<Shader>("DefaultShader");
+	m_TileShader = ResourceManager::Get()->GetResource<Shader>("TileShader");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
 }
 
 void Player::Input()
 {
-	if (shot_ = true)
-	{
-		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_1");
-	}
-
 	MouseInput();
 	KeyboardInput();
 }
 
 void Player::Update()
 {
-	if (TimeManager::GetTime() - m_FireRate.last_interval > m_FireRate.rate)
+	if (m_FireRate.bFireable == false)
 	{
-		m_FireRate.bFireable = true;
+		double last_fire = TimeManager::GetTime() - m_FireRate.last_interval;
+		if (last_fire > m_FireRate.rate)
+		{
+			m_FireRate.bFireable = true;
+		}
+		else
+		{
+			PlayWeaponAnimation(last_fire);
+		}
 	}
 
 	if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()) == false)
 	{
 		m_Camera->Move(m_Movement * s_MovementSpeed);
 
-		SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x * 0.30f, 0.22f, m_Camera->GetPosition().z + m_Camera->GetForward().z * 0.30f));
+		SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
 		glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
 		float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
@@ -73,9 +77,10 @@ void Player::Update()
 
 void Player::Render()
 {
-	m_DefaultShader->Bind();
-	m_DefaultShader->SetMat4("model", GetModelMatrix());
-	m_CurrentAnimation->Bind();
+	m_TileShader->Bind();
+	m_TileShader->SetMat4("model", GetModelMatrix());
+	m_TileShader->SetInt("index", m_Tid);
+	m_Texture->Bind();
 	m_Mesh->Draw();
 	m_HUD.Render();
 }
@@ -130,11 +135,18 @@ void Player::KeyboardInput()
 	}
 }
 
+//Play animation smoothed over fire rate
+void Player::PlayWeaponAnimation(double last_fire)
+{
+	int num_animations = 5;
+	float time_per_animation = m_FireRate.rate / num_animations;
+	m_Tid = 20 - m_CurrentWeapon * num_animations + glm::floor(last_fire / time_per_animation);
+}
+
 void Player::Shoot()
 {
 	if (m_FireRate.bFireable)
 	{
-		m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Shoot_3");
 		shot_ = true;
 		AudioManager::Get()->PlayPistol(GetPosition());
 

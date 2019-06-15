@@ -9,9 +9,10 @@ public:
 	TextureArray(std::string const& filename);
 	void Create();
 	void Bind() const;
-
+	unsigned int m_ID;
 private:
 
-	unsigned int m_ID;
+
+	static const int s_TextureSize;
 };
 

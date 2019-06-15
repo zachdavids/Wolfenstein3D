@@ -7,13 +7,10 @@
 
 WindowManager* WindowManager::m_Instance;
 
-bool WindowManager::Create(int width, int height)
+bool WindowManager::Create()
 {
 	if (m_Instance) { return false; }
 	m_Instance = this;
-
-	m_Width = width;
-	m_Height = height;
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -21,7 +18,14 @@ bool WindowManager::Create(int width, int height)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	m_Window = glfwCreateWindow(m_Width, m_Height, "Wolfenstein", nullptr, nullptr);
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+	m_Window = glfwCreateWindow(640, 640, "Wolfenstein", nullptr, nullptr);
 	if (!m_Window) 
 	{ 
 		return false; 
@@ -42,6 +46,7 @@ bool WindowManager::Create(int width, int height)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glfwGetFramebufferSize(m_Window, &m_Width, &m_Height);
 	glViewport(0, 0, m_Width, m_Height);
 	
 	return true;

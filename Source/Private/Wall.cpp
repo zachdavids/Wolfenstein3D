@@ -14,7 +14,7 @@ Wall::Wall(glm::vec3 const& position, glm::vec3 const& rotation, int t_id, Mesh*
 	m_Model = GetModelMatrix();
 
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
-	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("Tilesheet");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 }
 
 void Wall::Render()

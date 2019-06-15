@@ -133,7 +133,7 @@ void Level::GenerateLevel(std::string const& file_name)
 	LevelGenerator level_gen;
 	map = level_gen.Generate("Level1.json");
 	m_Player->GetCamera()->SetPosition(map.spawn.position);
-	//m_Player->GetCamera()->SetRotation(map.spawn.rotation);
+	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
 	m_LevelGeometry = map.geometry;
 	m_Doors = map.doors;
 }

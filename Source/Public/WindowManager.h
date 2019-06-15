@@ -7,7 +7,7 @@ class WindowManager
 public:
 
 	WindowManager() = default;
-	bool Create(int width, int height);
+	bool Create();
 	void Clear() const;
 	void SwapAndPoll() const;
 	bool IsCloseRequested() const;

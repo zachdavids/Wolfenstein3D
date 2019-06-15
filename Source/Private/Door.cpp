@@ -5,6 +5,7 @@
 #include "TextureArray.h"
 #include "Mesh.h"
 
+#include <iostream>
 #include <GLM/gtx/compatibility.hpp>
 
 const float DOOR_LENGTH = 0.125f;
@@ -26,7 +27,7 @@ Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id) :
 	rotation.y == glm::radians(90.0f) ? m_OpenPosition.x += 0.9f : m_OpenPosition.z += 0.9f;
 
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
-	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("Tilesheet");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Door");
 }
 

@@ -44,10 +44,6 @@ void ResourceManager::Create()
 		"Resources/Textures/Medkit/"
 	);
 
-	ResourceManager::Get()->AddResourceFolder<Texture>(
-		"Resources/Textures/Tiles/"
-	);
-
 	ResourceManager::Get()->AddResourceFolder<TextureArray>(
 		"Resources/Tilesheets/"
 	);
