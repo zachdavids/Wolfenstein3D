@@ -39,10 +39,7 @@ private:
 	bool shot_;
 	int m_CurrentWeapon;
 	int m_CurrentHP;
-	int m_Tid = 14;
-	static const int s_MaxHP;
-	static const float s_MovementSpeed;
-	static const float s_LookSensitivity;
+	int m_Tid = 64;
 	glm::vec3 m_Movement;
 	FireRate m_FireRate;
 	HUD m_HUD;
@@ -50,6 +47,9 @@ private:
 	Shader* m_TileShader = nullptr;
 	TextureArray* m_Texture = nullptr;
 	std::unique_ptr<Camera> m_Camera;
+	static const int s_MaxHP;
+	static const float s_MovementSpeed;
+	static const float s_LookSensitivity;
 	void Shoot();
 	void MouseInput();
 	void KeyboardInput();

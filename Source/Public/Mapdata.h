@@ -2,8 +2,9 @@
 
 #include "Door.h"
 #include "Enemy.h"
-#include "Medkit.h"
+#include "Item.h"
 #include "Wall.h"
+#include "Pickup.h"
 
 #include <vector>
 
@@ -20,6 +21,7 @@ struct Mapdata
 	std::vector<Wall> geometry;
 	std::vector<Door> doors;
 	std::vector<Enemy> enemies;
-	std::vector<Medkit> items;
+	std::vector<Item> items;
+	std::vector<Pickup> pickups;
 	std::vector<AABB> collision;
 };

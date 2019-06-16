@@ -2,14 +2,15 @@
 
 #include "Transform.h"
 
+#include <iostream>
 #include <GLM/mat4x4.hpp>
 
 class Actor
 {
 public:
 
-	virtual void Update() {};
-	virtual void Render() {};
+	virtual void Update() { std::cout << m_Transform.m_Position.x << std::endl; };
+	virtual void Render() { std::cout << "Hello" << std::endl; };
 	void Translate(glm::vec3 const& translation);
 	void Rotate(glm::vec3 const& rotate);
 	void Scale(glm::vec3 const& scale);

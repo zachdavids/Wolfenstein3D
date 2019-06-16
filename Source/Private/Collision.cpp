@@ -1,6 +1,9 @@
 #include "Collision.h"
 
 #include <algorithm>
+#include <iostream>
+
+#include <GLM/glm.hpp>
 
 bool Collision::AABBIntersection(AABB const& box_one, AABB const& box_two)
 {
@@ -11,7 +14,7 @@ bool Collision::AABBIntersection(AABB const& box_one, AABB const& box_two)
 
 	bool d1 = d1x > 0.0 || d1z > 0.0;
 	bool d2 = d2x > 0.0 || d2z > 0.0;
-	
+
 	return !(d1 || d2);
 }
 

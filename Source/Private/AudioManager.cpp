@@ -18,13 +18,16 @@ void AudioManager::Destroy()
 
 void AudioManager::PlayMusic()
 {
-	m_Music = m_SoundEngine->play2D(
-		"Resources/Sounds/GetThemBeforeTheyGetYou.ogg",
-		true,
-		false,
-		true
-	);
-	m_Music->setVolume(0.10f);
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/GetThemBeforeTheyGetYou.ogg"))
+	{
+		m_Music = m_SoundEngine->play2D(
+			"Resources/Sounds/GetThemBeforeTheyGetYou.ogg",
+			true,
+			false,
+			true
+		);
+		m_Music->setVolume(0.10f);
+	}
 }
 
 void AudioManager::PlayPistol(glm::vec3 const& position)

@@ -58,31 +58,43 @@ void Player::Update()
 		}
 	}
 
-	if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()) == false)
+	glm::vec3 intention = m_Movement * s_MovementSpeed;
+	glm::vec3 collision = glm::vec3(1.0f);
+	glm::vec3 new_position = m_Camera->GetPosition() + intention;
+	AABB aabb;
+	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + new_position;
+	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + new_position;
+	aabb.m_Position = new_position;
+
+	if (GameManager::Get()->GetLevel()->CheckAABBCollision(aabb) == false)
 	{
-		m_Camera->Move(m_Movement * s_MovementSpeed);
-
-		SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
-		glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
-		float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
-
-		if (camera_direction.x > 0)
-		{
-			camera_angle += glm::pi<float>();
-		}
-		SetRotation(glm::vec3(0, camera_angle, 0));
-		AudioManager::Get()->SetListenerPosition(m_Camera->GetPosition(), GetRotation());
+		m_Camera->Move(m_Movement * collision * s_MovementSpeed);
 	}
+
+	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
+	glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
+
+	if (camera_direction.x > 0)
+	{
+		camera_angle += glm::pi<float>();
+	}
+	SetRotation(glm::vec3(0, camera_angle, 0));
+	AudioManager::Get()->SetListenerPosition(m_Camera->GetPosition(), GetRotation());
 }
 
 void Player::Render()
 {
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
 	m_TileShader->Bind();
 	m_TileShader->SetMat4("model", GetModelMatrix());
 	m_TileShader->SetInt("index", m_Tid);
 	m_Texture->Bind();
 	m_Mesh->Draw();
 	m_HUD.Render();
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
 }
 
 void Player::MouseInput()
@@ -140,7 +152,7 @@ void Player::PlayWeaponAnimation(double last_fire)
 {
 	int num_animations = 5;
 	float time_per_animation = m_FireRate.rate / num_animations;
-	m_Tid = 20 - m_CurrentWeapon * num_animations + glm::floor(last_fire / time_per_animation);
+	m_Tid = 70 - m_CurrentWeapon * num_animations + glm::floor(last_fire / time_per_animation);
 }
 
 void Player::Shoot()

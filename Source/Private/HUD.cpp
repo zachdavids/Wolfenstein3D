@@ -3,16 +3,32 @@
 #include "GameManager.h"
 #include "Player.h"
 #include "Shader.h"
+#include "Texture.h"
+#include "Mesh.h"
 
 #include <iostream>
 #include <glad/glad.h>
 #include <freetype/ft2build.h>
 #include FT_FREETYPE_H
 
+#include <GLM/gtc/matrix_transform.hpp>
+
 HUD::HUD()
 {
-	InitText();
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("HUDShader");
 	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
+
+	Init();
+	InitText();
+}
+
+void HUD::Init()
+{
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("HUD");
+	m_Texture = ResourceManager::Get()->GetResource<Texture>("HUD1");
+
+	HUDElement GUI = HUDElement{ glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), m_Mesh, m_Texture };
+	m_Elements.emplace_back(GUI);
 }
 
 void HUD::InitText()
@@ -79,7 +95,15 @@ void HUD::InitText()
 
 void HUD::Render()
 {
-	RenderText("HP: " + std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(25.0f, 25.0f));
+	glDisable(GL_DEPTH_TEST);
+	m_Shader->Bind();
+	for (HUDElement& element : m_Elements)
+	{
+		element.texture->Bind();
+		m_Shader->SetMat4("transform", GetModel(element.position, element.scale));
+		element.mesh->Draw();
+	}
+	glEnable(GL_DEPTH_TEST);
 }
 
 void HUD::RenderText(std::string const& text, glm::vec2& position)
@@ -120,4 +144,12 @@ void HUD::RenderText(std::string const& text, glm::vec2& position)
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+glm::mat4 HUD::GetModel(glm::vec3 const& position, glm::vec3 const& scale)
+{
+	glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), position);
+	model_matrix = glm::scale(model_matrix, scale);
+
+	return model_matrix;
 }

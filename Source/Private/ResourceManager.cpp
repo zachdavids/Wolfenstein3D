@@ -28,6 +28,11 @@ void ResourceManager::Create()
 		"Resources/Shaders/Text/"
 	);
 
+	ResourceManager::Get()->AddResource<Shader>(
+		"HUDShader",
+		"Resources/Shaders/HUD/"
+		);
+
 		ResourceManager::Get()->AddResourceFolder<Mesh>(
 		"Resources/Meshes/"
 	);

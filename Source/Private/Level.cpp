@@ -54,9 +54,14 @@ void Level::Update()
 		enemy.Update();
 	}
 
-	for (Medkit& medkit : m_Medkits)
+	for (Item& item : m_Items)
 	{
-		medkit.Update();
+		item.Update();
+	}
+
+	for (Pickup& pickup : m_Pickups)
+	{
+		pickup.Update();
 	}
 }
 
@@ -94,9 +99,14 @@ void Level::Render()
 		enemy.Render();
 	}
 
-	for (Medkit& medkit : m_Medkits) 
+	for (Item& item : m_Items) 
 	{
-		medkit.Render();
+		item.Render();
+	}
+
+	for (Pickup& pickup : m_Pickups)
+	{
+		pickup.Render();
 	}
 
 	m_Player->Render();
@@ -135,7 +145,11 @@ void Level::GenerateLevel(std::string const& file_name)
 	m_Player->GetCamera()->SetPosition(map.spawn.position);
 	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
 	m_LevelGeometry = map.geometry;
+	m_StaticGeometry = map.collision;
 	m_Doors = map.doors;
+	m_Items = map.items;
+	m_Pickups = map.pickups;
+	m_Enemies = map.enemies;
 }
 
 bool Level::CheckPlayerRayCollision(Ray& ray)
@@ -218,12 +232,13 @@ bool Level::CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_
 	return distance_one > distance_two;
 }
 
-bool Level::CheckAABBCollision(AABB& one)
+bool Level::CheckAABBCollision(AABB& actor)
 {
 	for (AABB& box: m_StaticGeometry)
 	{
-		if (Collision::AABBIntersection(one, box))
+		if (Collision::AABBIntersection(actor, box))
 		{
+			//Handle Response
 			return true;
 		}
 	}
@@ -231,7 +246,7 @@ bool Level::CheckAABBCollision(AABB& one)
 	for (Door& door : m_Doors)
 	{
 		AABB box = door.GetAABB();
-		if (Collision::AABBIntersection(one, box))
+		if (Collision::AABBIntersection(actor, box))
 		{
 			return true;
 		}

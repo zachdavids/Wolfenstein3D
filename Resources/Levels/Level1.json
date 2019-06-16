@@ -13,6 +13,76 @@
           "y": 0.5,
           "z": 7,
           "rotation": 90
+        },
+		{
+          "id": 2,
+          "x": 40,
+          "y": 0,
+          "z": 7,
+		  "texture": 28,
+		  "collision": 0
+        },	
+		{
+          "id": 2,
+          "x": 28,
+          "y": 0,
+          "z": 13,
+		  "texture": 28,
+		  "collision": 0
+        },	
+		{
+          "id": 3,
+		  "type": 0,
+		  "amount": 10,
+          "x": 29,
+          "y": 0,
+          "z": 13,
+		  "texture": 23,
+		  "collision": 0
+        },
+		{
+          "id": 2,
+          "x": 38,
+          "y": 0,
+          "z": 12,
+		  "texture": 38,
+		  "collision": 0
+        },	
+		{
+          "id": 3,
+		  "type": 0,
+		  "amount": 10,
+          "x": 37,
+          "y": 0,
+          "z": 7,
+		  "texture": 23,
+		  "collision": 0
+        },
+		{
+          "id": 3,
+		  "type": 0,
+		  "amount": 10,
+          "x": 34,
+          "y": 0,
+          "z": 2,
+		  "texture": 23,
+		  "collision": 0
+        },
+		{
+          "id": 3,
+		  "type": 1,
+		  "amount": 8,
+          "x": 40,
+          "y": 0,
+          "z": 3,
+		  "texture": 21,
+		  "collision": 0
+        },
+		{
+          "id": 4,
+          "x": 39,
+          "y": 0,
+          "z": 3
         }
       ]
     }
