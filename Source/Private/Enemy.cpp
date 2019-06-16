@@ -110,10 +110,10 @@ void Enemy::Chase()
 			m_CurrentAnimation = ResourceManager::Get()->GetResource<Texture>("Guard_Walk4");
 		}
 
-		if (GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB()) == false)
-		{
-			SetPosition(GetPosition() + (m_PlayerDirection * s_MovementSpeed));
-		}
+		glm::vec3 collision(1.0f);
+		glm::vec3 delta(0.0f);
+		GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB(), collision, delta);
+		SetPosition(GetPosition() + (m_PlayerDirection * collision * s_MovementSpeed));
 	}
 }
 
@@ -202,8 +202,5 @@ bool Enemy::CheckSightline()
 
 AABB Enemy::GetAABB()
 {
-	AABB aabb;
-	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1) + GetPosition();;
-	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + GetPosition();;
-	return aabb;
+	return AABB{ GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
 }

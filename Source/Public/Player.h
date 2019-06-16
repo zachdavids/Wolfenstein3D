@@ -54,4 +54,5 @@ private:
 	void MouseInput();
 	void KeyboardInput();
 	void PlayWeaponAnimation(double last_fire);
+	void Move(glm::vec3 const& movement);
 };

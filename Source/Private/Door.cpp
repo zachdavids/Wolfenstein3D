@@ -86,15 +86,13 @@ AABB Door::GetAABB()
 
 	if (GetRotation().y == glm::radians(-90.0f)) 
 	{
-		aabb.m_Min = glm::vec3(-0.0625f, 0.0f, -0.5f) + GetPosition();
-		aabb.m_Max = glm::vec3(0.0625f, 0.0f, 0.5f) + GetPosition();
-		aabb.m_Position = GetPosition();
+		aabb.position = GetPosition(); 
+		aabb.half = glm::vec3(0.0625f, 0.0f, 0.5f);
 	}
 	else 
 	{
-		aabb.m_Min = glm::vec3(-0.5f, 0.0f, -0.0625) + GetPosition();
-		aabb.m_Max = glm::vec3(0.5f, 0.0f, 0.0625) + GetPosition();
-		aabb.m_Position = GetPosition();
+		aabb.position = GetPosition();
+		aabb.half = glm::vec3(0.5f, 0.0f, 0.0625);
 	}
 
 	return aabb;

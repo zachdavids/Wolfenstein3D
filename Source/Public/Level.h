@@ -25,7 +25,7 @@ public:
 	void OpenDoors(glm::vec3 const& position, bool exit);
 	bool CheckPlayerRayCollision(Ray& ray);
 	bool CheckEnemyRayCollision(Ray& ray);
-	bool CheckAABBCollision(AABB& actor);
+	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
 
 private:
 

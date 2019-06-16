@@ -202,7 +202,7 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 	{
 		if (Collision::RayAABBIntersection(ray, box))
 		{
-			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.m_Position - ray.m_Origin))
+			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.position - ray.m_Origin))
 			{
 				return false;
 			}
@@ -214,7 +214,7 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 		AABB box = door.GetAABB();
 		if (Collision::RayAABBIntersection(ray, box))
 		{
-			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.m_Position - ray.m_Origin))
+			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.position - ray.m_Origin))
 			{
 				return false;
 			}
@@ -224,32 +224,39 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 	return true;
 }
 
-bool Level::CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two)
+bool Level::CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position)
 {
-	float distance_one = glm::length(length_one);
-	float distance_two = glm::length(length_two);
-
-	return distance_one > distance_two;
-}
-
-bool Level::CheckAABBCollision(AABB& actor)
-{
+	AABB closest;
 	for (AABB& box: m_StaticGeometry)
 	{
-		if (Collision::AABBIntersection(actor, box))
+		if (Collision::AABBIntersection(actor, box, normal, position))
 		{
-			//Handle Response
-			return true;
+			if (CompareLengths(closest.position, box.position))
+			{
+				closest = box;
+			}
 		}
 	}
 
 	for (Door& door : m_Doors)
 	{
 		AABB box = door.GetAABB();
-		if (Collision::AABBIntersection(actor, box))
+		if (Collision::AABBIntersection(actor, box, normal, position))
 		{
-			return true;
+			if (CompareLengths(closest.position, box.position))
+			{
+				closest = box;
+			}
 		}
 	}
-	return false;
+	return true;
+}
+
+//Returns true if first vector's length is over the second
+bool Level::CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two)
+{
+	float distance_one = glm::length(length_one);
+	float distance_two = glm::length(length_two);
+
+	return distance_one > distance_two;
 }

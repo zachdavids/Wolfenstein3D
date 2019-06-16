@@ -17,7 +17,7 @@
 #include <GLM/gtc/constants.hpp>
 
 const int Player::s_MaxHP = 100;
-const float Player::s_MovementSpeed = 0.08f;
+const float Player::s_MovementSpeed = 0.05f;
 const float Player::s_LookSensitivity = 0.001f;
 
 Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
@@ -29,7 +29,6 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 {
 	SetPosition(position);
 	SetRotation(rotation);
-	//SetScale(glm::vec3(0.5f));
 
 	m_Camera = std::make_unique<Camera>(position, rotation);
 	m_TileShader = ResourceManager::Get()->GetResource<Shader>("TileShader");
@@ -59,27 +58,14 @@ void Player::Update()
 	}
 
 	glm::vec3 intention = m_Movement * s_MovementSpeed;
-	glm::vec3 collision = glm::vec3(1.0f);
 	glm::vec3 new_position = m_Camera->GetPosition() + intention;
-	AABB aabb;
-	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + new_position;
-	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + new_position;
-	aabb.m_Position = new_position;
+	AABB aabb{ new_position, glm::vec3(0.1f, 0, 0.1) };
 
-	if (GameManager::Get()->GetLevel()->CheckAABBCollision(aabb) == false)
-	{
-		m_Camera->Move(m_Movement * collision * s_MovementSpeed);
-	}
+	glm::vec3 collision(1.0f);
+	glm::vec3 delta(0.0f);
+	GameManager::Get()->GetLevel()->CheckAABBCollision(aabb, collision, delta);
+	Move((intention + delta) * collision);
 
-	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
-	glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
-	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
-
-	if (camera_direction.x > 0)
-	{
-		camera_angle += glm::pi<float>();
-	}
-	SetRotation(glm::vec3(0, camera_angle, 0));
 	AudioManager::Get()->SetListenerPosition(m_Camera->GetPosition(), GetRotation());
 }
 
@@ -151,8 +137,22 @@ void Player::KeyboardInput()
 void Player::PlayWeaponAnimation(double last_fire)
 {
 	int num_animations = 5;
-	float time_per_animation = m_FireRate.rate / num_animations;
-	m_Tid = 70 - m_CurrentWeapon * num_animations + glm::floor(last_fire / time_per_animation);
+	double time_per_animation = m_FireRate.rate / num_animations;
+	m_Tid = 70 - m_CurrentWeapon * num_animations + (int)glm::floor(last_fire / time_per_animation);
+}
+
+void Player::Move(glm::vec3 const& movement)
+{
+	m_Camera->Move(movement);
+	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
+	glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
+	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
+
+	if (camera_direction.x > 0)
+	{
+		camera_angle += glm::pi<float>();
+	}
+	SetRotation(glm::vec3(0, camera_angle, 0));
 }
 
 void Player::Shoot()
@@ -198,9 +198,5 @@ Camera* Player::GetCamera()
 
 AABB Player::GetAABB()
 {
-	AABB aabb;
-	aabb.m_Min = glm::vec3(-0.1f, 0, -0.1f) + m_Camera->GetPosition();;
-	aabb.m_Max = glm::vec3(0.1f, 0, 0.1f) + m_Camera->GetPosition();;
-	aabb.m_Position = m_Camera->GetPosition();
-	return aabb;
+	return AABB{ m_Camera->GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
 }
