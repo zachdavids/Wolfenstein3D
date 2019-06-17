@@ -24,11 +24,19 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 	m_CurrentHP(s_MaxHP),
 	m_Movement(glm::vec3(0.0f)),
 	shot_(false),
-	m_FireRate{ true, 0.15f, 0.0f },
-	m_CurrentWeapon(2)
+	m_CurrentWeapon(1),
+	m_Ammo(8),
+	m_Lives(3)
 {
 	SetPosition(position);
 	SetRotation(rotation);
+
+	m_Weapons = {
+		Weapon{ true, 1.5f, 0.15f, 0 },
+		Weapon{ true, 100.0f, 0.15f, 0 },
+		Weapon{ true, 100.0f, 0.10f, 0 },
+		Weapon{ true, 100.0f, 0.05f, 0 } 
+	};
 
 	m_Camera = std::make_unique<Camera>(position, rotation);
 	m_TileShader = ResourceManager::Get()->GetResource<Shader>("TileShader");
@@ -44,12 +52,12 @@ void Player::Input()
 
 void Player::Update()
 {
-	if (m_FireRate.bFireable == false)
+	if (m_Weapons[m_CurrentWeapon].bFireable == false)
 	{
-		double last_fire = TimeManager::GetTime() - m_FireRate.last_interval;
-		if (last_fire > m_FireRate.rate)
+		double last_fire = TimeManager::GetTime() - m_Weapons[m_CurrentWeapon].last_interval;
+		if (last_fire > m_Weapons[m_CurrentWeapon].rate)
 		{
-			m_FireRate.bFireable = true;
+			m_Weapons[m_CurrentWeapon].bFireable = true;
 		}
 		else
 		{
@@ -103,6 +111,35 @@ void Player::MouseInput()
 void Player::KeyboardInput()
 {
 	m_Movement = glm::vec3(0.0f);
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_1))
+	{
+		m_CurrentWeapon = 0;
+		m_Tid = 69 - m_CurrentWeapon * 5;
+	}
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_2))
+	{
+		if (m_Ammo > 0)
+		{
+			m_CurrentWeapon = 1;
+			m_Tid = 69 - m_CurrentWeapon * 5;
+		}
+	}
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_3))
+	{
+		if (m_Ammo > 0)
+		{
+			m_CurrentWeapon = 2;
+			m_Tid = 69 - m_CurrentWeapon * 5;
+		}
+	}
+	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_4))
+	{
+		if (m_Ammo > 0)
+		{
+			m_CurrentWeapon = 3;
+			m_Tid = 69 - m_CurrentWeapon * 5;
+		}
+	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A))
 	{
 		m_Movement -= m_Camera->GetRight();
@@ -137,8 +174,8 @@ void Player::KeyboardInput()
 void Player::PlayWeaponAnimation(double last_fire)
 {
 	int num_animations = 5;
-	double time_per_animation = m_FireRate.rate / num_animations;
-	m_Tid = 70 - m_CurrentWeapon * num_animations + (int)glm::floor(last_fire / time_per_animation);
+	double time_per_animation = m_Weapons[m_CurrentWeapon].rate / num_animations;
+	m_Tid = 65 - m_CurrentWeapon * num_animations + (int)glm::floor(last_fire / time_per_animation);
 }
 
 void Player::Move(glm::vec3 const& movement)
@@ -157,18 +194,44 @@ void Player::Move(glm::vec3 const& movement)
 
 void Player::Shoot()
 {
-	if (m_FireRate.bFireable)
+	if (m_Weapons[m_CurrentWeapon].bFireable)
 	{
 		shot_ = true;
-		AudioManager::Get()->PlayPistol(GetPosition());
+
+		switch (m_CurrentWeapon)
+		{
+		case 0:
+			AudioManager::Get()->PlayKnife(GetPosition());
+			break;
+		case 1:
+			AudioManager::Get()->PlayPistol(GetPosition());
+			break;
+		case 2:
+			AudioManager::Get()->PlayMachineGun(GetPosition());
+			break;
+		case 3:
+			AudioManager::Get()->PlayMinigun(GetPosition());
+			break;
+		}
 
 		Ray ray;
 		ray.m_Origin = glm::vec3(m_Camera->GetPosition().x, 0, m_Camera->GetPosition().z);
 		ray.m_Direction = glm::normalize(glm::vec3(m_Camera->GetForward().x, 0, m_Camera->GetForward().z));
 		ray.m_InvDirection = 1.0f / ray.m_Direction;
-		GameManager::Get()->GetLevel()->CheckPlayerRayCollision(ray);
-		m_FireRate.bFireable = false;
-		m_FireRate.last_interval = TimeManager::GetTime();
+		GameManager::Get()->GetLevel()->CheckPlayerRayCollision(ray, m_Weapons[m_CurrentWeapon].range);
+		m_Weapons[m_CurrentWeapon].bFireable = false;
+		m_Weapons[m_CurrentWeapon].last_interval = TimeManager::GetTime();
+
+
+		if (m_Ammo > 0)
+		{
+			--m_Ammo;
+		}
+		else 
+		{
+			m_CurrentWeapon = 0;
+			m_Tid = 69 - m_CurrentWeapon * 5;
+		}
 	}
 }
 
@@ -189,6 +252,26 @@ void Player::Damage(int damage)
 int Player::GetHealth()
 {
 	return m_CurrentHP;
+}
+
+int Player::GetMaxHealth()
+{
+	return s_MaxHP;
+}
+
+int Player::GetLives()
+{
+	return m_Lives;
+}
+
+int Player::GetAmmo()
+{
+	return m_Ammo;
+}
+
+void Player::AddAmmo(int amount)
+{
+	m_Ammo += amount;
 }
 
 Camera* Player::GetCamera()

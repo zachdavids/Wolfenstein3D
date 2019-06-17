@@ -51,7 +51,7 @@ void HUD::InitText()
 	if (FT_New_Face(ft, "Resources/Fonts/OpenSans.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-	FT_Set_Pixel_Sizes(face, 0, 48);
+	FT_Set_Pixel_Sizes(face, 0, 42);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	for (GLubyte c = 0; c < 128; c++)
@@ -103,6 +103,10 @@ void HUD::Render()
 		m_Shader->SetMat4("transform", GetModel(element.position, element.scale));
 		element.mesh->Draw();
 	}
+
+	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetLives()), glm::vec2(275.0f, 17.0f));
+	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(413.0f, 17.0f));
+	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetAmmo()), glm::vec2(550.0f, 17.0f));
 	glEnable(GL_DEPTH_TEST);
 }
 

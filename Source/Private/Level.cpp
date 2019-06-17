@@ -152,7 +152,7 @@ void Level::GenerateLevel(std::string const& file_name)
 	m_Enemies = map.enemies;
 }
 
-bool Level::CheckPlayerRayCollision(Ray& ray)
+bool Level::CheckPlayerRayCollision(Ray& ray, float range)
 {
 	std::vector<Enemy*> EnemyCollisions;
 	for (Enemy& enemy : m_Enemies)
@@ -178,8 +178,11 @@ bool Level::CheckPlayerRayCollision(Ray& ray)
 	{
 		if (ClosestCollision(ray, EnemyCollisions[0]))
 		{
-			EnemyCollisions[0]->Damage(PLAYER_DAMAGE);
-			return true;
+			if (glm::length(EnemyCollisions[0]->GetPosition() - ray.m_Origin) < range)
+			{
+				EnemyCollisions[0]->Damage(PLAYER_DAMAGE);
+				return true;
+			}
 		}
 	}
 

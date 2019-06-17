@@ -23,7 +23,7 @@ public:
 	void Update();
 	void Render();
 	void OpenDoors(glm::vec3 const& position, bool exit);
-	bool CheckPlayerRayCollision(Ray& ray);
+	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
 	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
 

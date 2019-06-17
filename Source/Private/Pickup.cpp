@@ -22,7 +22,6 @@ Pickup::Pickup(glm::vec3 const& position, Type type, int t_id, int amount) :
 
 void Pickup::Update()
 {
-
 	if (m_bIsEaten == false)
 	{
 		Item::Update();
@@ -32,15 +31,22 @@ void Pickup::Update()
 
 		if (glm::length(camera_direction) < s_PickupDistance)
 		{
-			std::cout << glm::length(camera_direction) << std::endl;
 			switch (m_Type)
 			{
 			case kHeal:
-				AudioManager::Get()->PlayMedkit();
-				GameManager::Get()->GetPlayer()->Damage(-m_Amount);
+				if (GameManager::Get()->GetPlayer()->GetHealth() < GameManager::Get()->GetPlayer()->GetMaxHealth())
+				{
+					AudioManager::Get()->PlayMedkit();
+					GameManager::Get()->GetPlayer()->Damage(-m_Amount);
+					m_bIsEaten = true;
+				}
+				break;
+			case kAmmo:
+				AudioManager::Get()->PlayAmmoPickup(GetPosition());
+				GameManager::Get()->GetPlayer()->AddAmmo(m_Amount);
+				m_bIsEaten = true;
 				break;
 			}
-			m_bIsEaten = true;
 		}
 	}
 }

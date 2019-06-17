@@ -11,9 +11,13 @@ public:
 	void Create();
 	void Destroy();
 	void PlayMusic();
+	void PlayKnife(glm::vec3 const& position);
 	void PlayPistol(glm::vec3 const& position);
+	void PlayMachineGun(glm::vec3 const& position);
+	void PlayMinigun(glm::vec3 const& position);
 	void PlayPlayerDeath(glm::vec3 const& position);
 	void PlayEnemyDeath(glm::vec3 const& position);
+	void PlayAmmoPickup(glm::vec3 const& position);
 	void PlayMedkit();
 	void PlayDoorOpen();
 	void PlayDoorClose();

@@ -38,6 +38,30 @@ void AudioManager::PlayPistol(glm::vec3 const& position)
 	);
 }
 
+void AudioManager::PlayMachineGun(glm::vec3 const& position)
+{
+	m_SoundEngine->play3D(
+		"Resources/Sounds/MachineGun.wav",
+		irrklang::vec3df(position.x, 0, position.z)
+	);
+}
+
+void AudioManager::PlayMinigun(glm::vec3 const& position)
+{
+	m_SoundEngine->play3D(
+		"Resources/Sounds/Minigun.wav",
+		irrklang::vec3df(position.x, 0, position.z)
+	);
+}
+
+void AudioManager::PlayKnife(glm::vec3 const& position)
+{
+	m_SoundEngine->play3D(
+		"Resources/Sounds/Knife.wav",
+		irrklang::vec3df(position.x, 0, position.z)
+	);
+}
+
 void AudioManager::PlayPlayerDeath(glm::vec3 const& position)
 {
 	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/PlayerDeath.wav"))
@@ -51,11 +75,11 @@ void AudioManager::PlayPlayerDeath(glm::vec3 const& position)
 
 void AudioManager::PlayMedkit()
 {
-	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Health.wav"))
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Food.wav"))
 	{
 		m_SoundEngine->play3D(
-			"Resources/Sounds/Health.wav",
-			irrklang::vec3df(0.0f, -0.25f, 0.0f)
+			"Resources/Sounds/Food.wav",
+			irrklang::vec3df(0, 0, 0)
 		);
 	}
 }
@@ -66,6 +90,17 @@ void AudioManager::PlayEnemyDeath(glm::vec3 const& position)
 	{
 		m_SoundEngine->play3D(
 			"Resources/Sounds/EnemyDeath1.wav",
+			irrklang::vec3df(position.x, 0, position.z)
+		);
+	}
+}
+
+void AudioManager::PlayAmmoPickup(glm::vec3 const& position)
+{
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Ammo.wav"))
+	{
+		m_SoundEngine->play3D(
+			"Resources/Sounds/Ammo.wav",
 			irrklang::vec3df(position.x, 0, position.z)
 		);
 	}
