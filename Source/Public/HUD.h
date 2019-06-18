@@ -32,14 +32,13 @@ public:
 	HUD();
 	void Init();
 	void Render();
+	void UpdateWeapon(int weapon);
 
 private:
 
 	unsigned int m_VAO;
 	unsigned int m_VBO;
 	std::vector<HUDElement> m_Elements;
-	Texture* m_Texture = nullptr;
-	Mesh* m_Mesh = nullptr;
 	Shader* m_Shader = nullptr;
 	Shader* m_TextShader = nullptr;
 	void InitText();

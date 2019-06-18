@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "GameManager.h"
 #include "Player.h"
+#include "Level.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Mesh.h"
@@ -24,11 +25,16 @@ HUD::HUD()
 
 void HUD::Init()
 {
-	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("HUD");
-	m_Texture = ResourceManager::Get()->GetResource<Texture>("HUD1");
+	Mesh* mesh = ResourceManager::Get()->GetResource<Mesh>("HUD");
+	Texture* gui_texture = ResourceManager::Get()->GetResource<Texture>("HUD1");
+	Texture* weapon_texture = ResourceManager::Get()->GetResource<Texture>("Pistol");
 
-	HUDElement GUI = HUDElement{ glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), m_Mesh, m_Texture };
-	m_Elements.emplace_back(GUI);
+	HUDElement gui = HUDElement{ glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), mesh, gui_texture };
+	HUDElement weapon = HUDElement{ glm::vec3(0.775f, -0.95f, 1.5f), glm::vec3(0.3f, 0.2f, 0.2f), mesh, weapon_texture };
+	m_Elements = {
+		gui,
+		weapon
+	};
 }
 
 void HUD::InitText()
@@ -104,10 +110,31 @@ void HUD::Render()
 		element.mesh->Draw();
 	}
 
+	RenderText(std::to_string(GameManager::Get()->GetLevel()->GetLevelNumber()), glm::vec2(35.0f, 17.0f));
+	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetScore()), glm::vec2(150.0f, 17.0f));
 	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetLives()), glm::vec2(275.0f, 17.0f));
 	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetHealth()), glm::vec2(413.0f, 17.0f));
 	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetAmmo()), glm::vec2(550.0f, 17.0f));
 	glEnable(GL_DEPTH_TEST);
+}
+
+void HUD::UpdateWeapon(int weapon)
+{
+	switch (weapon)
+	{
+	case 0:
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Knife");
+		break;
+	case 1:
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Pistol");
+		break;
+	case 2:
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("MachineGun");
+		break;
+	case 3:
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Minigun");
+		break;
+	}
 }
 
 void HUD::RenderText(std::string const& text, glm::vec2& position)

@@ -21,6 +21,7 @@ Mapdata LevelGenerator::Generate(std::string const& filename)
 	file >> data;
 
 	Mapdata map;
+	map.number = data["number"];
 	GenerateGeometry(data["layers"][0], map);
 	GenerateObjects(data["layers"][1], map);
 
@@ -39,13 +40,13 @@ void LevelGenerator::GenerateGeometry(json& layer, Mapdata& map)
 		glm::vec3 rotation = (t_id % 2 == 0) ? glm::vec3(0, 0, 0) : glm::vec3(0, glm::radians(90.0f), 0);
 		if (t_id > 0 && t_id <= 98)
 		{
-			map.geometry.emplace_back(Wall(position, rotation, 184 - t_id, wall_tile));
+			map.geometry.emplace_back(Wall(position, rotation, 198 - t_id, wall_tile));
 			map.collision.emplace_back(AABB{ position, glm::vec3(0.5f, 0, 0.5f) });
 		}
 		else if (t_id > 98 && t_id < 110)
 		{
-			map.geometry.emplace_back(Wall(position, rotation, 82, door_tile));
-			map.doors.emplace_back(Door(position, rotation, 184 - t_id));
+			map.geometry.emplace_back(Wall(position, rotation, 96, door_tile));
+			map.doors.emplace_back(Door(position, rotation, 198 - t_id));
 		}
 		++index;
 	}

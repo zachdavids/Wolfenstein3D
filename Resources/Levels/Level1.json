@@ -1,4 +1,5 @@
 {
+  "number": 1,
   "height": 64,
   "width": 64,
   "layers": [
@@ -19,7 +20,7 @@
           "x": 40,
           "y": 0,
           "z": 7,
-		  "texture": 28,
+		  "texture": 42,
 		  "collision": 0
         },	
 		{
@@ -27,7 +28,7 @@
           "x": 28,
           "y": 0,
           "z": 13,
-		  "texture": 28,
+		  "texture": 42,
 		  "collision": 0
         },	
 		{
@@ -37,7 +38,7 @@
           "x": 29,
           "y": 0,
           "z": 13,
-		  "texture": 23,
+		  "texture": 37,
 		  "collision": 0
         },
 		{
@@ -45,7 +46,7 @@
           "x": 38,
           "y": 0,
           "z": 12,
-		  "texture": 38,
+		  "texture": 52,
 		  "collision": 0
         },	
 		{
@@ -55,7 +56,7 @@
           "x": 37,
           "y": 0,
           "z": 7,
-		  "texture": 23,
+		  "texture": 37,
 		  "collision": 0
         },
 		{
@@ -65,7 +66,7 @@
           "x": 34,
           "y": 0,
           "z": 2,
-		  "texture": 23,
+		  "texture": 37,
 		  "collision": 0
         },
 		{
@@ -75,7 +76,7 @@
           "x": 40,
           "y": 0,
           "z": 3,
-		  "texture": 21,
+		  "texture": 35,
 		  "collision": 0
         },
 		{

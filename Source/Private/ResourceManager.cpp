@@ -45,10 +45,6 @@ void ResourceManager::Create()
 		"Resources/Textures/HUD/"
 	);
 
-	ResourceManager::Get()->AddResourceFolder<Texture>(
-		"Resources/Textures/Medkit/"
-	);
-
 	ResourceManager::Get()->AddResourceFolder<TextureArray>(
 		"Resources/Tilesheets/"
 	);

@@ -28,7 +28,9 @@ public:
 	int GetMaxHealth();
 	int GetLives();
 	int GetAmmo();
+	int GetScore();
 	void AddAmmo(int amount);
+	void AddScore(int amount);
 	Camera* GetCamera();
 	AABB GetAABB();
 
@@ -39,7 +41,9 @@ private:
 	int m_Ammo;
 	int m_CurrentWeapon;
 	int m_CurrentHP;
-	int m_Tid = 64;
+	int m_Tid = 78;
+	int m_Score;
+	glm::vec3 m_Spawn;
 	glm::vec3 m_Movement;
 	HUD m_HUD;
 	std::vector<Weapon> m_Weapons;
@@ -56,4 +60,6 @@ private:
 	void KeyboardInput();
 	void PlayWeaponAnimation(double last_fire);
 	void Move(glm::vec3 const& movement);
+	void ChangeWeapon(int weapon);
+	void Reset();
 };

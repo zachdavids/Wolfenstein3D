@@ -142,14 +142,18 @@ void Level::GenerateLevel(std::string const& file_name)
 	Mapdata map;
 	LevelGenerator level_gen;
 	map = level_gen.Generate("Level1.json");
-	m_Player->GetCamera()->SetPosition(map.spawn.position);
-	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
+
+	m_Number = map.number;
+	m_SpawnPoint = map.spawn.position;
 	m_LevelGeometry = map.geometry;
 	m_StaticGeometry = map.collision;
 	m_Doors = map.doors;
 	m_Items = map.items;
 	m_Pickups = map.pickups;
 	m_Enemies = map.enemies;
+
+	m_Player->GetCamera()->SetPosition(m_SpawnPoint);
+	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
 }
 
 bool Level::CheckPlayerRayCollision(Ray& ray, float range)
@@ -253,6 +257,16 @@ bool Level::CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& positi
 		}
 	}
 	return true;
+}
+
+int Level::GetLevelNumber()
+{
+	return m_Number;
+}
+
+glm::vec3 Level::GetSpawnPoint()
+{
+	return m_SpawnPoint;
 }
 
 //Returns true if first vector's length is over the second

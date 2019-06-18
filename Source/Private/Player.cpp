@@ -26,7 +26,9 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 	shot_(false),
 	m_CurrentWeapon(1),
 	m_Ammo(8),
-	m_Lives(3)
+	m_Lives(3),
+	m_Score(0),
+	m_Spawn(position)
 {
 	SetPosition(position);
 	SetRotation(rotation);
@@ -113,31 +115,27 @@ void Player::KeyboardInput()
 	m_Movement = glm::vec3(0.0f);
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_1))
 	{
-		m_CurrentWeapon = 0;
-		m_Tid = 69 - m_CurrentWeapon * 5;
+		ChangeWeapon(0);
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_2))
 	{
 		if (m_Ammo > 0)
 		{
-			m_CurrentWeapon = 1;
-			m_Tid = 69 - m_CurrentWeapon * 5;
+			ChangeWeapon(1);
 		}
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_3))
 	{
 		if (m_Ammo > 0)
 		{
-			m_CurrentWeapon = 2;
-			m_Tid = 69 - m_CurrentWeapon * 5;
+			ChangeWeapon(2);
 		}
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_4))
 	{
 		if (m_Ammo > 0)
 		{
-			m_CurrentWeapon = 3;
-			m_Tid = 69 - m_CurrentWeapon * 5;
+			ChangeWeapon(3);
 		}
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_A))
@@ -175,7 +173,7 @@ void Player::PlayWeaponAnimation(double last_fire)
 {
 	int num_animations = 5;
 	double time_per_animation = m_Weapons[m_CurrentWeapon].rate / num_animations;
-	m_Tid = 65 - m_CurrentWeapon * num_animations + (int)glm::floor(last_fire / time_per_animation);
+	m_Tid = 79 - (m_CurrentWeapon * num_animations) + (int)glm::floor(last_fire / time_per_animation);
 }
 
 void Player::Move(glm::vec3 const& movement)
@@ -190,6 +188,21 @@ void Player::Move(glm::vec3 const& movement)
 		camera_angle += glm::pi<float>();
 	}
 	SetRotation(glm::vec3(0, camera_angle, 0));
+}
+
+void Player::ChangeWeapon(int weapon)
+{
+	m_CurrentWeapon = weapon;
+	m_HUD.UpdateWeapon(weapon);
+	m_Tid = 83 - (m_CurrentWeapon * 5);
+}
+
+void Player::Reset()
+{
+	m_Ammo = 8;
+	m_CurrentHP = 100;
+	ChangeWeapon(2);
+	GameManager::Get()->ResetGame();
 }
 
 void Player::Shoot()
@@ -223,14 +236,13 @@ void Player::Shoot()
 		m_Weapons[m_CurrentWeapon].last_interval = TimeManager::GetTime();
 
 
-		if (m_Ammo > 0)
+		if (m_Ammo > 0 && m_CurrentWeapon != 0)
 		{
 			--m_Ammo;
 		}
 		else 
 		{
-			m_CurrentWeapon = 0;
-			m_Tid = 69 - m_CurrentWeapon * 5;
+			ChangeWeapon(0);
 		}
 	}
 }
@@ -241,7 +253,15 @@ void Player::Damage(int damage)
 
 	if (m_CurrentHP <= 0)
 	{
-		//Game::GameOver();
+		if (m_Lives > 0)
+		{
+			--m_Lives;
+			Reset();
+		}
+		else
+		{
+			exit(0);
+		}
 	}
 	else if (m_CurrentHP > s_MaxHP)
 	{
@@ -269,9 +289,19 @@ int Player::GetAmmo()
 	return m_Ammo;
 }
 
+int Player::GetScore()
+{
+	return m_Score;
+}
+
 void Player::AddAmmo(int amount)
 {
 	m_Ammo += amount;
+}
+
+void Player::AddScore(int amount)
+{
+	m_Score += amount;
 }
 
 Camera* Player::GetCamera()

@@ -2,8 +2,9 @@
 
 #include "Actor.h"
 #include "AABB.h"
+#include "Weapon.h"
 
-class Texture;
+class TextureArray;
 class Mesh;
 class Shader;
 
@@ -29,6 +30,7 @@ public:
 
 private:
 
+	int m_Tid = 14;
 	int m_CurrentHP;
 	int m_CurrentState;
 	bool m_bCanAttack;
@@ -39,7 +41,8 @@ private:
 	static const float s_MovementSpeed;
 	static const float s_SightRange;
 	static const float s_AttackRange;
-	Texture* m_CurrentAnimation;
+	Weapon m_Weapon;
+	TextureArray* m_Texture;
 	Mesh* m_Mesh;
 	Shader* m_Shader;
 	bool CheckSightline();
@@ -49,4 +52,6 @@ private:
 	void Hurt();
 	void Death();
 	void FaceCamera();
+	void PlayWeaponAnimation(double last_fire);
+	void Shoot();
 };

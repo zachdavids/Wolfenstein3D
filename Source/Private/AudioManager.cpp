@@ -73,23 +73,23 @@ void AudioManager::PlayPlayerDeath(glm::vec3 const& position)
 	//}
 }
 
-void AudioManager::PlayMedkit()
+void AudioManager::PlayMedkit(glm::vec3 const& position)
 {
 	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Food.wav"))
 	{
 		m_SoundEngine->play3D(
 			"Resources/Sounds/Food.wav",
-			irrklang::vec3df(0, 0, 0)
+			irrklang::vec3df(position.x, 0, position.z)
 		);
 	}
 }
 
 void AudioManager::PlayEnemyDeath(glm::vec3 const& position)
 {
-	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/EnemyDeath1.wav"))
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/EnemyDeath.wav"))
 	{
 		m_SoundEngine->play3D(
-			"Resources/Sounds/EnemyDeath1.wav",
+			"Resources/Sounds/EnemyDeath.wav",
 			irrklang::vec3df(position.x, 0, position.z)
 		);
 	}

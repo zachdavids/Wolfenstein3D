@@ -36,7 +36,7 @@ void Pickup::Update()
 			case kHeal:
 				if (GameManager::Get()->GetPlayer()->GetHealth() < GameManager::Get()->GetPlayer()->GetMaxHealth())
 				{
-					AudioManager::Get()->PlayMedkit();
+					AudioManager::Get()->PlayMedkit(GetPosition());
 					GameManager::Get()->GetPlayer()->Damage(-m_Amount);
 					m_bIsEaten = true;
 				}
@@ -44,6 +44,11 @@ void Pickup::Update()
 			case kAmmo:
 				AudioManager::Get()->PlayAmmoPickup(GetPosition());
 				GameManager::Get()->GetPlayer()->AddAmmo(m_Amount);
+				m_bIsEaten = true;
+				break;
+			case kScore:
+				AudioManager::Get()->PlayAmmoPickup(GetPosition());
+				GameManager::Get()->GetPlayer()->AddScore(m_Amount);
 				m_bIsEaten = true;
 				break;
 			}

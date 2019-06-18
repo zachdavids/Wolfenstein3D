@@ -18,7 +18,7 @@ public:
 	void PlayPlayerDeath(glm::vec3 const& position);
 	void PlayEnemyDeath(glm::vec3 const& position);
 	void PlayAmmoPickup(glm::vec3 const& position);
-	void PlayMedkit();
+	void PlayMedkit(glm::vec3 const& position);
 	void PlayDoorOpen();
 	void PlayDoorClose();
 	void PlayLevelEnd();

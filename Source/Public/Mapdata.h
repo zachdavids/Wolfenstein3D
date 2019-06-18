@@ -16,6 +16,7 @@ struct SpawnPoint
 
 struct Mapdata
 {
+	int number;
 	SpawnPoint spawn;
 	glm::vec3 endpoint;
 	std::vector<Wall> geometry;

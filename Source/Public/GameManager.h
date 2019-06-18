@@ -1,7 +1,9 @@
 #pragma once
 
-class Level;
-class Player;
+#include "Level.h"
+#include "Player.h"
+
+#include <memory>
 
 class GameManager
 {
@@ -12,8 +14,10 @@ public:
 	void Input();
 	void Update();
 	void Render();
+	void StartGame();
 	void ResetGame();
 	bool GetActive();
+	void EndGame();
 	Player* GetPlayer();
 	Level* GetLevel();
 	static GameManager* Get() { return m_Instance; }
@@ -22,6 +26,6 @@ private:
 
 	static GameManager* m_Instance;
 	bool m_bIsActive = false;
-	Level* m_Level;
-	Player* m_Player;
+	std::unique_ptr<Level> m_Level;
+	std::unique_ptr<Player> m_Player;
 };

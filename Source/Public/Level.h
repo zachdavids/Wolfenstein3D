@@ -17,7 +17,6 @@ class Level
 {
 public:
 
-	Level() = default;
 	Level(std::string const& filename);
 	void Input();
 	void Update();
@@ -26,9 +25,13 @@ public:
 	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
 	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
+	int GetLevelNumber();
+	glm::vec3 GetSpawnPoint();
+	void GenerateLevel(std::string const& file_name);
 
 private:
 
+	int m_Number;
 	Player* m_Player;
 	Shader* m_TextShader; //temp
 	Shader* m_DefaultShader; //temp
@@ -39,9 +42,10 @@ private:
 	std::vector<Enemy> m_Enemies;
 	std::vector<Item> m_Items;
 	std::vector<Pickup> m_Pickups;
+	glm::vec3 m_SpawnPoint;
 	glm::vec3 m_Endpoint;
 	glm::ivec2 m_LevelDimensions;
-	void GenerateLevel(std::string const& file_name);
+
 	int FlatIndex(int x, int y);
 	bool ClosestCollision(Ray& ray, Actor* actor);
 	bool CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two);
