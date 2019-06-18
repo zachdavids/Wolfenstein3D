@@ -39,7 +39,7 @@ glm::mat4& Camera::GetProjectionMatrix()
 {
 	if (m_bProjectionHasChanged)
 	{
-		float aspect_ratio = (float)(WindowManager::Get()->GetWidth() / WindowManager::Get()->GetHeight());
+		float aspect_ratio = (float)(WindowManager::Get()->s_Width / WindowManager::Get()->s_Height);
 		m_ProjectionMatrix = glm::perspective(m_FOV, aspect_ratio, m_Near, m_Far);
 	}
 

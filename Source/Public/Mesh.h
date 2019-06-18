@@ -2,7 +2,6 @@
 
 #include "Resource.h"
 #include "Vertex.h"
-#include "AABB.h"
 
 #include <vector>
 
@@ -26,7 +25,6 @@ private:
 	unsigned int m_VAO;
 	unsigned int m_VBO;
 	unsigned int m_EBO;
-	AABB m_AABB;
 	std::vector<Vertex> m_Vertices;
 	std::vector<unsigned int> m_Indices;
 	void CreateVAO();

@@ -15,7 +15,6 @@ void GameManager::Create()
 	m_Level = std::make_unique<Level>("Level1.json");
 }
 
-//TODO FIX
 void GameManager::ResetGame()
 {
 	m_Level->GenerateLevel("Level1.json");

@@ -84,9 +84,9 @@ void Level::Render()
 	m_TextShader->SetVec3("color", glm::vec3(0.5, 0.8f, 0.2f));
 	m_TextShader->SetMat4("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
-	for (Wall& Wall : m_LevelGeometry)
+	for (Tile& Tile : m_LevelGeometry)
 	{
-		Wall.Render();
+		Tile.Render();
 	}
 
 	for (Door& door : m_Doors) 

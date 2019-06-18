@@ -3,7 +3,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "Item.h"
-#include "Wall.h"
+#include "Tile.h"
 #include "Pickup.h"
 
 #include <vector>
@@ -19,7 +19,7 @@ struct Mapdata
 	int number;
 	SpawnPoint spawn;
 	glm::vec3 endpoint;
-	std::vector<Wall> geometry;
+	std::vector<Tile> geometry;
 	std::vector<Door> doors;
 	std::vector<Enemy> enemies;
 	std::vector<Item> items;

@@ -2,9 +2,9 @@
 
 #include "Resource.h"
 
-#include <GLM/mat4x4.hpp>
 #include <GLM/vec3.hpp>
-#include <string>
+#include <GLM/mat4x4.hpp>
+
 #include <vector>
 
 class Shader : public Resource

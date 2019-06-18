@@ -19,8 +19,7 @@ public:
 	void PlayEnemyDeath(glm::vec3 const& position);
 	void PlayAmmoPickup(glm::vec3 const& position);
 	void PlayMedkit(glm::vec3 const& position);
-	void PlayDoorOpen();
-	void PlayDoorClose();
+	void PlayDoor(glm::vec3 const& position);
 	void PlayLevelEnd();
 	void SetListenerPosition(glm::vec3 const& position, glm::vec3 const& rotation);
 	static AudioManager* Get() { return m_Instance; }

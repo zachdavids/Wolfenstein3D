@@ -106,26 +106,15 @@ void AudioManager::PlayAmmoPickup(glm::vec3 const& position)
 	}
 }
 
-void AudioManager::PlayDoorOpen()
+void AudioManager::PlayDoor(glm::vec3 const& position)
 {
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/DoorOpen.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/DoorOpen.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
-}
-
-void AudioManager::PlayDoorClose()
-{
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/DoorClose.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/DoorClose.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/Door.wav"))
+	{
+		m_SoundEngine->play3D(
+			"Resources/Sounds/Door.wav",
+			irrklang::vec3df(position.x, 0, position.z)
+		);
+	}
 }
 
 void AudioManager::PlayLevelEnd()

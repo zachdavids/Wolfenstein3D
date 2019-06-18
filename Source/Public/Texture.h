@@ -2,8 +2,6 @@
 
 #include "Resource.h"
 
-#include <string>
-
 class Texture : public Resource
 {
 public:

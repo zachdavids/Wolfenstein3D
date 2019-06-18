@@ -19,8 +19,8 @@ public:
 
 private:
 
-	Type m_Type;
+	int m_Type;
 	int m_Amount;
-	static const float s_PickupDistance;
 	bool m_bIsEaten = false;
+	static constexpr float s_PickupDistance = 1.0f;
 };

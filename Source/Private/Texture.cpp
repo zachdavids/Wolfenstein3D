@@ -4,7 +4,8 @@
 
 #include <glad/glad.h>
 
-Texture::Texture(std::string const& filename) : Resource(filename)
+Texture::Texture(std::string const& filename) : 
+	Resource(filename)
 {
 }
 

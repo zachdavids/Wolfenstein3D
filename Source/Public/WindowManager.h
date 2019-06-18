@@ -7,20 +7,21 @@ class WindowManager
 public:
 
 	WindowManager() = default;
-	bool Create();
+	void Create();
+	void Destroy() const;
+	void InitGLFW();
+	void InitWindow();
+	void InitGlad();
 	void Clear() const;
 	void SwapAndPoll() const;
 	bool IsCloseRequested() const;
-	void Destroy();
-	static WindowManager* Get() { return m_Instance; }
-	GLFWwindow* GetWindow() const { return m_Window; }
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
+	GLFWwindow* GetWindow() const;
+	static WindowManager* Get();
+	static constexpr int s_Width = 640;
+	static constexpr int s_Height = 640;
 
 private:
 
-	int m_Width = 800;
-	int m_Height = 600;
-	static WindowManager* m_Instance;
 	GLFWwindow* m_Window = nullptr;
+	static WindowManager* m_Instance;
 };

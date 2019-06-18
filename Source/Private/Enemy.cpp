@@ -3,34 +3,25 @@
 #include "AudioManager.h"
 #include "GameManager.h"
 #include "TimeManager.h"
-#include "Shader.h"
-#include "TextureArray.h"
-#include "Mesh.h"
 #include "AABB.h"
 #include "Player.h"
 #include "Level.h"
 #include "Ray.h"
 
-#include <iostream>
 #include <GLM/geometric.hpp>
 #include <GLM/gtc/constants.hpp>
 
-const int Enemy::s_MaxHP = 100;
-const int Enemy::s_Damage = 6;
-const float Enemy::s_MovementSpeed = 0.01f;
-const float Enemy::s_SightRange = 150.0f;
-const float Enemy::s_AttackRange = 3.0f;
+#include <iostream>
 
 Enemy::Enemy(glm::vec3 const& position) :
 	m_CurrentHP(s_MaxHP),
 	m_CurrentState(kIdle),
 	m_bCanAttack(false)
 {
-	SetPosition(position);
-	SetScale(glm::vec3(0.75f));
-
+	m_Position = position;
+	m_Scale = glm::vec3(0.75f);
+	m_Tid = 14;
 	m_Weapon = Weapon{ true, 100.0f, 0.5f, 0 };
-
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
 	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
@@ -63,15 +54,6 @@ void Enemy::Update()
 		Death();
 		break;
 	}
-}
-
-void Enemy::Render()
-{
-	m_Shader->Bind();
-	m_Shader->SetMat4("model", GetModelMatrix());
-	m_Shader->SetInt("index", m_Tid);
-	m_Texture->Bind();
-	m_Mesh->Draw();
 }
 
 void Enemy::Idle()

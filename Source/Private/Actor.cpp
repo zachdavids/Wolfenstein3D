@@ -1,35 +1,57 @@
 #include "Actor.h"
+#include "Shader.h"
+#include "TextureArray.h"
+#include "Mesh.h"
 
 #include <GLM/gtc/matrix_transform.hpp>
 
+Actor::Actor(glm::vec3 position, glm::vec3 rotation, int t_id, Mesh* mesh, Shader* shader, TextureArray* texture) :
+	m_Position(position),
+	m_Rotation(rotation),
+	m_Tid(t_id),
+	m_Mesh(mesh),
+	m_Shader(shader),
+	m_Texture(texture)
+{
+}
+
 glm::vec3& Actor::GetPosition()
 {
-	return m_Transform.m_Position;
+	return m_Position;
 }
 
 glm::vec3& Actor::GetRotation()
 {
-	return m_Transform.m_Rotation;
+	return m_Rotation;
 }
 
 glm::vec3& Actor::GetScale()
 {
-	return m_Transform.m_Scale;
+	return m_Scale;
+}
+
+void Actor::Render()
+{
+	m_Shader->Bind();
+	m_Shader->SetMat4("model", GetModelMatrix());
+	m_Shader->SetInt("index", m_Tid);
+	m_Texture->Bind();
+	m_Mesh->Draw();
 }
 
 void Actor::Translate(glm::vec3 const& translation)
 {
-	m_Transform.m_Position += translation;
+	m_Position += translation;
 }
 
 void Actor::Rotate(glm::vec3 const& rotate)
 {
-	m_Transform.m_Rotation += rotate;
+	m_Rotation += rotate;
 }
 
 void Actor::Scale(glm::vec3 const& scale)
 {
-	m_Transform.m_Scale += scale;
+	m_Scale += scale;
 }
 
 glm::vec3 Actor::GetRight() const
@@ -49,36 +71,36 @@ glm::vec3 Actor::GetForward() const
 glm::mat4 Actor::GetRotationMatrix() const
 {
 	glm::mat4 rotation_matrix(1.0f);
-	rotation_matrix = glm::rotate(rotation_matrix, m_Transform.m_Rotation.x, glm::vec3(1, 0, 0));
-	rotation_matrix = glm::rotate(rotation_matrix, m_Transform.m_Rotation.y, glm::vec3(0, 1, 0));
+	rotation_matrix = glm::rotate(rotation_matrix, m_Rotation.x, glm::vec3(1, 0, 0));
+	rotation_matrix = glm::rotate(rotation_matrix, m_Rotation.y, glm::vec3(0, 1, 0));
 
 	return rotation_matrix;
 }
 
 glm::mat4 Actor::GetModelMatrix() const
 {
-	glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), m_Transform.m_Position);
+	glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), m_Position);
 
-	model_matrix = glm::scale(model_matrix, m_Transform.m_Scale);
+	model_matrix = glm::scale(model_matrix, m_Scale);
 
-	model_matrix = glm::rotate(model_matrix, m_Transform.m_Rotation.x, glm::vec3(1, 0, 0));
-	model_matrix = glm::rotate(model_matrix, m_Transform.m_Rotation.y, glm::vec3(0, 1, 0));
-	model_matrix = glm::rotate(model_matrix, m_Transform.m_Rotation.z, glm::vec3(0, 0, 1));
+	model_matrix = glm::rotate(model_matrix, m_Rotation.x, glm::vec3(1, 0, 0));
+	model_matrix = glm::rotate(model_matrix, m_Rotation.y, glm::vec3(0, 1, 0));
+	model_matrix = glm::rotate(model_matrix, m_Rotation.z, glm::vec3(0, 0, 1));
 
 	return model_matrix;
 }
 
 void Actor::SetPosition(glm::vec3 const& position)
 {
-	m_Transform.m_Position = position;
+	m_Position = position;
 }
 
 void Actor::SetRotation(glm::vec3 const& rotation)
 {
-	m_Transform.m_Rotation = rotation;
+	m_Rotation = rotation;
 }
 
 void Actor::SetScale(glm::vec3 const& scale)
 {
-	m_Transform.m_Scale = scale;
+	m_Scale = scale;
 }

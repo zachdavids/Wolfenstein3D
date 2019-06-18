@@ -4,10 +4,6 @@
 #include "AABB.h"
 #include "Weapon.h"
 
-class TextureArray;
-class Mesh;
-class Shader;
-
 class Enemy : public Actor
 {
 public:
@@ -23,28 +19,23 @@ public:
 
 	Enemy(glm::vec3 const& position);
 	virtual void Update() override;
-	virtual void Render() override;
 	AABB GetAABB();
 	void Damage(int damage_points);
 	bool IsAlive();
+	static constexpr int s_MaxHP = 100;
+	static constexpr int s_Damage = 6;
+	static constexpr float s_MovementSpeed = 0.01f;
+	static constexpr float s_SightRange = 120.0f;
+	static constexpr float s_AttackRange = 3.5f;
 
 private:
 
-	int m_Tid = 14;
 	int m_CurrentHP;
 	int m_CurrentState;
 	bool m_bCanAttack;
 	float m_DistanceToPlayer;
 	glm::vec3 m_PlayerDirection;
-	static const int s_MaxHP;
-	static const int s_Damage;
-	static const float s_MovementSpeed;
-	static const float s_SightRange;
-	static const float s_AttackRange;
 	Weapon m_Weapon;
-	TextureArray* m_Texture;
-	Mesh* m_Mesh;
-	Shader* m_Shader;
 	bool CheckSightline();
 	void Idle();
 	void Chase();

@@ -2,12 +2,13 @@
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
+
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(std::string const& path) : Resource(path)
+Shader::Shader(std::string const& path) : 
+	Resource(path)
 {
 }
 
@@ -73,21 +74,6 @@ void Shader::LoadShader(std::string const& path)
 	glShaderSource(stage_id, 1, &stage_code, NULL);
 	glCompileShader(stage_id);
 
-	GLint status;
-	glGetShaderiv(stage_id, GL_COMPILE_STATUS, &status);
-	if (status != GL_TRUE)
-	{
-		GLint maxLength = 0;
-		glGetProgramiv(stage_id, GL_INFO_LOG_LENGTH, &maxLength);
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(stage_id, maxLength, &maxLength, &infoLog[0]);
-
-		for (unsigned int i = 0; i < infoLog.size(); i++)
-		{
-			std::cout << infoLog[i];
-		}
-		glDeleteProgram(stage_id);
-	}
 	m_ShaderStages.push_back(stage_id);
 }
 
@@ -100,21 +86,6 @@ void Shader::Compile()
 	}
 	glLinkProgram(program_id);
 
-	GLint status;
-	glGetProgramiv(program_id, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		GLint maxLength = 0;
-		glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &maxLength);
-
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(program_id, maxLength, &maxLength, &infoLog[0]);
-
-		for (unsigned int i = 0; i < infoLog.size(); i++) {
-			std::cout << infoLog[i];
-		}
-		glDeleteProgram(program_id);
-	}
 	m_ID = program_id;
 }
 
@@ -130,6 +101,3 @@ void Shader::ReadFile(std::string* output, std::string const& path)
 	sstr.str("");
 	sstr.clear();
 }
-
-
-

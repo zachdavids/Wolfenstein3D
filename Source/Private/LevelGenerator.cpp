@@ -1,6 +1,6 @@
 #include "LevelGenerator.h"
 #include "ResourceManager.h"
-#include "Wall.h"
+#include "Tile.h"
 #include "Pickup.h"
 #include "Enemy.h"
 
@@ -10,9 +10,6 @@
 #include <GLM/common.hpp>
 
 using json = nlohmann::json;
-
-const std::string LevelGenerator::s_Directory = "Resources/Levels/";
-const int LevelGenerator::s_MapSize = 64;
 
 Mapdata LevelGenerator::Generate(std::string const& filename)
 {
@@ -40,12 +37,12 @@ void LevelGenerator::GenerateGeometry(json& layer, Mapdata& map)
 		glm::vec3 rotation = (t_id % 2 == 0) ? glm::vec3(0, 0, 0) : glm::vec3(0, glm::radians(90.0f), 0);
 		if (t_id > 0 && t_id <= 98)
 		{
-			map.geometry.emplace_back(Wall(position, rotation, 198 - t_id, wall_tile));
+			map.geometry.emplace_back(Tile(position, rotation, 198 - t_id, wall_tile));
 			map.collision.emplace_back(AABB{ position, glm::vec3(0.5f, 0, 0.5f) });
 		}
 		else if (t_id > 98 && t_id < 110)
 		{
-			map.geometry.emplace_back(Wall(position, rotation, 96, door_tile));
+			map.geometry.emplace_back(Tile(position, rotation, 96, door_tile));
 			map.doors.emplace_back(Door(position, rotation, 198 - t_id));
 		}
 		++index;

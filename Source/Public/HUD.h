@@ -1,9 +1,10 @@
 #pragma once
 
-#include <map>
-#include <vector>
 #include <GLM/detail/type_vec2.hpp>
 #include <GLM/glm.hpp>
+
+#include <map>
+#include <vector>
 
 class Shader;
 class Mesh;

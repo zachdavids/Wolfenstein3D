@@ -3,9 +3,8 @@
 
 #include <glad/glad.h>
 
-const int TextureArray::s_TextureSize = 64;
-
-TextureArray::TextureArray(std::string const& filename) : Resource(filename)
+TextureArray::TextureArray(std::string const& filename) : 
+	Resource(filename)
 {
 }
 

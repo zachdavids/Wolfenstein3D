@@ -1,16 +1,20 @@
 #pragma once
 
-#include "Transform.h"
-
-#include <iostream>
+#include <GLM/vec3.hpp>
 #include <GLM/mat4x4.hpp>
+
+class Mesh;
+class TextureArray;
+class Shader;
 
 class Actor
 {
 public:
 
-	virtual void Update() { std::cout << m_Transform.m_Position.x << std::endl; };
-	virtual void Render() { std::cout << "Hello" << std::endl; };
+	Actor() = default;
+	Actor(glm::vec3 position, glm::vec3 rotation, int t_id, Mesh* mesh, Shader* shader, TextureArray* texture);
+	virtual void Update() {};
+	virtual void Render();
 	void Translate(glm::vec3 const& translation);
 	void Rotate(glm::vec3 const& rotate);
 	void Scale(glm::vec3 const& scale);
@@ -25,7 +29,13 @@ public:
 	void SetRotation(glm::vec3 const& rotation);
 	void SetScale(glm::vec3 const& scale);
 
-private:
+protected:
 
-	Transform m_Transform;
+	int m_Tid;
+	glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	Mesh* m_Mesh = nullptr;
+	Shader* m_Shader = nullptr;
+	TextureArray* m_Texture = nullptr;
 };

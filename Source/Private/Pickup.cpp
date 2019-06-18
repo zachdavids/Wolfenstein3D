@@ -1,23 +1,17 @@
 #include "Pickup.h"
-#include "ResourceManager.h"
 #include "AudioManager.h"
 #include "GameManager.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "Mesh.h"
 #include "Player.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/constants.hpp>
-
-const float Pickup::s_PickupDistance = 1.0f;
 
 Pickup::Pickup(glm::vec3 const& position, Type type, int t_id, int amount) :
 	Item(position, t_id),
 	m_Type(type),
 	m_Amount(amount)
 {
-	SetPosition(position);
+	m_Position = position;
 }
 
 void Pickup::Update()

@@ -1,31 +1,18 @@
 #include "Door.h"
 #include "ResourceManager.h"
+#include "AudioManager.h"
 #include "TimeManager.h"
-#include "Shader.h"
-#include "TextureArray.h"
-#include "Mesh.h"
 
-#include <iostream>
 #include <GLM/gtx/compatibility.hpp>
 
-const float DOOR_LENGTH = 0.125f;
-const float DOOR_WIDTH = 1.0f;
-const float DOOR_HEIGHT = 1.0f;
-
-const float TIME_TO_OPEN = 1.0f;
-const float DELAY = 3.0f;
-const float TIME_TO_CLOSE = 1.0f;
-
-Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id) :
-	m_Tid(t_id)
+Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id)
 {
-	SetPosition(position);
-	SetRotation(rotation);
-
-	m_ClosePosition = GetPosition();
-	m_OpenPosition = GetPosition();
+	m_Position = position;
+	m_Rotation = rotation;
+	m_Tid = t_id;
+	m_ClosePosition = position;
+	m_OpenPosition = position;
 	rotation.y == glm::radians(90.0f) ? m_OpenPosition.x += 0.9f : m_OpenPosition.z += 0.9f;
-
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
 	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Door");
@@ -33,51 +20,42 @@ Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id) :
 
 void Door::Open()
 {
-	if (!is_open_) 
+	if (!m_bOpen) 
 	{
-		is_open_ = true;
+		m_bOpen = true;
 
-		open_start_ = TimeManager::GetTime();
-		open_time_ = open_start_ + TIME_TO_OPEN;
-		close_start_ = open_time_ + DELAY;
-		close_time_ = close_start_ + TIME_TO_CLOSE;
+		m_OpenStart = TimeManager::GetTime();
+		m_TimeToOpen = m_OpenStart + s_MoveTime;
+		m_CloseStart = m_TimeToOpen + s_Delay;
+		m_TimeToClose = m_CloseStart + s_MoveTime;
 	}
 }
 
 void Door::Update()
 {
-	if (is_open_)
+	if (m_bOpen)
 	{
 		double time = TimeManager::GetTime();
-		if (time < open_time_) 
+		if (time < m_TimeToOpen) 
 		{
-			SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - open_start_ / TIME_TO_OPEN)));
-			//audio_->PlayDoorOpen();
+			SetPosition(glm::lerp(m_ClosePosition, m_OpenPosition, (float)(time - m_OpenStart / s_MoveTime)));
+			AudioManager::Get()->PlayDoor(m_Position);
 		}
-		else if (time < close_start_) 
+		else if (time < m_CloseStart) 
 		{
 			SetPosition(m_OpenPosition);
 		}
-		else if (time < close_time_) 
+		else if (time < m_TimeToClose) 
 		{
-			SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - close_start_ / TIME_TO_OPEN)));
-			//audio_->PlayDoorClose();
+			SetPosition(glm::lerp(m_OpenPosition, m_ClosePosition, (float)(time - m_CloseStart / s_MoveTime)));
+			AudioManager::Get()->PlayDoor(m_Position);
 		}
 		else 
 		{
 			SetPosition(m_ClosePosition);
-			is_open_ = false;
+			m_bOpen = false;
 		}
 	}
-}
-
-void Door::Render()
-{
-	m_Shader->Bind();
-	m_Shader->SetMat4("model", GetModelMatrix());
-	m_Shader->SetInt("index", m_Tid);
-	m_Texture->Bind();
-	m_Mesh->Draw();
 }
 
 AABB Door::GetAABB()

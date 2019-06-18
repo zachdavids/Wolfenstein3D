@@ -3,7 +3,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "Item.h"
-#include "Wall.h"
+#include "Tile.h"
 #include "Ray.h"
 #include "Pickup.h"
 
@@ -25,18 +25,18 @@ public:
 	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
 	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
+	void GenerateLevel(std::string const& file_name);
 	int GetLevelNumber();
 	glm::vec3 GetSpawnPoint();
-	void GenerateLevel(std::string const& file_name);
 
 private:
 
 	int m_Number;
 	Player* m_Player;
-	Shader* m_TextShader; //temp
-	Shader* m_DefaultShader; //temp
-	Shader* m_TileShader; //temp
-	std::vector<Wall> m_LevelGeometry;
+	Shader* m_TextShader;
+	Shader* m_DefaultShader;
+	Shader* m_TileShader;
+	std::vector<Tile> m_LevelGeometry;
 	std::vector<AABB> m_StaticGeometry;
 	std::vector<Door> m_Doors;
 	std::vector<Enemy> m_Enemies;
@@ -45,7 +45,6 @@ private:
 	glm::vec3 m_SpawnPoint;
 	glm::vec3 m_Endpoint;
 	glm::ivec2 m_LevelDimensions;
-
 	int FlatIndex(int x, int y);
 	bool ClosestCollision(Ray& ray, Actor* actor);
 	bool CompareLengths(glm::vec3 const& length_one, glm::vec3 const& length_two);
