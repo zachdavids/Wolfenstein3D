@@ -64,13 +64,13 @@ void AudioManager::PlayKnife(glm::vec3 const& position)
 
 void AudioManager::PlayPlayerDeath(glm::vec3 const& position)
 {
-	//if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/PlayerDeath.wav"))
-	//{
-	//	m_SoundEngine->play3D(
-	//		"Resources/Sounds/PlayerDeath.wav",
-	//		irrklang::vec3df(0.0f, -0.25f, 0.0f)
-	//	);
-	//}
+	if (!m_SoundEngine->isCurrentlyPlaying("Resources/Sounds/PlayerDeath.wav"))
+	{
+		m_SoundEngine->play3D(
+			"Resources/Sounds/PlayerDeath.wav",
+			irrklang::vec3df(position.x, 0, position.z)
+		);
+	}
 }
 
 void AudioManager::PlayMedkit(glm::vec3 const& position)

@@ -3,14 +3,10 @@
 
 #include <GLM/gtc/matrix_transform.hpp>
 
-const float Camera::m_FOV = glm::radians(70.0f);
-const float Camera::m_Near = 0.1f;
-const float Camera::m_Far = 1000.0f;
-
 Camera::Camera(glm::vec3 const& position, glm::vec3 const& rotation)
 {
-	SetPosition(position);
-	SetRotation(rotation);
+	m_Position = position;
+	m_Rotation = rotation;
 }
 
 void Camera::Move(glm::vec3 const& movement)
@@ -40,7 +36,7 @@ glm::mat4& Camera::GetProjectionMatrix()
 	if (m_bProjectionHasChanged)
 	{
 		float aspect_ratio = (float)(WindowManager::Get()->s_Width / WindowManager::Get()->s_Height);
-		m_ProjectionMatrix = glm::perspective(m_FOV, aspect_ratio, m_Near, m_Far);
+		m_ProjectionMatrix = glm::perspective(s_FOV, aspect_ratio, s_Near, s_Far);
 	}
 
 	return m_ProjectionMatrix;

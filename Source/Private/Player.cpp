@@ -20,14 +20,6 @@ const float Player::s_MovementSpeed = 0.05f;
 const float Player::s_LookSensitivity = 0.001f;
 
 Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
-	Actor(
-		position,
-		rotation,
-		78,
-		ResourceManager::Get()->GetResource<Mesh>("Billboard"),
-		ResourceManager::Get()->GetResource<Shader>("TileShader"),
-		ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet")
-	),
 	m_CurrentHP(s_MaxHP),
 	m_CurrentWeapon(1),
 	m_Ammo(8),
@@ -35,6 +27,14 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 	m_Score(0),
 	m_Spawn(position)
 {
+	m_Position = position;
+	m_Rotation = rotation;
+	m_Scale = glm::vec3(0.80f);
+	m_Tid = 78;
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
+
 	m_Weapons = {
 		Weapon{ true, 1.5f, 0.15f, 0 },
 		Weapon{ true, 100.0f, 0.15f, 0 },
@@ -170,8 +170,8 @@ void Player::PlayWeaponAnimation(double last_fire)
 void Player::Move(glm::vec3 const& movement)
 {
 	m_Camera->Move(movement);
-	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.0f, m_Camera->GetPosition().z + m_Camera->GetForward().z));
-	glm::vec3 camera_direction(m_Camera->GetPosition().x - GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - GetPosition().z);
+	SetPosition(glm::vec3(m_Camera->GetPosition().x + m_Camera->GetForward().x, 0.15, m_Camera->GetPosition().z + m_Camera->GetForward().z));
+	glm::vec3 camera_direction(m_Camera->GetPosition().x - m_Position.x, m_Camera->GetPosition().y, m_Camera->GetPosition().z - m_Position.z);
 	float camera_angle = -atanf(camera_direction.z / camera_direction.x) + (90.0f * glm::pi<float>() / 180.0f);
 
 	if (camera_direction.x > 0)
@@ -250,6 +250,7 @@ void Player::Damage(int damage)
 		if (m_Lives > 0)
 		{
 			--m_Lives;
+			AudioManager::Get()->PlayPlayerDeath(m_Position);
 			Reset();
 		}
 		else
