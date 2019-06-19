@@ -1,18 +1,19 @@
 # Wolfenstein3D
 ****
 
-Wolfenstein3D remade with a custom engine using OpenGL and C++. This game was my first ever game circa 2015 and was created from scratch to learn C++, and game design by exploring concepts and techniques used in released games. It is currently being refactored to reflect my current understanding of C++.
+Wolfenstein3D remade with a custom engine using OpenGL and C++. This game was my first ever game circa 2015 and was created from scratch to learn C++, and game design by exploring concepts and techniques used in released games. It is currently being rewritten to reflect my current understanding of C++.
 
 ### Features
-  * XML-based Level Design
-  * XML File Parsing using pugixml
+  * JSON-based Level Design
+  * JSON File Parsing using nhlohmann JSON
   * Sprite Animation
   * Billboarding
   * Model Loading using ASSIMP
   * HUD
   * Text Rendering using FreeType
   * Simple AI
-  * 2D Collision Detection & Resolution
+  * 2D Ray Casting
+  * AABB Collision Detection with Slide Resolution
   * Audio System with Music & SFX
 
 ### Instructions
