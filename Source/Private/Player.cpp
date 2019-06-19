@@ -260,7 +260,7 @@ void Player::Damage(int damage)
 		}
 		else
 		{
-			exit(0);
+			GameManager::Get()->EndGame();
 		}
 	}
 	else if (m_CurrentHP > s_MaxHP)

@@ -38,10 +38,6 @@ void ResourceManager::Create()
 	);
 
 	ResourceManager::Get()->AddResourceFolder<Texture>(
-		"Resources/Textures/Enemy/Guard/"
-	);
-
-	ResourceManager::Get()->AddResourceFolder<Texture>(
 		"Resources/Textures/HUD/"
 	);
 

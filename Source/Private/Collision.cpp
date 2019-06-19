@@ -24,12 +24,12 @@ bool Collision::AABBIntersection(AABB const& box_one, AABB const& box_two, glm::
 	if (px < pz)
 	{
 		normal.x = 0;
-		position.x = px * glm::sign(dx);
+		position.x = (float)(px * glm::sign(dx));
 	}
 	else
 	{
 		normal.z = 0;
-		position.z = pz * glm::sign(dz);
+		position.z = (float)(pz * glm::sign(dz));
 	}
 
 	return true;
