@@ -35,12 +35,12 @@ void LevelGenerator::GenerateGeometry(json& layer, Mapdata& map)
 	{
 		glm::vec3 position = glm::vec3(-index % s_MapSize, 0, s_MapSize - glm::floor(index / s_MapSize));
 		glm::vec3 rotation = (t_id % 2 == 0) ? glm::vec3(0, 0, 0) : glm::vec3(0, glm::radians(90.0f), 0);
-		if (t_id > 0 && t_id <= 98)
+		if (t_id > 0 && t_id <= 98 || t_id == 107)
 		{
 			map.geometry.emplace_back(Tile(position, rotation, 198 - t_id, wall_tile));
 			map.collision.emplace_back(AABB{ position, glm::vec3(0.5f, 0, 0.5f) });
 		}
-		else if (t_id > 98 && t_id < 110)
+		else if (t_id == 99 || t_id == 100 || t_id == 106)
 		{
 			map.geometry.emplace_back(Tile(position, rotation, 96, door_tile));
 			map.doors.emplace_back(Door(position, rotation, 198 - t_id));
@@ -94,8 +94,13 @@ void LevelGenerator::GenerateObjects(nlohmann::json& layer, Mapdata& map)
 				198 - object["texture"]
 			));
 			break;
+		case 6:
+			map.elevators.emplace_back(Elevator(
+				glm::vec3(-object["x"], object["y"], object["z"]),
+				glm::vec3(0, 0, 0),
+				90
+			));
 		}
-
 	}
 }
 

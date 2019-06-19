@@ -45,6 +45,17 @@ void Pickup::Update()
 				GameManager::Get()->GetPlayer()->AddScore(m_Amount);
 				m_bIsEaten = true;
 				break;
+			case kLife:
+				AudioManager::Get()->PlayAmmoPickup(GetPosition());
+				GameManager::Get()->GetPlayer()->AddLife(m_Amount);
+				m_bIsEaten = true;
+				break;
+			case kSubmachineGun:
+				AudioManager::Get()->PlayAmmoPickup(GetPosition());
+				GameManager::Get()->GetPlayer()->AddSubmachineGun();
+				GameManager::Get()->GetPlayer()->AddAmmo(m_Amount);
+				m_bIsEaten = true;
+				break;
 			}
 		}
 	}

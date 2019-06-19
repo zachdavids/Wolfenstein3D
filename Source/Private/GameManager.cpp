@@ -26,8 +26,7 @@ void GameManager::Input()
 
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_ESCAPE))
 	{
-		m_bIsActive = false;
-		exit(0);
+		EndGame();
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_R))
 	{
@@ -58,6 +57,7 @@ bool GameManager::GetActive()
 void GameManager::EndGame()
 {
 	m_bIsActive = false;
+	exit(0);
 }
 
 Player* GameManager::GetPlayer()

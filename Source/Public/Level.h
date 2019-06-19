@@ -7,6 +7,7 @@
 #include "Ray.h"
 #include "Pickup.h"
 #include "HiddenDoor.h"
+#include "Elevator.h"
 
 #include <GLM/vec2.hpp>
 #include <GLM/vec3.hpp>
@@ -22,7 +23,7 @@ public:
 	void Input();
 	void Update();
 	void Render();
-	void OpenDoors(glm::vec3 const& position, bool exit);
+	void OpenDoors(glm::vec3 const& position);
 	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
 	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
@@ -44,6 +45,7 @@ private:
 	std::vector<Item> m_Items;
 	std::vector<Pickup> m_Pickups;
 	std::vector<HiddenDoor> m_HiddenDoors;
+	std::vector<Elevator> m_Elevators;
 	glm::vec3 m_SpawnPoint;
 	glm::vec3 m_Endpoint;
 	glm::ivec2 m_LevelDimensions;

@@ -15,6 +15,8 @@
 #include <GLM/geometric.hpp>
 #include <GLM/gtc/constants.hpp>
 
+#include <iostream>
+
 const int Player::s_MaxHP = 100;
 const float Player::s_MovementSpeed = 0.05f;
 const float Player::s_LookSensitivity = 0.001f;
@@ -37,9 +39,7 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 
 	m_Weapons = {
 		Weapon{ true, 1.5f, 0.15f, 0 },
-		Weapon{ true, 100.0f, 0.15f, 0 },
-		Weapon{ true, 100.0f, 0.10f, 0 },
-		Weapon{ true, 100.0f, 0.05f, 0 } 
+		Weapon{ true, 100.0f, 0.15f, 0 }
 	};
 
 	m_Camera = std::make_unique<Camera>(position, rotation);
@@ -53,6 +53,7 @@ void Player::Input()
 
 void Player::Update()
 {
+	std::cout << m_Weapons.size() << std::endl;
 	if (m_Weapons[m_CurrentWeapon].bFireable == false)
 	{
 		double last_fire = TimeManager::GetTime() - m_Weapons[m_CurrentWeapon].last_interval;
@@ -152,7 +153,7 @@ void Player::KeyboardInput()
 	}
 	if (glfwGetKey(WindowManager::Get()->GetWindow(), GLFW_KEY_E))
 	{
-		GameManager::Get()->GetLevel()->OpenDoors(GetPosition(), true);
+		GameManager::Get()->GetLevel()->OpenDoors(GetPosition());
 	}
 	if (glfwGetMouseButton(WindowManager::Get()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
@@ -184,9 +185,12 @@ void Player::Move(glm::vec3 const& movement)
 
 void Player::ChangeWeapon(int weapon)
 {
-	m_CurrentWeapon = weapon;
-	m_HUD.UpdateWeapon(weapon);
-	m_Tid = 83 - (m_CurrentWeapon * 5);
+	if (weapon < m_Weapons.size())
+	{
+		m_CurrentWeapon = weapon;
+		m_HUD.UpdateWeapon(weapon);
+		m_Tid = 83 - (m_CurrentWeapon * 5);
+	}
 }
 
 void Player::PlaySound()
@@ -212,7 +216,7 @@ void Player::Reset()
 {
 	m_Ammo = 8;
 	m_CurrentHP = 100;
-	ChangeWeapon(2);
+	ChangeWeapon(1);
 	GameManager::Get()->ResetGame();
 }
 
@@ -297,6 +301,17 @@ void Player::AddAmmo(int amount)
 void Player::AddScore(int amount)
 {
 	m_Score += amount;
+}
+
+void Player::AddLife(int amount)
+{
+	m_Lives += amount;
+}
+
+void Player::AddSubmachineGun()
+{
+	m_Weapons.emplace_back(Weapon{ true, 100.0f, 0.10f, 0 });
+	ChangeWeapon(2);
 }
 
 Camera* Player::GetCamera()

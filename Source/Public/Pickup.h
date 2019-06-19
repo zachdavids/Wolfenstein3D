@@ -10,7 +10,9 @@ public:
 	{
 		kHeal,
 		kAmmo,
-		kScore
+		kScore,
+		kLife,
+		kSubmachineGun
 	};
 
 	Pickup(glm::vec3 const& position, Type type, int t_id, int amount);

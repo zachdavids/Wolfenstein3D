@@ -21,6 +21,8 @@ public:
 	void Damage(int damage);
 	void AddAmmo(int amount);
 	void AddScore(int amount);
+	void AddLife(int amount);
+	void AddSubmachineGun();
 	int GetHealth();
 	int GetMaxHealth();
 	int GetLives();

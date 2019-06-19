@@ -36,7 +36,7 @@ void Level::Input()
 
 	for (Enemy& enemy : m_Enemies)
 	{
-		OpenDoors(enemy.GetPosition(), false);
+		OpenDoors(enemy.GetPosition());
 	}
 }
 
@@ -67,6 +67,11 @@ void Level::Update()
 	for (HiddenDoor& hidden_door : m_HiddenDoors)
 	{
 		hidden_door.Update();
+	}
+
+	for (Elevator& elevator : m_Elevators)
+	{
+		elevator.Update();
 	}
 }
 
@@ -119,10 +124,15 @@ void Level::Render()
 		hidden_door.Render();
 	}
 
+	for (Elevator& elevator : m_Elevators)
+	{
+		elevator.Render();
+	}
+
 	m_Player->Render();
 }
 
-void Level::OpenDoors(glm::vec3 const& position, bool exit)
+void Level::OpenDoors(glm::vec3 const& position)
 {
 	for (Door& door : m_Doors)
 	{
@@ -140,12 +150,11 @@ void Level::OpenDoors(glm::vec3 const& position, bool exit)
 		}
 	}
 
-	if (exit) 
+	for (Elevator& elevator : m_Elevators)
 	{
-		if (glm::length(m_Endpoint - position) < 1.0f) 
+		if (glm::length(elevator.GetPosition() - position) < 1.0f)
 		{
-			//audio_->PlayLevelEnd();
-			//Game::LoadNextLevel();
+			elevator.Open();
 		}
 	}
 }
@@ -170,6 +179,7 @@ void Level::GenerateLevel(std::string const& file_name)
 	m_Pickups = map.pickups;
 	m_Enemies = map.enemies;
 	m_HiddenDoors = map.hidden;
+	m_Elevators = map.elevators;
 
 	m_Player->GetCamera()->SetPosition(m_SpawnPoint);
 	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
