@@ -1,5 +1,7 @@
 #pragma once
 
+#include "HUDElement.h"
+
 #include <GLM/detail/type_vec2.hpp>
 #include <GLM/glm.hpp>
 
@@ -9,14 +11,6 @@
 class Shader;
 class Mesh;
 class Texture;
-
-struct HUDElement
-{
-	glm::vec3 position;
-	glm::vec3 scale;
-	Mesh* mesh;
-	Texture* texture;
-};
 
 class HUD
 {
@@ -34,6 +28,9 @@ public:
 	void Init();
 	void Render();
 	void UpdateWeapon(int weapon);
+	void PlayRedFlash();
+	void PlayYellowFlash();
+	void EndFlash();
 
 private:
 

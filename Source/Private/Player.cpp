@@ -53,7 +53,6 @@ void Player::Input()
 
 void Player::Update()
 {
-	std::cout << m_Weapons.size() << std::endl;
 	if (m_Weapons[m_CurrentWeapon].bFireable == false)
 	{
 		double last_fire = TimeManager::GetTime() - m_Weapons[m_CurrentWeapon].last_interval;
@@ -247,6 +246,8 @@ void Player::Shoot()
 
 void Player::Damage(int damage)
 {
+	m_HUD.PlayRedFlash();
+
 	m_CurrentHP -= damage;
 
 	if (m_CurrentHP <= 0)
@@ -295,21 +296,25 @@ int Player::GetScore()
 
 void Player::AddAmmo(int amount)
 {
+	m_HUD.PlayYellowFlash();
 	m_Ammo += amount;
 }
 
 void Player::AddScore(int amount)
 {
+	m_HUD.PlayYellowFlash();
 	m_Score += amount;
 }
 
 void Player::AddLife(int amount)
 {
+	m_HUD.PlayYellowFlash();
 	m_Lives += amount;
 }
 
 void Player::AddSubmachineGun()
 {
+	m_HUD.PlayYellowFlash();
 	m_Weapons.emplace_back(Weapon{ true, 100.0f, 0.10f, 0 });
 	ChangeWeapon(2);
 }

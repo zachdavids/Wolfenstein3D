@@ -39,7 +39,6 @@ void Elevator::Update()
 		else
 		{
 			GameManager::Get()->EndGame();
-			std::cout << "hi" << std::endl;
 		}
 	}
 }

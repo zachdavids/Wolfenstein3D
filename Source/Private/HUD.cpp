@@ -28,12 +28,16 @@ void HUD::Init()
 	Mesh* mesh = ResourceManager::Get()->GetResource<Mesh>("HUD");
 	Texture* gui_texture = ResourceManager::Get()->GetResource<Texture>("HUD1");
 	Texture* weapon_texture = ResourceManager::Get()->GetResource<Texture>("Pistol");
+	Texture* red_flash = ResourceManager::Get()->GetResource<Texture>("RedScreenFlash");
 
-	HUDElement gui = HUDElement{ glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), mesh, gui_texture };
-	HUDElement weapon = HUDElement{ glm::vec3(0.775f, -0.95f, 1.5f), glm::vec3(0.3f, 0.2f, 0.2f), mesh, weapon_texture };
+	HUDElement screen_flash = HUDElement{ 0, glm::vec3(0.0f, -0.70, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f), mesh, red_flash };
+	HUDElement gui = HUDElement{ 1.0f, glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), mesh, gui_texture };
+	HUDElement weapon = HUDElement{ 1.0f, glm::vec3(0.775f, -0.95f, 1.5f), glm::vec3(0.3f, 0.2f, 0.2f), mesh, weapon_texture };
+
 	m_Elements = {
 		gui,
-		weapon
+		weapon,
+		screen_flash
 	};
 }
 
@@ -102,13 +106,17 @@ void HUD::InitText()
 void HUD::Render()
 {
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
 	m_Shader->Bind();
 	for (HUDElement& element : m_Elements)
 	{
 		element.texture->Bind();
 		m_Shader->SetMat4("transform", GetModel(element.position, element.scale));
+		m_Shader->SetFloat("alpha", element.alpha);
 		element.mesh->Draw();
 	}
+
+	EndFlash();
 
 	RenderText(std::to_string(GameManager::Get()->GetLevel()->GetLevelNumber()), glm::vec2(35.0f, 17.0f));
 	RenderText(std::to_string(GameManager::Get()->GetPlayer()->GetScore()), glm::vec2(150.0f, 17.0f));
@@ -135,6 +143,23 @@ void HUD::UpdateWeapon(int weapon)
 		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Minigun");
 		break;
 	}
+}
+
+void HUD::PlayRedFlash()
+{ 
+	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("RedScreenFlash");
+	m_Elements[2].alpha = 0.75;
+}
+
+void HUD::PlayYellowFlash()
+{
+	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("YellowScreenFlash");
+	m_Elements[2].alpha = 0.75;
+}
+
+void HUD::EndFlash()
+{
+	m_Elements[2].alpha = 0;
 }
 
 void HUD::RenderText(std::string const& text, glm::vec2& position)
