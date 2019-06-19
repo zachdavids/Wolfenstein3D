@@ -28,6 +28,7 @@ public:
 	bool CheckEnemyRayCollision(Ray& ray);
 	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
 	void GenerateLevel(std::string const& file_name);
+	void SpawnAmmo(glm::vec3 const& position);
 	int GetLevelNumber();
 	glm::vec3 GetSpawnPoint();
 

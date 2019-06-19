@@ -140,7 +140,8 @@ void Enemy::Damage(int damage)
 	}
 	else
 	{
-		AudioManager::Get()->PlayEnemyDeath(GetPosition());
+		AudioManager::Get()->PlayEnemyDeath(m_Position);
+		GameManager::Get()->GetLevel()->SpawnAmmo(m_Position);
 		m_CurrentState = kDeath;
 	}
 }

@@ -18,7 +18,7 @@
 #include <iostream>
 
 const int Player::s_MaxHP = 100;
-const float Player::s_MovementSpeed = 0.05f;
+const float Player::s_MovementSpeed = 0.07f;
 const float Player::s_LookSensitivity = 0.001f;
 
 Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :

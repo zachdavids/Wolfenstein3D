@@ -185,6 +185,16 @@ void Level::GenerateLevel(std::string const& file_name)
 	m_Player->GetCamera()->SetRotation(map.spawn.rotation);
 }
 
+void Level::SpawnAmmo(glm::vec3 const& position)
+{
+	m_Pickups.emplace_back(Pickup(
+		glm::vec3(position.x + 0.1f, 0, position.z + 0.1f),
+		Pickup::kAmmo,
+		35,
+		8
+	));
+}
+
 bool Level::CheckPlayerRayCollision(Ray& ray, float range)
 {
 	std::vector<Enemy*> EnemyCollisions;
