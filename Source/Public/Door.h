@@ -9,12 +9,12 @@ public:
 	
 	Door(glm::vec3 const& position, glm::vec3 const& rotatiom, int t_id);
 	virtual void Update() override;
-	void Open();
-	AABB GetAABB();
+	virtual void Open();
+	virtual AABB GetAABB();
 	static constexpr float s_MoveTime = 1.0f;
 	static constexpr float s_Delay = 7.5f;
 
-private:
+protected:
 
 	bool m_bOpen;
 	double m_OpenStart;

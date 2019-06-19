@@ -12,6 +12,7 @@ Door::Door(glm::vec3 const& position, glm::vec3 const& rotation, int t_id)
 	m_Tid = t_id;
 	m_ClosePosition = position;
 	m_OpenPosition = position;
+	m_bOpen = false;
 	rotation.y == glm::radians(90.0f) ? m_OpenPosition.x += 0.9f : m_OpenPosition.z += 0.9f;
 	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
 	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
@@ -60,18 +61,14 @@ void Door::Update()
 
 AABB Door::GetAABB()
 {
-	AABB aabb;
-
 	if (GetRotation().y == glm::radians(-90.0f)) 
 	{
-		aabb.position = GetPosition(); 
-		aabb.half = glm::vec3(0.0625f, 0.0f, 0.5f);
+		AABB aabb{ m_Position, glm::vec3(0.0625f, 0.0f, 0.5f) };
+		return aabb;
 	}
 	else 
 	{
-		aabb.position = GetPosition();
-		aabb.half = glm::vec3(0.5f, 0.0f, 0.0625);
+		AABB aabb{ m_Position, glm::vec3(0.5f, 0.0f, 0.0625) };
+		return aabb;
 	}
-
-	return aabb;
 }

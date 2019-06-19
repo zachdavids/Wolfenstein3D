@@ -63,6 +63,11 @@ void Level::Update()
 	{
 		pickup.Update();
 	}
+
+	for (HiddenDoor& hidden_door : m_HiddenDoors)
+	{
+		hidden_door.Update();
+	}
 }
 
 void Level::Render()
@@ -109,6 +114,11 @@ void Level::Render()
 		pickup.Render();
 	}
 
+	for (HiddenDoor& hidden_door : m_HiddenDoors)
+	{
+		hidden_door.Render();
+	}
+
 	m_Player->Render();
 }
 
@@ -117,6 +127,14 @@ void Level::OpenDoors(glm::vec3 const& position, bool exit)
 	for (Door& door : m_Doors)
 	{
 		if (glm::length(door.GetPosition() - position) < 1.0f) 
+		{
+			door.Open();
+		}
+	}
+
+	for (HiddenDoor& door : m_HiddenDoors)
+	{
+		if (glm::length(door.GetPosition() - position) < 1.0f)
 		{
 			door.Open();
 		}
@@ -151,6 +169,7 @@ void Level::GenerateLevel(std::string const& file_name)
 	m_Items = map.items;
 	m_Pickups = map.pickups;
 	m_Enemies = map.enemies;
+	m_HiddenDoors = map.hidden;
 
 	m_Player->GetCamera()->SetPosition(m_SpawnPoint);
 	m_Player->GetCamera()->SetRotation(map.spawn.rotation);

@@ -11,9 +11,7 @@ class Actor
 {
 public:
 
-	Actor() = default;
-	Actor(glm::vec3 position, glm::vec3 rotation, int t_id, Mesh* mesh, Shader* shader, TextureArray* texture);
-	virtual void Update() {};
+	virtual void Update() = 0;
 	virtual void Render();
 	void Translate(glm::vec3 const& translation);
 	void Rotate(glm::vec3 const& rotate);

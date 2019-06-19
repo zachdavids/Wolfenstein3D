@@ -6,6 +6,7 @@
 #include "Tile.h"
 #include "Ray.h"
 #include "Pickup.h"
+#include "HiddenDoor.h"
 
 #include <GLM/vec2.hpp>
 #include <GLM/vec3.hpp>
@@ -42,6 +43,7 @@ private:
 	std::vector<Enemy> m_Enemies;
 	std::vector<Item> m_Items;
 	std::vector<Pickup> m_Pickups;
+	std::vector<HiddenDoor> m_HiddenDoors;
 	glm::vec3 m_SpawnPoint;
 	glm::vec3 m_Endpoint;
 	glm::ivec2 m_LevelDimensions;

@@ -61,19 +61,41 @@ void LevelGenerator::GenerateObjects(nlohmann::json& layer, Mapdata& map)
 			map.spawn.rotation = glm::vec3(0, glm::radians(object["rotation"].get<float>()), 0);
 			break;
 		case 2:
-			map.items.emplace_back(Item(glm::vec3(-object["x"], object["y"], object["z"]), object["texture"]));
+			map.items.emplace_back(Item(
+				glm::vec3(-object["x"], object["y"], object["z"]),
+				object["texture"]
+			));
 			if (object["collision"].get<int>() == 1)
 			{
-				map.collision.emplace_back(AABB{ glm::vec3(-object["x"], object["y"], object["z"]), glm::vec3(0.5f, 0, 0.5f) });
+				map.collision.emplace_back(AABB{
+					glm::vec3(-object["x"], object["y"], object["z"]),
+					glm::vec3(0.5f, 0, 0.5f)
+					});
 			}
 			break;
 		case 3:
-			map.pickups.emplace_back(Pickup(glm::vec3(-object["x"], object["y"], object["z"]), object["type"], object["texture"], object["amount"]));
+			map.pickups.emplace_back(Pickup(
+				glm::vec3(-object["x"], object["y"], object["z"]),
+				object["type"], 
+				object["texture"],
+				object["amount"]
+			));
 			break;
 		case 4:
-			map.enemies.emplace_back(Enemy(glm::vec3(-object["x"], object["y"], object["z"])));
+			map.enemies.emplace_back(Enemy(
+				glm::vec3(-object["x"], object["y"], object["z"])
+			));
+			break;
+		case 5:
+			map.hidden.emplace_back(HiddenDoor(
+				glm::vec3(-object["x"], object["y"], object["z"]),
+				glm::vec3(-object["cx"], object["cy"], object["cz"]),
+				glm::vec3(0, 0, 0),
+				198 - object["texture"]
+			));
 			break;
 		}
+
 	}
 }
 

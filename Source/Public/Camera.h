@@ -7,6 +7,7 @@ class Camera : public Actor
 public:
 
 	Camera(glm::vec3 const& position, glm::vec3 const& rotation);
+	virtual void Update() override {};
 	glm::mat4& GetViewMatrix();
 	glm::mat4& GetProjectionMatrix();
 	void Move(glm::vec3 const& movement);

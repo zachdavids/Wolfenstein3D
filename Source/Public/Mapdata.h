@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "Tile.h"
 #include "Pickup.h"
+#include "HiddenDoor.h"
 
 #include <vector>
 
@@ -25,4 +26,5 @@ struct Mapdata
 	std::vector<Item> items;
 	std::vector<Pickup> pickups;
 	std::vector<AABB> collision;
+	std::vector<HiddenDoor> hidden;
 };

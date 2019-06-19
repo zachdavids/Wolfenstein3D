@@ -5,16 +5,6 @@
 
 #include <GLM/gtc/matrix_transform.hpp>
 
-Actor::Actor(glm::vec3 position, glm::vec3 rotation, int t_id, Mesh* mesh, Shader* shader, TextureArray* texture) :
-	m_Position(position),
-	m_Rotation(rotation),
-	m_Tid(t_id),
-	m_Mesh(mesh),
-	m_Shader(shader),
-	m_Texture(texture)
-{
-}
-
 glm::vec3& Actor::GetPosition()
 {
 	return m_Position;
