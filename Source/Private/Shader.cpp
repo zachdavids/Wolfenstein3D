@@ -98,6 +98,4 @@ void Shader::ReadFile(std::string* output, std::string const& path)
 	sstr << stream.rdbuf();
 	stream.close();
 	*output = sstr.str();
-	sstr.str("");
-	sstr.clear();
 }
