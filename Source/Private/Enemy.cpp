@@ -3,7 +3,7 @@
 #include "AudioManager.h"
 #include "GameManager.h"
 #include "TimeManager.h"
-#include "AABB.h"
+#include "BoundingBox.h"
 #include "Player.h"
 #include "Level.h"
 #include "Ray.h"
@@ -98,7 +98,7 @@ void Enemy::Chase()
 
 		glm::vec3 collision(1.0f);
 		glm::vec3 delta(0.0f);
-		GameManager::Get()->GetLevel()->CheckAABBCollision(GetAABB(), collision, delta);
+		GameManager::Get()->GetLevel()->CheckBoundingBoxCollision(GetBoundingBox(), collision, delta);
 		SetPosition(GetPosition() + (m_PlayerDirection * collision * s_MovementSpeed));
 	}
 }
@@ -199,7 +199,7 @@ bool Enemy::CheckSightline()
 	return GameManager::Get()->GetLevel()->CheckEnemyRayCollision(ray);
 }
 
-AABB Enemy::GetAABB()
+BoundingBox Enemy::GetBoundingBox()
 {
-	return AABB{ GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
+	return BoundingBox{ GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
 }

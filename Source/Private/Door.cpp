@@ -59,16 +59,14 @@ void Door::Update()
 	}
 }
 
-AABB Door::GetAABB()
+BoundingBox Door::GetBoundingBox()
 {
 	if (GetRotation().y == glm::radians(-90.0f)) 
 	{
-		AABB aabb{ m_Position, glm::vec3(0.0625f, 0.0f, 0.5f) };
-		return aabb;
+		return BoundingBox{ m_Position, glm::vec3(0.0625f, 0.0f, 0.5f) };
 	}
 	else 
 	{
-		AABB aabb{ m_Position, glm::vec3(0.5f, 0.0f, 0.0625) };
-		return aabb;
+		return BoundingBox{ m_Position, glm::vec3(0.5f, 0.0f, 0.0625) };
 	}
 }

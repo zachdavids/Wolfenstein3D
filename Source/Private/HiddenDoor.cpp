@@ -37,8 +37,7 @@ void HiddenDoor::Open()
 	}
 }
 
-AABB HiddenDoor::GetAABB()
+BoundingBox HiddenDoor::GetBoundingBox()
 {
-	AABB aabb {m_Position, glm::vec3(0.5f)};
-	return aabb;
+	return BoundingBox{m_Position, glm::vec3(0.5f)};
 }
