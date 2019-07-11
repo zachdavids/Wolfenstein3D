@@ -8,7 +8,7 @@ public:
 
 	Resource() = default;
 	Resource(std::string const& path);
-	virtual void Create() {};
+	virtual void Create() = 0;
 
 protected:
 
