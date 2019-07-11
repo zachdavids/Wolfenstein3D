@@ -26,7 +26,7 @@ struct Mapdata
 	std::vector<Enemy> enemies;
 	std::vector<Item> items;
 	std::vector<Pickup> pickups;
-	std::vector<BoundingBox> collision;
+	std::vector<AABB> collision;
 	std::vector<HiddenDoor> hidden;
 	std::vector<Elevator> elevators;
 };

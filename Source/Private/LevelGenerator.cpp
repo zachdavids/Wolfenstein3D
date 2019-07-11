@@ -38,7 +38,7 @@ void LevelGenerator::GenerateGeometry(json& layer, Mapdata& map)
 		if (t_id > 0 && t_id <= 98 || t_id == 107)
 		{
 			map.geometry.emplace_back(Tile(position, rotation, 198 - t_id, wall_tile));
-			map.collision.emplace_back(BoundingBox{ position, glm::vec3(0.5f, 0, 0.5f) });
+			map.collision.emplace_back(AABB{ position, glm::vec3(0.5f, 0, 0.5f) });
 		}
 		else if (t_id == 99 || t_id == 100 || t_id == 106)
 		{
@@ -67,7 +67,7 @@ void LevelGenerator::GenerateObjects(nlohmann::json& layer, Mapdata& map)
 			));
 			if (object["collision"].get<int>() == 1)
 			{
-				map.collision.emplace_back(BoundingBox{
+				map.collision.emplace_back(AABB{
 					glm::vec3(-object["x"], object["y"], object["z"]),
 					glm::vec3(0.5f, 0, 0.5f)
 					});

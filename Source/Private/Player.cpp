@@ -68,11 +68,11 @@ void Player::Update()
 
 	glm::vec3 intention = m_Movement * s_MovementSpeed;
 	glm::vec3 new_position = m_Camera->GetPosition() + intention;
-	BoundingBox BoundingBox{ new_position, glm::vec3(0.1f, 0, 0.1) };
+	AABB aabb{ new_position, glm::vec3(0.1f, 0, 0.1) };
 
 	glm::vec3 collision(1.0f);
 	glm::vec3 delta(0.0f);
-	GameManager::Get()->GetLevel()->CheckBoundingBoxCollision(BoundingBox, collision, delta);
+	GameManager::Get()->GetLevel()->CheckAABBCollision(aabb, collision, delta);
 	Move((intention + delta) * collision);
 }
 
@@ -324,7 +324,7 @@ Camera* Player::GetCamera()
 	return m_Camera.get();
 }
 
-BoundingBox Player::GetBoundingBox()
+AABB Player::GetAABB()
 {
-	return BoundingBox{ m_Camera->GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
+	return AABB{ m_Camera->GetPosition(), glm::vec3(0.1f, 0, 0.1f) };
 }

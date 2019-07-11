@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Actor.h"
-#include "BoundingBox.h"
+#include "AABB.h"
 #include "Weapon.h"
 
 class Enemy : public Actor
@@ -19,7 +19,7 @@ public:
 
 	Enemy(glm::vec3 const& position);
 	virtual void Update() override;
-	BoundingBox GetBoundingBox();
+	AABB GetAABB();
 	void Damage(int damage_points);
 	bool IsAlive();
 	static constexpr int s_MaxHP = 100;

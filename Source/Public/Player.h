@@ -2,7 +2,7 @@
 
 #include "Actor.h"
 #include "Camera.h"
-#include "BoundingBox.h"
+#include "AABB.h"
 #include "HUD.h"
 #include "Weapon.h"
 
@@ -29,7 +29,7 @@ public:
 	int GetAmmo();
 	int GetScore();
 	Camera* GetCamera();
-	BoundingBox GetBoundingBox();
+	AABB GetAABB();
 
 private:
 

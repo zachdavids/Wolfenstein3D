@@ -1,11 +1,11 @@
 #pragma once
 
-#include "BoundingBox.h"
+#include "AABB.h"
 #include "Ray.h"
 
 namespace Collision
 {
-	bool BoundingBoxIntersection(BoundingBox const& box_one, BoundingBox const& box_two, glm::vec3& collision, glm::vec3& position);
-	bool RayBoundingBoxIntersection(Ray const& ray, BoundingBox const& box);
+	bool AABBIntersection(AABB const& box_one, AABB const& box_two, glm::vec3& collision, glm::vec3& position);
+	bool RayAABBIntersection(Ray const& ray, AABB const& box);
 }
 

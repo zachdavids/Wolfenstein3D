@@ -200,7 +200,7 @@ bool Level::CheckPlayerRayCollision(Ray& ray, float range)
 	std::vector<Enemy*> EnemyCollisions;
 	for (Enemy& enemy : m_Enemies)
 	{
-		if (Collision::RayBoundingBoxIntersection(ray, enemy.GetBoundingBox()))
+		if (Collision::RayAABBIntersection(ray, enemy.GetAABB()))
 		{
 			if (enemy.IsAlive())
 			{
@@ -234,7 +234,7 @@ bool Level::CheckPlayerRayCollision(Ray& ray, float range)
 
 bool Level::CheckEnemyRayCollision(Ray& ray)
 {
-	if (Collision::RayBoundingBoxIntersection(ray, m_Player->GetBoundingBox()) == false)
+	if (Collision::RayAABBIntersection(ray, m_Player->GetAABB()) == false)
 	{
 		return false;
 	}
@@ -244,9 +244,9 @@ bool Level::CheckEnemyRayCollision(Ray& ray)
 
 bool Level::ClosestCollision(Ray& ray, Actor* actor)
 {
-	for (BoundingBox& box : m_StaticGeometry)
+	for (AABB& box : m_StaticGeometry)
 	{
-		if (Collision::RayBoundingBoxIntersection(ray, box))
+		if (Collision::RayAABBIntersection(ray, box))
 		{
 			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.position - ray.m_Origin))
 			{
@@ -257,8 +257,8 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 
 	for (Door& door : m_Doors)
 	{
-		BoundingBox box = door.GetBoundingBox();
-		if (Collision::RayBoundingBoxIntersection(ray, box))
+		AABB box = door.GetAABB();
+		if (Collision::RayAABBIntersection(ray, box))
 		{
 			if (CompareLengths(actor->GetPosition() - ray.m_Origin, box.position - ray.m_Origin))
 			{
@@ -270,12 +270,12 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 	return true;
 }
 
-bool Level::CheckBoundingBoxCollision(BoundingBox& actor, glm::vec3& normal, glm::vec3& position)
+bool Level::CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position)
 {
-	BoundingBox closest;
-	for (BoundingBox& box: m_StaticGeometry)
+	AABB closest;
+	for (AABB& box: m_StaticGeometry)
 	{
-		if (Collision::BoundingBoxIntersection(actor, box, normal, position))
+		if (Collision::AABBIntersection(actor, box, normal, position))
 		{
 			if (CompareLengths(closest.position, box.position))
 			{
@@ -286,8 +286,8 @@ bool Level::CheckBoundingBoxCollision(BoundingBox& actor, glm::vec3& normal, glm
 
 	for (Door& door : m_Doors)
 	{
-		BoundingBox box = door.GetBoundingBox();
-		if (Collision::BoundingBoxIntersection(actor, box, normal, position))
+		AABB box = door.GetAABB();
+		if (Collision::AABBIntersection(actor, box, normal, position))
 		{
 			if (CompareLengths(closest.position, box.position))
 			{

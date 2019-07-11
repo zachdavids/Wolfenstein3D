@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Actor.h"
-#include "BoundingBox.h"
+#include "AABB.h"
 
 class Door : public Actor
 {
@@ -10,7 +10,7 @@ public:
 	Door(glm::vec3 const& position, glm::vec3 const& rotatiom, int t_id);
 	virtual void Update() override;
 	virtual void Open();
-	virtual BoundingBox GetBoundingBox();
+	virtual AABB GetAABB();
 	static constexpr float s_MoveTime = 1.0f;
 	static constexpr float s_Delay = 7.5f;
 

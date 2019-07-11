@@ -26,7 +26,7 @@ public:
 	void OpenDoors(glm::vec3 const& position);
 	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
-	bool CheckBoundingBoxCollision(BoundingBox& actor, glm::vec3& normal, glm::vec3& position);
+	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
 	void GenerateLevel(std::string const& file_name);
 	void SpawnAmmo(glm::vec3 const& position);
 	int GetLevelNumber();
@@ -40,7 +40,7 @@ private:
 	Shader* m_DefaultShader;
 	Shader* m_TileShader;
 	std::vector<Tile> m_LevelGeometry;
-	std::vector<BoundingBox> m_StaticGeometry;
+	std::vector<AABB> m_StaticGeometry;
 	std::vector<Door> m_Doors;
 	std::vector<Enemy> m_Enemies;
 	std::vector<Item> m_Items;

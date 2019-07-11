@@ -5,7 +5,7 @@
 
 #include <GLM/glm.hpp>
 
-bool Collision::BoundingBoxIntersection(BoundingBox const& box_one, BoundingBox const& box_two, glm::vec3& normal, glm::vec3& position)
+bool Collision::AABBIntersection(AABB const& box_one, AABB const& box_two, glm::vec3& normal, glm::vec3& position)
 {
 	double dx = box_two.position.x - box_one.position.x;
 	double px = (box_two.half.x + box_one.half.x) - glm::abs(dx);
@@ -35,7 +35,7 @@ bool Collision::BoundingBoxIntersection(BoundingBox const& box_one, BoundingBox 
 	return true;
 }
 
-bool Collision::RayBoundingBoxIntersection(Ray const& ray, BoundingBox const& box)
+bool Collision::RayAABBIntersection(Ray const& ray, AABB const& box)
 {
 	double tx1 = (box.position.x - box.half.x - ray.m_Origin.x) * ray.m_InvDirection.x;
 	double tx2 = (box.position.x + box.half.x - ray.m_Origin.x) * ray.m_InvDirection.x;
