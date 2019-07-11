@@ -33,9 +33,9 @@ Player::Player(glm::vec3 const& position, glm::vec3 const& rotation) :
 	m_Rotation = rotation;
 	m_Scale = glm::vec3(0.80f);
 	m_Tid = 78;
-	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Resources/Meshes/Billboard.obj");
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("Resources/Shaders/TileShader");
-	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("Resources/Tilesheets/SpriteSheet.png");
+	m_Mesh = ResourceManager::Get()->GetResource<Mesh>("Billboard");
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("TileShader");
+	m_Texture = ResourceManager::Get()->GetResource<TextureArray>("SpriteSheet");
 
 	m_Weapons = {
 		Weapon{ true, 1.5f, 0.15f, 0 },

@@ -4,16 +4,9 @@
 #include "Mesh.h"
 #include "TextureArray.h"
 
-#include <nlohmann/json.hpp>
-
 #include <filesystem>
-#include <fstream>
-
-#include <iostream>
 
 ResourceManager* ResourceManager::m_Instance;
-
-using json = nlohmann::json;
 
 /*
 TODO	Remove Load from Create() and separate global resources from level resources
@@ -26,65 +19,44 @@ void ResourceManager::Create()
 	if (m_Instance) { return; }
 	m_Instance = this;
 
-	LoadGlobalResources();
+	Load();
 }
 
-void ResourceManager::LoadLevelResources(nlohmann::json& data)
+void ResourceManager::Load()
 {
-	for (std::string const& path : data["meshes"])
-	{
-		ResourceManager::Get()->AddResource<Mesh>(path, path);
-	}
+	//Temporary
+	ResourceManager::Get()->AddResource<Shader>(
+		"DefaultShader",
+		"Resources/Shaders/Default/"
+		);
 
-	for (std::string const& path : data["shaders"])
-	{
-		ResourceManager::Get()->AddResource<Shader>(path, path);
-	}
+	ResourceManager::Get()->AddResource<Shader>(
+		"TileShader",
+		"Resources/Shaders/Tilesheet/"
+		);
 
-	for (std::string const& path : data["textures"])
-	{
-		ResourceManager::Get()->AddResource<Texture>(path, path);
-	}
+	ResourceManager::Get()->AddResource<Shader>(
+		"TextShader",
+		"Resources/Shaders/Text/"
+		);
 
-	for (std::string const& path : data["texturearrays"])
-	{
-		ResourceManager::Get()->AddResource<TextureArray>(path, path);
-	}
+	ResourceManager::Get()->AddResource<Shader>(
+		"HUDShader",
+		"Resources/Shaders/HUD/"
+		);
 
-	LoadResources();
-}
+	ResourceManager::Get()->AddResourceFolder<Mesh>(
+		"Resources/Meshes/"
+		);
 
-void ResourceManager::LoadGlobalResources()
-{
-	std::ifstream file(s_ConfigFilePath);
-	json data;
-	file >> data;
-	file.close();
+	ResourceManager::Get()->AddResourceFolder<Texture>(
+		"Resources/Textures/HUD/"
+		);
 
-	std::cout << "Global Resources" << std::endl;
-	for (std::string const& path : data["meshes"])
-	{
-		std::cout << path << std::endl;
-		ResourceManager::Get()->AddResource<Mesh>(path,	path);
-	}
-
-	for (std::string const& path : data["shaders"])
-	{
-		std::cout << path << std::endl;
-		ResourceManager::Get()->AddResource<Shader>(path, path);
-	}
-
-	for (std::string const& path : data["textures"])
-	{
-		std::cout << path << std::endl;
-		ResourceManager::Get()->AddResource<Texture>(path, path);
-	}
-
-	for (std::string const& path : data["texturearrays"])
-	{
-		std::cout << path << std::endl;
-		ResourceManager::Get()->AddResource<TextureArray>(path, path);
-	}
+	ResourceManager::Get()->AddResourceFolder<TextureArray>(
+		"Resources/Tilesheets/"
+		);
+	// Temporary Ends
 
 	LoadResources();
 }

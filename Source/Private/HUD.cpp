@@ -16,8 +16,8 @@
 
 HUD::HUD()
 {
-	m_Shader = ResourceManager::Get()->GetResource<Shader>("Resources/Shaders/HUDShader/");
-	m_TextShader = ResourceManager::Get()->GetResource<Shader>("Resources/Shaders/TextShader/");
+	m_Shader = ResourceManager::Get()->GetResource<Shader>("HUDShader");
+	m_TextShader = ResourceManager::Get()->GetResource<Shader>("TextShader");
 
 	Init();
 	InitText();
@@ -25,10 +25,10 @@ HUD::HUD()
 
 void HUD::Init()
 {
-	Mesh* mesh = ResourceManager::Get()->GetResource<Mesh>("Resources/Meshes/HUD.obj");
-	Texture* gui_texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/HUD1.png");
-	Texture* weapon_texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/Pistol.png");
-	Texture* red_flash = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/RedScreenFlash.png");
+	Mesh* mesh = ResourceManager::Get()->GetResource<Mesh>("HUD");
+	Texture* gui_texture = ResourceManager::Get()->GetResource<Texture>("HUD1");
+	Texture* weapon_texture = ResourceManager::Get()->GetResource<Texture>("Pistol");
+	Texture* red_flash = ResourceManager::Get()->GetResource<Texture>("RedScreenFlash");
 
 	HUDElement screen_flash = HUDElement{ 0, glm::vec3(0.0f, -0.70, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f), mesh, red_flash };
 	HUDElement gui = HUDElement{ 1.0f, glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(2.0f, 0.3f, 1.0f), mesh, gui_texture };
@@ -131,29 +131,29 @@ void HUD::UpdateWeapon(int weapon)
 	switch (weapon)
 	{
 	case 0:
-		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/Knife.png");
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Knife");
 		break;
 	case 1:
-		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/Pistol.png");
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Pistol");
 		break;
 	case 2:
-		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/MachineGun.png");
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("MachineGun");
 		break;
 	case 3:
-		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/Minigun.png");
+		m_Elements[1].texture = ResourceManager::Get()->GetResource<Texture>("Minigun");
 		break;
 	}
 }
 
 void HUD::PlayRedFlash()
 { 
-	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/RedScreenFlash.png");
+	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("RedScreenFlash");
 	m_Elements[2].alpha = 0.75;
 }
 
 void HUD::PlayYellowFlash()
 {
-	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("Resources/Textures/HUD/YellowScreenFlash.png");
+	m_Elements[2].texture = ResourceManager::Get()->GetResource<Texture>("YellowScreenFlash");
 	m_Elements[2].alpha = 0.75;
 }
 
