@@ -4,10 +4,11 @@
 #include "Pickup.h"
 #include "Enemy.h"
 
-#include <vector>
-#include <fstream>
 #include <GLM/trigonometric.hpp>
 #include <GLM/common.hpp>
+
+#include <vector>
+#include <fstream>
 
 using json = nlohmann::json;
 
@@ -16,9 +17,13 @@ Mapdata LevelGenerator::Generate(std::string const& filename)
 	std::ifstream file(s_Directory + filename);
 	json data;
 	file >> data;
+	file.close();
+
+	ResourceManager::Get()->LoadLevelResources(data["resources"]);
 
 	Mapdata map;
 	map.number = data["number"];
+
 	GenerateGeometry(data["layers"][0], map);
 	GenerateObjects(data["layers"][1], map);
 
