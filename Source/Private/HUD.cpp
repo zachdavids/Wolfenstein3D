@@ -162,7 +162,7 @@ void HUD::EndFlash()
 	m_Elements[2].alpha = 0;
 }
 
-void HUD::RenderText(std::string const& text, glm::vec2& position)
+void HUD::RenderText(std::string const& text, glm::vec2 position)
 {
 	glDisable(GL_CULL_FACE);
 	m_TextShader->Bind();

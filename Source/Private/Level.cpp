@@ -270,7 +270,7 @@ bool Level::ClosestCollision(Ray& ray, Actor* actor)
 	return true;
 }
 
-bool Level::CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position)
+bool Level::CheckAABBCollision(AABB actor, glm::vec3 normal, glm::vec3 position)
 {
 	AABB closest;
 	for (AABB& box: m_StaticGeometry)

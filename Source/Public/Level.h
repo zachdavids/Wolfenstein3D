@@ -12,6 +12,7 @@
 #include <GLM/vec2.hpp>
 #include <GLM/vec3.hpp>
 #include <vector>
+#include <string>
 
 class Player;
 
@@ -26,7 +27,7 @@ public:
 	void OpenDoors(glm::vec3 const& position);
 	bool CheckPlayerRayCollision(Ray& ray, float range);
 	bool CheckEnemyRayCollision(Ray& ray);
-	bool CheckAABBCollision(AABB& actor, glm::vec3& normal, glm::vec3& position);
+	bool CheckAABBCollision(AABB actor, glm::vec3 normal, glm::vec3 position);
 	void GenerateLevel(std::string const& file_name);
 	void SpawnAmmo(glm::vec3 const& position);
 	int GetLevelNumber();

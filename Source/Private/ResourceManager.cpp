@@ -31,9 +31,14 @@ void ResourceManager::Create()
 	ResourceManager::Get()->AddResource<Shader>(
 		"HUDShader",
 		"Resources/Shaders/HUD/"
-		);
+	);
 
-		ResourceManager::Get()->AddResourceFolder<Mesh>(
+	ResourceManager::Get()->AddResource<Shader>(
+		"DebugShader",
+		"Resources/Shaders/Debug/"
+	);
+
+	ResourceManager::Get()->AddResourceFolder<Mesh>(
 		"Resources/Meshes/"
 	);
 

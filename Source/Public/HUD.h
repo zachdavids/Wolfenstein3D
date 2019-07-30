@@ -7,6 +7,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 class Shader;
 class Mesh;
@@ -40,7 +41,7 @@ private:
 	Shader* m_Shader = nullptr;
 	Shader* m_TextShader = nullptr;
 	void InitText();
-	void RenderText(std::string const& text, glm::vec2& position);
+	void RenderText(std::string const& text, glm::vec2 position);
 	std::map<char, Character> characters_;
 	glm::mat4 GetModel(glm::vec3 const& position, glm::vec3 const& scale);
 };
