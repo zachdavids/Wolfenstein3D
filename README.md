@@ -1,6 +1,6 @@
 # Wolfenstein3D
 ****
-<p align="center">
+<img align="right" src="Wolfenstein.gif">
 ![](Wolfenstein.gif)
 </p>
 
