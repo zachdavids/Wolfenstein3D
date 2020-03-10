@@ -1,7 +1,8 @@
 # Wolfenstein3D
 ****
-
+<p align="center">
 ![](Wolfenstein.gif)
+</p>
 
 Wolfenstein3D remade with a custom engine using OpenGL and C++. This game was my first ever game circa 2015 and was created from scratch to learn C++, and game design by exploring concepts and techniques used in released games. It is currently being rewritten to reflect my current understanding of C++.
 
